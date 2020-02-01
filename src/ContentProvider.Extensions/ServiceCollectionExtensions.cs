@@ -22,7 +22,7 @@ using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ContentProvider.Extensions
+namespace ContentProvider
 {
     public static class ServiceCollectionExtensions
     {
@@ -63,6 +63,12 @@ namespace ContentProvider.Extensions
             where TContent : ContentBase, new()
         {
             services.AddSingleton<TContent>(_ => new TContent());
+            return services;
+        }
+
+        public static IServiceCollection AddFileContent(this IServiceCollection services)
+        {
+            //TODO:
             return services;
         }
     }

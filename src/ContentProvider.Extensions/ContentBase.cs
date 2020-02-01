@@ -21,7 +21,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ContentProvider.Extensions
+namespace ContentProvider
 {
     public abstract class ContentBase : IContent
     {

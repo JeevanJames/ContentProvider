@@ -3,7 +3,7 @@
   <PropertyGroup>
       <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
       <AssemblyName>$(BaseNamespace).Extensions</AssemblyName>
-      <RootNamespace>$(AssemblyName)</RootNamespace>
+      <RootNamespace>$(BaseNamespace)</RootNamespace>
       <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 

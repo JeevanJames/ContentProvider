@@ -19,7 +19,7 @@ limitations under the License.
 
 using System.Threading.Tasks;
 
-namespace ContentProvider.Extensions
+namespace ContentProvider
 {
     public interface IContentManager
     {

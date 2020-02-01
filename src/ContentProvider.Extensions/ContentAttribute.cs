@@ -19,7 +19,7 @@ limitations under the License.
 
 using System;
 
-namespace ContentProvider.Extensions
+namespace ContentProvider
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class ContentAttribute : Attribute

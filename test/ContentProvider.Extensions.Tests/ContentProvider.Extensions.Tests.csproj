@@ -8,10 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Content.txt" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ContentProvider.Extensions\ContentProvider.Extensions.csproj" />
     <ProjectReference Include="..\..\src\ContentProvider\ContentProvider.csproj" />
   </ItemGroup>
 
