@@ -40,13 +40,8 @@ namespace ContentProvider.Files
                 baseDirectory = Directory.GetCurrentDirectory();
 
             _baseDirectory = Path.GetFullPath(baseDirectory);
-            _files = DiscoverFiles(_baseDirectory, searchPattern, searchOption);
-        }
-
-        private List<string> DiscoverFiles(string baseDirectory, string fileMask, SearchOption searchOption)
-        {
-            return Directory.EnumerateFiles(baseDirectory, fileMask, searchOption)
-                .Select(path => path.Substring(baseDirectory.Length + 1))
+            _files = Directory.EnumerateFiles(_baseDirectory, searchPattern, searchOption)
+                .Select(path => path.Substring(_baseDirectory.Length + 1))
                 .ToList();
         }
 
@@ -83,7 +78,7 @@ namespace ContentProvider.Files
 #if NETSTANDARD2_0
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var ms = new MemoryStream();
-            await fs.CopyToAsync(ms);
+            await fs.CopyToAsync(ms).ConfigureAwait(false);
             byte[] content = ms.ToArray();
             return (true, content);
 #else
