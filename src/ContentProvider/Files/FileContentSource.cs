@@ -19,12 +19,14 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ContentProvider.Files
 {
+    [DebuggerDisplay("File content source: {_baseDirectory} ({_files.Count} items)")]
     public sealed class FileContentSource : ContentSource
     {
         private readonly string _baseDirectory;

@@ -19,6 +19,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ContentProvider
@@ -27,6 +28,7 @@ namespace ContentProvider
     ///     Represents a named set of contents, consisting of a primary content source and zero or more
     ///     fallback sources.
     /// </summary>
+    [DebuggerDisplay("Content Set {Name}")]
     public sealed class ContentSet : IContentSet
     {
         public ContentSet(string name)
