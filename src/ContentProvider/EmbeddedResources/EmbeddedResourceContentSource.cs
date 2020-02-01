@@ -77,6 +77,26 @@ namespace ContentProvider.EmbeddedResources
 #pragma warning restore S1854 // Unused assignments should be removed
             return (true, content);
         }
+
+        public async override Task<(bool success, byte[] content)> TryLoadAsBinary(string name)
+        {
+            if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+                return (false, null);
+
+            using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+
+            var buffer = new byte[2048];
+
+            using var ms = new MemoryStream();
+            int read;
+            while ((read = await resourceStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
+                await ms.WriteAsync(buffer, 0, read).ConfigureAwait(false);
+#pragma warning disable S1854 // Unused assignments should be removed
+            byte[] content = ms.ToArray();
+#pragma warning restore S1854 // Unused assignments should be removed
+
+            return (true, content);
+        }
     }
 
     internal readonly struct ResourceDetail

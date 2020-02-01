@@ -17,6 +17,7 @@ limitations under the License.
 */
 #endregion
 
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ContentProvider
@@ -37,6 +38,18 @@ namespace ContentProvider
         ///     A tuple indicating whether the content item could be loaded, and if so, the string
         ///     content itself.
         /// </returns>
-        public abstract Task<(bool success, string content)> TryLoadAsString(string name);
+        public async virtual Task<(bool success, string content)> TryLoadAsString(string name)
+        {
+            (bool success, byte[] content) = await TryLoadAsBinary(name).ConfigureAwait(false);
+            if (!success)
+                return (false, null);
+
+#pragma warning disable S1854 // Unused assignments should be removed
+            string contentString = Encoding.UTF8.GetString(content);
+#pragma warning restore S1854 // Unused assignments should be removed
+            return (true, contentString);
+        }
+
+        public abstract Task<(bool success, byte[] content)> TryLoadAsBinary(string name);
     }
 }

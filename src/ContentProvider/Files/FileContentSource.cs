@@ -70,5 +70,27 @@ namespace ContentProvider.Files
 
             return (true, content);
         }
+
+        public async override Task<(bool success, byte[] content)> TryLoadAsBinary(string name)
+        {
+            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (file is null)
+                return (false, null);
+
+            string filePath = Path.Combine(_baseDirectory, file);
+
+#pragma warning disable S1854 // Unused assignments should be removed
+#if NETSTANDARD2_0
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var ms = new MemoryStream();
+            await fs.CopyToAsync(ms);
+            byte[] content = ms.ToArray();
+            return (true, content);
+#else
+            byte[] content = await File.ReadAllBytesAsync(filePath);
+            return (true, content);
+#endif
+#pragma warning restore S1854 // Unused assignments should be removed
+        }
     }
 }
