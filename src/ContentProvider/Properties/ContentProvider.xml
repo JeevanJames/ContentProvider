@@ -4,5 +4,10 @@
         <name>ContentProvider</name>
     </assembly>
     <members>
+        <member name="T:ContentProvider.Content">
+            <summary>
+                Represents a named set of content, consisting of a primary content source and zero or more fallback sources.
+            </summary>
+        </member>
     </members>
 </doc>
