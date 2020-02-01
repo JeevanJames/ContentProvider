@@ -26,7 +26,7 @@ namespace ContentProvider
     /// <summary>
     ///     Represents a named set of content, consisting of a primary content source and zero or more fallback sources.
     /// </summary>
-    public sealed class Content
+    public sealed class Content : IContent
     {
         public Content(string name)
         {

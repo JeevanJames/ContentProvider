@@ -17,20 +17,14 @@ limitations under the License.
 */
 #endregion
 
-using System.Reflection;
+using System.Threading.Tasks;
 
-namespace ContentProvider.EmbeddedResources
+namespace ContentProvider.Extensions
 {
-    public static class BuilderSourceExtensions
+    public interface IContentManager
     {
-        public static ContentBuilder ResourcesInExecutingAssembly(this ContentSourceBuilder builder)
-        {
-            return builder.Source(new EmbeddedResourceContentSource(new[] { Assembly.GetCallingAssembly() }));
-        }
+        Content Get(string name);
 
-        public static ContentBuilder ResourcesIn(this ContentSourceBuilder builder, params Assembly[] assemblies)
-        {
-            return builder.Source(new EmbeddedResourceContentSource(assemblies));
-        }
+        Task<string> Get(string name, string entryName);
     }
 }

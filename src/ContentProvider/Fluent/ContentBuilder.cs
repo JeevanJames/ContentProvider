@@ -17,34 +17,15 @@ limitations under the License.
 */
 #endregion
 
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace ContentProvider.Fluent
+namespace ContentProvider
 {
     public sealed class ContentBuilder : Collection<ContentSource>
     {
         public ContentSourceBuilder From => new ContentSourceBuilder(this);
 
         public ContentSource[] Build() => this.ToArray();
-    }
-
-    public sealed class ContentSourceBuilder
-    {
-        private readonly ContentBuilder _builder;
-
-        internal ContentSourceBuilder(ContentBuilder builder)
-        {
-            _builder = builder;
-        }
-
-        public ContentBuilder Source(ContentSource source)
-        {
-            if (source is null)
-                throw new ArgumentNullException(nameof(source));
-            _builder.Add(source);
-            return _builder;
-        }
     }
 }

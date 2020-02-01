@@ -20,7 +20,6 @@ limitations under the License.
 using System.Threading.Tasks;
 
 using ContentProvider.EmbeddedResources;
-using ContentProvider.Fluent;
 
 using Shouldly;
 
@@ -38,7 +37,8 @@ namespace ContentProvider.Tests
                 .Build());
 
             Content content = ContentManager.Get("Text");
-            string value = await content.Get("ContentProvider.Tests.Content.txt");
+            string value = await content.Get("ContentProvider.Tests.Content.txt")
+                .ConfigureAwait(false);
 
             content.ShouldNotBeNull();
             value.ShouldBe("This is the content.");

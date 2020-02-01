@@ -18,16 +18,16 @@ namespace ContentProvider
 
         public static Content Get(string name)
         {
-            if (!_contents.TryGetValue(name, out Content bucket))
+            if (!_contents.TryGetValue(name, out Content content))
                 throw new ArgumentException($"Could not find content named {name}.", nameof(name));
 
-            return bucket;
+            return content;
         }
 
         public static async Task<string> Get(string name, string entryName)
         {
             Content content = Get(name);
-            return await content.Get(entryName);
+            return await content.Get(entryName).ConfigureAwait(false);
         }
     }
 }
