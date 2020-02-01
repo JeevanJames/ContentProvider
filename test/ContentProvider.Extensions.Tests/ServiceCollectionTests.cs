@@ -18,6 +18,7 @@ limitations under the License.
 #endregion
 
 using System.Threading.Tasks;
+
 using ContentProvider.EmbeddedResources;
 
 using Microsoft.Extensions.DependencyInjection;

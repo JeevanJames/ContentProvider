@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace ContentProvider.EmbeddedResources
 {
-    public static class BuilderSourceExtensions
+    public static class SourceBuilderExtensions
     {
         public static ContentBuilder ResourcesInExecutingAssembly(this ContentSourceBuilder builder,
             Regex resourceNameMatcher = null,
