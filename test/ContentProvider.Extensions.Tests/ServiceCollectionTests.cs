@@ -19,8 +19,6 @@ limitations under the License.
 
 using System.Threading.Tasks;
 
-using ContentProvider.EmbeddedResources;
-
 using Microsoft.Extensions.DependencyInjection;
 
 using Shouldly;
@@ -29,26 +27,20 @@ using Xunit;
 
 namespace ContentProvider.Tests
 {
+    [Collection("Content")]
     public sealed class ServiceCollectionTests
     {
-        private readonly ServiceProvider _serviceProvider;
+        private readonly ContentFixture _fixture;
 
-        public ServiceCollectionTests()
+        public ServiceCollectionTests(ContentFixture fixture)
         {
-            IServiceCollection services = new ServiceCollection();
-            services.AddContentProvider("Text", b => b
-                .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace));
-            services.AddContentProvider("Json", b => b
-                .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"));
-            services.AddContentSet<TextContentSet>();
-            services.AddContentSet<JsonContentSet>("Json");
-            _serviceProvider = services.BuildServiceProvider();
+            _fixture = fixture;
         }
 
         [Fact]
         public async Task Can_inject_service_manager_and_retrieve_content()
         {
-            var manager = _serviceProvider.GetService<IContentManager>();
+            var manager = _fixture.ServiceProvider.GetService<IContentManager>();
             manager.ShouldNotBeNull();
 
             ContentSet contentSet = manager.Get("Text");
@@ -61,7 +53,7 @@ namespace ContentProvider.Tests
         [Fact]
         public async Task Can_inject_content_set_with_attribute()
         {
-            var textContentSet = _serviceProvider.GetService<TextContentSet>();
+            var textContentSet = _fixture.ServiceProvider.GetService<TextContentSet>();
             textContentSet.ShouldNotBeNull();
 
             string value = await textContentSet.Get("Content.txt");
@@ -71,7 +63,7 @@ namespace ContentProvider.Tests
         [Fact]
         public async Task Can_inject_content_set_with_name()
         {
-            var jsonContentSet = _serviceProvider.GetService<JsonContentSet>();
+            var jsonContentSet = _fixture.ServiceProvider.GetService<JsonContentSet>();
             jsonContentSet.ShouldNotBeNull();
 
             string value = await jsonContentSet.Get("Content.json");

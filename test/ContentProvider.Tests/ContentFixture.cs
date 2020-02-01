@@ -17,30 +17,24 @@ limitations under the License.
 */
 #endregion
 
-using System.Threading.Tasks;
-
-using Shouldly;
+using ContentProvider.EmbeddedResources;
 
 using Xunit;
 
 namespace ContentProvider.Tests
 {
-    [Collection("Content")]
-    public sealed class EmbeddedResourceTests
+    public sealed class ContentFixture
     {
-        public EmbeddedResourceTests(ContentFixture fixture)
+        public ContentFixture()
         {
+            ContentManager.Register("Text", new ContentBuilder()
+                .From.ResourcesInExecutingAssembly(rootNamespace: "ContentProvider.Tests")
+                .Build());
         }
+    }
 
-        [Fact]
-        public async Task Able_to_load_embedded_resources()
-        {
-            ContentSet content = ContentManager.Get("Text");
-            string value = await content.Get("Content.txt")
-                .ConfigureAwait(false);
-
-            content.ShouldNotBeNull();
-            value.ShouldBe("This is the content.");
-        }
+    [CollectionDefinition("Content")]
+    public sealed class ContentCollection : ICollectionFixture<ContentFixture>
+    {
     }
 }

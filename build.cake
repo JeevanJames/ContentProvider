@@ -15,4 +15,12 @@ Task("Build")
         Configuration = configuration,
     });
 });
+
+Task("Test")
+    .IsDependentOn("Build")
+    .Does(() =>
+    {
+        DotNetCoreTest("./ContentProvider.sln");
+    });
+
 RunTarget(target);
