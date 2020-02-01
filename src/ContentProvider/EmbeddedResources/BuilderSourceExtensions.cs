@@ -18,17 +18,20 @@ limitations under the License.
 #endregion
 
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ContentProvider.EmbeddedResources
 {
     public static class BuilderSourceExtensions
     {
         public static ContentBuilder ResourcesInExecutingAssembly(this ContentSourceBuilder builder,
+            Regex resourceNameMatcher = null,
+            string resourceFileExtension = null,
             string rootNamespace = null)
         {
             return builder.Source(new EmbeddedResourceContentSource(
                 new[] { Assembly.GetCallingAssembly() },
-                rootNamespace: rootNamespace));
+                resourceNameMatcher, resourceFileExtension, rootNamespace));
         }
 
         public static ContentBuilder ResourcesIn(this ContentSourceBuilder builder, params Assembly[] assemblies)

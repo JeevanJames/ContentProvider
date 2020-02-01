@@ -23,7 +23,7 @@ namespace ContentProvider
 {
     public interface IContentManager
     {
-        Content Get(string name);
+        ContentSet Get(string name);
 
         Task<string> Get(string name, string entryName);
     }

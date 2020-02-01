@@ -23,25 +23,26 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
-    public abstract class ContentBase : IContent
+    public abstract class ContentSetBase : IContentSet
     {
-        private readonly Content _content;
+        private readonly ContentSet _contentSet;
 
-        protected ContentBase()
+        protected ContentSetBase()
         {
-            ContentAttribute attribute = GetType().GetCustomAttribute<ContentAttribute>(false);
+            ContentSetAttribute attribute = GetType().GetCustomAttribute<ContentSetAttribute>(false);
             if (attribute is null)
-                throw new InvalidOperationException($"Decorate the ${GetType().FullName} class with a {typeof(ContentAttribute).FullName} attribute to indicate the name of the content to load.");
+                throw new InvalidOperationException($"Decorate the ${GetType().FullName} class with a {typeof(ContentSetAttribute).FullName} attribute to indicate the name of the content to load.");
+            _contentSet = ContentManager.Get(attribute.Name);
         }
 
-        protected ContentBase(string name)
+        protected ContentSetBase(string name)
         {
-            _content = ContentManager.Get(name);
+            _contentSet = ContentManager.Get(name);
         }
 
         public Task<string> Get(string name)
         {
-            return _content.Get(name);
+            return _contentSet.Get(name);
         }
     }
 }

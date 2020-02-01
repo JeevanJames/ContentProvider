@@ -62,9 +62,9 @@ namespace ContentProvider.EmbeddedResources
             }
         }
 
-        public async override Task<(bool success, string content)> TryLoadAsString(string contentName)
+        public async override Task<(bool success, string content)> TryLoadAsString(string name)
         {
-            if (!_resources.TryGetValue(contentName, out ResourceDetail resourceDetail))
+            if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
 
             using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);

@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
-    public interface IContent
+    public interface IContentSet
     {
         Task<string> Get(string name);
     }

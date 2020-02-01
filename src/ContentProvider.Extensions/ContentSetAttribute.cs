@@ -22,9 +22,9 @@ using System;
 namespace ContentProvider
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class ContentAttribute : Attribute
+    public sealed class ContentSetAttribute : Attribute
     {
-        public ContentAttribute(string name)
+        public ContentSetAttribute(string name)
         {
             Name = name;
         }

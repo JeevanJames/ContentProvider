@@ -23,7 +23,7 @@ namespace ContentProvider
 {
     internal sealed class ContentManagerImpl : IContentManager
     {
-        Content IContentManager.Get(string name) =>
+        ContentSet IContentManager.Get(string name) =>
             ContentManager.Get(name);
 
         async Task<string> IContentManager.Get(string name, string entryName) =>

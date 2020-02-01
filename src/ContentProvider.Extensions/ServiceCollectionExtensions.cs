@@ -20,6 +20,8 @@ limitations under the License.
 using System;
 using System.Reflection;
 
+using ContentProvider.EmbeddedResources;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContentProvider
@@ -40,8 +42,8 @@ namespace ContentProvider
             return services;
         }
 
-        public static IServiceCollection AddContent<TContent>(this IServiceCollection services, string name)
-            where TContent : ContentBase
+        public static IServiceCollection AddContentSet<TContent>(this IServiceCollection services, string name)
+            where TContent : ContentSetBase
         {
             services.AddSingleton(_ =>
             {
@@ -59,17 +61,27 @@ namespace ContentProvider
             return services;
         }
 
-        public static IServiceCollection AddContent<TContent>(this IServiceCollection services)
-            where TContent : ContentBase, new()
+        public static IServiceCollection AddContentSet<TContentSet>(this IServiceCollection services)
+            where TContentSet : ContentSetBase, new()
         {
-            services.AddSingleton<TContent>(_ => new TContent());
-            return services;
+            return services.AddSingleton(_ => new TContentSet());
         }
 
-        public static IServiceCollection AddFileContent(this IServiceCollection services)
+        public static IServiceCollection AddFileContent(this IServiceCollection services,
+            string fileExtension,
+            string rootNamespace,
+            string baseDirectory = null)
         {
-            //TODO:
-            return services;
+            if (string.IsNullOrWhiteSpace(fileExtension))
+                throw new ArgumentException("Specify a valid file extension.", nameof(fileExtension));
+            if (string.IsNullOrWhiteSpace(rootNamespace))
+                throw new ArgumentException("Specify a valid root namespace for the embedded resources.", nameof(rootNamespace));
+
+            //if (string.IsNullOrWhiteSpace(baseDirectory))
+            //    baseDirectory = Directory.GetCurrentDirectory();
+
+            return services.AddContentProvider(fileExtension, builder =>
+                builder.From.ResourcesInExecutingAssembly(resourceFileExtension: fileExtension, rootNamespace: rootNamespace));
         }
     }
 }

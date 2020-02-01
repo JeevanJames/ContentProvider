@@ -4,10 +4,29 @@
         <name>ContentProvider</name>
     </assembly>
     <members>
-        <member name="T:ContentProvider.Content">
+        <member name="T:ContentProvider.ContentSet">
             <summary>
-                Represents a named set of content, consisting of a primary content source and zero or more fallback sources.
+                Represents a named set of contents, consisting of a primary content source and zero or more
+                fallback sources.
             </summary>
+        </member>
+        <member name="T:ContentProvider.ContentSource">
+            <summary>
+                Represents a source from which to retrieve content.
+                <para/>
+                Examples include assembly embedded resources, files, web sites, etc.
+            </summary>
+        </member>
+        <member name="M:ContentProvider.ContentSource.TryLoadAsString(System.String)">
+            <summary>
+                Attempts to load an item from the content source as a string, given its
+                <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the content item to retrieve.</param>
+            <returns>
+                A tuple indicating whether the content item could be loaded, and if so, the string
+                content itself.
+            </returns>
         </member>
     </members>
 </doc>

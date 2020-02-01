@@ -36,7 +36,7 @@ namespace ContentProvider.Tests
                 .From.ResourcesInExecutingAssembly(rootNamespace: "ContentProvider.Tests")
                 .Build());
 
-            Content content = ContentManager.Get("Text");
+            ContentSet content = ContentManager.Get("Text");
             string value = await content.Get("Content.txt")
                 .ConfigureAwait(false);
 

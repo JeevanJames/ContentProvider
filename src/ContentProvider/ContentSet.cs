@@ -24,14 +24,15 @@ using System.Threading.Tasks;
 namespace ContentProvider
 {
     /// <summary>
-    ///     Represents a named set of content, consisting of a primary content source and zero or more fallback sources.
+    ///     Represents a named set of contents, consisting of a primary content source and zero or more
+    ///     fallback sources.
     /// </summary>
-    public sealed class Content : IContent
+    public sealed class ContentSet : IContentSet
     {
-        public Content(string name)
+        public ContentSet(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Specify a valid name for the content.", nameof(name));
+                throw new ArgumentException("Specify a valid name for the content set.", nameof(name));
             Name = name;
         }
 

@@ -35,7 +35,12 @@ namespace ContentProvider.Tests
         public ServiceCollectionTests()
         {
             IServiceCollection services = new ServiceCollection();
-            services.AddContentProvider("Text", b => b.From.ResourcesInExecutingAssembly(typeof(ServiceCollectionTests).Namespace));
+            services.AddContentProvider("Text", b => b
+                .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace));
+            services.AddContentProvider("Json", b => b
+                .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"));
+            services.AddContentSet<TextContentSet>();
+            services.AddContentSet<JsonContentSet>("Json");
             _serviceProvider = services.BuildServiceProvider();
         }
 
@@ -43,12 +48,48 @@ namespace ContentProvider.Tests
         public async Task Can_inject_service_manager_and_retrieve_content()
         {
             var manager = _serviceProvider.GetService<IContentManager>();
-            Content content = manager.Get("Text");
-            string value = await content.Get("Content.txt");
-
             manager.ShouldNotBeNull();
-            content.ShouldNotBeNull();
+
+            ContentSet contentSet = manager.Get("Text");
+            contentSet.ShouldNotBeNull();
+
+            string value = await contentSet.Get("Content.txt");
             value.ShouldBe("This is the content.");
+        }
+
+        [Fact]
+        public async Task Can_inject_content_set_with_attribute()
+        {
+            var textContentSet = _serviceProvider.GetService<TextContentSet>();
+            textContentSet.ShouldNotBeNull();
+
+            string value = await textContentSet.Get("Content.txt");
+            value.ShouldBe("This is the content.");
+        }
+
+        [Fact]
+        public async Task Can_inject_content_set_with_name()
+        {
+            var jsonContentSet = _serviceProvider.GetService<JsonContentSet>();
+            jsonContentSet.ShouldNotBeNull();
+
+            string value = await jsonContentSet.Get("Content.json");
+            value.ShouldNotBeNull();
+
+            //value.ShouldBe("This is the content.");
+        }
+    }
+
+    [ContentSet("Text")]
+    public sealed class TextContentSet : ContentSetBase
+    {
+    }
+
+    public sealed class JsonContentSet : ContentSetBase
+    {
+        public JsonContentSet(string name)
+            : base(name)
+        {
         }
     }
 }

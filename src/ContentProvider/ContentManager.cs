@@ -6,19 +6,19 @@ namespace ContentProvider
 {
     public static class ContentManager
     {
-        private static readonly Dictionary<string, Content> _contents = new Dictionary<string, Content>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, ContentSet> _contents = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
 
         public static void Register(string name, params ContentSource[] sources)
         {
-            var content = new Content(name);
+            var content = new ContentSet(name);
             foreach (ContentSource source in sources)
                 content.Sources.Add(source);
             _contents.Add(name, content);
         }
 
-        public static Content Get(string name)
+        public static ContentSet Get(string name)
         {
-            if (!_contents.TryGetValue(name, out Content content))
+            if (!_contents.TryGetValue(name, out ContentSet content))
                 throw new ArgumentException($"Could not find content named {name}.", nameof(name));
 
             return content;
@@ -26,7 +26,7 @@ namespace ContentProvider
 
         public static async Task<string> Get(string name, string entryName)
         {
-            Content content = Get(name);
+            ContentSet content = Get(name);
             return await content.Get(entryName).ConfigureAwait(false);
         }
     }

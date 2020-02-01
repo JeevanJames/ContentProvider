@@ -21,8 +21,22 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
+    /// <summary>
+    ///     Represents a source from which to retrieve content.
+    ///     <para/>
+    ///     Examples include assembly embedded resources, files, web sites, etc.
+    /// </summary>
     public abstract class ContentSource
     {
-        public abstract Task<(bool success, string content)> TryLoadAsString(string contentName);
+        /// <summary>
+        ///     Attempts to load an item from the content source as a string, given its
+        ///     <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the content item to retrieve.</param>
+        /// <returns>
+        ///     A tuple indicating whether the content item could be loaded, and if so, the string
+        ///     content itself.
+        /// </returns>
+        public abstract Task<(bool success, string content)> TryLoadAsString(string name);
     }
 }
