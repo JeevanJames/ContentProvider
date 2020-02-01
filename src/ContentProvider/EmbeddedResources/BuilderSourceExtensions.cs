@@ -23,9 +23,12 @@ namespace ContentProvider.EmbeddedResources
 {
     public static class BuilderSourceExtensions
     {
-        public static ContentBuilder ResourcesInExecutingAssembly(this ContentSourceBuilder builder)
+        public static ContentBuilder ResourcesInExecutingAssembly(this ContentSourceBuilder builder,
+            string rootNamespace = null)
         {
-            return builder.Source(new EmbeddedResourceContentSource(new[] { Assembly.GetCallingAssembly() }));
+            return builder.Source(new EmbeddedResourceContentSource(
+                new[] { Assembly.GetCallingAssembly() },
+                rootNamespace: rootNamespace));
         }
 
         public static ContentBuilder ResourcesIn(this ContentSourceBuilder builder, params Assembly[] assemblies)

@@ -33,11 +33,11 @@ namespace ContentProvider.Tests
         public async Task Able_to_load_embedded_resources()
         {
             ContentManager.Register("Text", new ContentBuilder()
-                .From.ResourcesInExecutingAssembly()
+                .From.ResourcesInExecutingAssembly(rootNamespace: "ContentProvider.Tests")
                 .Build());
 
             Content content = ContentManager.Get("Text");
-            string value = await content.Get("ContentProvider.Tests.Content.txt")
+            string value = await content.Get("Content.txt")
                 .ConfigureAwait(false);
 
             content.ShouldNotBeNull();

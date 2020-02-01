@@ -17,6 +17,7 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,14 +33,19 @@ namespace ContentProvider.EmbeddedResources
 
         public EmbeddedResourceContentSource(IEnumerable<Assembly> assemblies,
             Regex resourceNameMatcher = null,
-            string resourceFileExtension = null)
+            string resourceFileExtension = null,
+            string rootNamespace = null)
         {
-            DiscoverResources(assemblies, resourceNameMatcher, resourceFileExtension);
+            DiscoverResources(assemblies, resourceNameMatcher, resourceFileExtension, rootNamespace);
         }
 
         private void DiscoverResources(IEnumerable<Assembly> assemblies,
-            Regex resourceNameMatcher, string resourceFileExtension)
+            Regex resourceNameMatcher, string resourceFileExtension, string rootNamespace)
         {
+            var contentNameGetter = string.IsNullOrWhiteSpace(rootNamespace)
+                ? (Func<string, string>)(res => res)
+                : res => res.Substring(rootNamespace.Length + 1);
+
             foreach (Assembly assembly in assemblies)
             {
                 IEnumerable<string> resourceNames = assembly.GetManifestResourceNames();
@@ -48,8 +54,11 @@ namespace ContentProvider.EmbeddedResources
                 if (!string.IsNullOrWhiteSpace(resourceFileExtension))
                     resourceNames = resourceNames.Where(res => res.EndsWith($".{resourceFileExtension}", System.StringComparison.OrdinalIgnoreCase));
 
-                foreach (var resourceName in resourceNames.ToList())
-                    _resources.Add(resourceName, new ResourceDetail(assembly, resourceName));
+                foreach (string resourceName in resourceNames.ToList())
+                {
+                    string contentName = contentNameGetter(resourceName);
+                    _resources.Add(contentName, new ResourceDetail(assembly, resourceName));
+                }
             }
         }
 

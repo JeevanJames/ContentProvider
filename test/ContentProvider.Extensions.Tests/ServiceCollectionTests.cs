@@ -17,6 +17,7 @@ limitations under the License.
 */
 #endregion
 
+using System.Threading.Tasks;
 using ContentProvider.EmbeddedResources;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -34,18 +35,20 @@ namespace ContentProvider.Tests
         public ServiceCollectionTests()
         {
             IServiceCollection services = new ServiceCollection();
-            services.AddContentProvider("Text", b => b.From.ResourcesInExecutingAssembly());
+            services.AddContentProvider("Text", b => b.From.ResourcesInExecutingAssembly(typeof(ServiceCollectionTests).Namespace));
             _serviceProvider = services.BuildServiceProvider();
         }
 
         [Fact]
-        public void Can_inject_service_manager()
+        public async Task Can_inject_service_manager_and_retrieve_content()
         {
             var manager = _serviceProvider.GetService<IContentManager>();
             Content content = manager.Get("Text");
+            string value = await content.Get("Content.txt");
 
             manager.ShouldNotBeNull();
             content.ShouldNotBeNull();
+            value.ShouldBe("This is the content.");
         }
     }
 }
