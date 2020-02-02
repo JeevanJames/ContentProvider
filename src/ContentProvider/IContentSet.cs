@@ -23,6 +23,6 @@ namespace ContentProvider
 {
     public interface IContentSet
     {
-        Task<string> Get(string name);
+        Task<string> GetAsString(string name);
     }
 }

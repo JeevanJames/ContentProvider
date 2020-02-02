@@ -34,7 +34,9 @@ namespace ContentProvider.Tests
     }
 
     [CollectionDefinition("Content")]
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
     public sealed class ContentCollection : ICollectionFixture<ContentFixture>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
     }
 }

@@ -38,6 +38,8 @@ namespace ContentProvider.EmbeddedResources
             string resourceFileExtension = null,
             string rootNamespace = null)
         {
+            if (assemblies is null)
+                throw new ArgumentNullException(nameof(assemblies));
             DiscoverResources(assemblies, resourceNameMatcher, resourceFileExtension, rootNamespace);
         }
 
@@ -70,7 +72,9 @@ namespace ContentProvider.EmbeddedResources
                 return (false, null);
 
             using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
-            var reader = new StreamReader(resourceStream);
+#pragma warning disable S3966 // Objects should not be disposed more than once
+            using var reader = new StreamReader(resourceStream);
+#pragma warning restore S3966 // Objects should not be disposed more than once
 
 #pragma warning disable S1854 // Unused assignments should be removed
             string content = await reader.ReadToEndAsync().ConfigureAwait(false);

@@ -37,6 +37,9 @@ namespace ContentProvider
 
         public static void Register(string name, Action<ContentBuilder> builderSetup)
         {
+            if (builderSetup is null)
+                throw new ArgumentNullException(nameof(builderSetup));
+
             var builder = new ContentBuilder();
             builderSetup(builder);
             ContentSource[] sources = builder.Build();
@@ -54,7 +57,7 @@ namespace ContentProvider
         public static async Task<string> Get(string name, string entryName)
         {
             ContentSet contentSet = Get(name);
-            return await contentSet.Get(entryName).ConfigureAwait(false);
+            return await contentSet.GetAsString(entryName).ConfigureAwait(false);
         }
     }
 }

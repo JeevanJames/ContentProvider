@@ -17,6 +17,7 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -29,6 +30,8 @@ namespace ContentProvider.EmbeddedResources
             string resourceFileExtension = null,
             string rootNamespace = null)
         {
+            if (builder is null)
+                throw new ArgumentNullException(nameof(builder));
             return builder.Source(new EmbeddedResourceContentSource(
                 new[] { Assembly.GetCallingAssembly() },
                 resourceNameMatcher, resourceFileExtension, rootNamespace));
@@ -36,6 +39,8 @@ namespace ContentProvider.EmbeddedResources
 
         public static ContentBuilder ResourcesIn(this ContentSourceBuilder builder, params Assembly[] assemblies)
         {
+            if (builder is null)
+                throw new ArgumentNullException(nameof(builder));
             return builder.Source(new EmbeddedResourceContentSource(assemblies));
         }
     }

@@ -17,6 +17,7 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.IO;
 
 namespace ContentProvider.Files
@@ -28,6 +29,8 @@ namespace ContentProvider.Files
             string searchPattern = "*",
             SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
+            if (builder is null)
+                throw new ArgumentNullException(nameof(builder));
             return builder.Source(new FileContentSource(baseDirectory, searchPattern, searchOption));
         }
     }

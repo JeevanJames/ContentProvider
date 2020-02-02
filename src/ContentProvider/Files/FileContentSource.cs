@@ -59,7 +59,7 @@ namespace ContentProvider.Files
             using (var reader = new StreamReader(filePath))
                 content = await reader.ReadToEndAsync().ConfigureAwait(false);
 #else
-            string content = await File.ReadAllTextAsync(filePath);
+            string content = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
 #endif
 #pragma warning restore S1854 // Unused assignments should be removed
 
@@ -82,7 +82,7 @@ namespace ContentProvider.Files
             byte[] content = ms.ToArray();
             return (true, content);
 #else
-            byte[] content = await File.ReadAllBytesAsync(filePath);
+            byte[] content = await File.ReadAllBytesAsync(filePath).ConfigureAwait(false);
             return (true, content);
 #endif
 #pragma warning restore S1854 // Unused assignments should be removed

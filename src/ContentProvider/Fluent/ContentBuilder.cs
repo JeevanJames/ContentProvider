@@ -22,7 +22,9 @@ using System.Linq;
 
 namespace ContentProvider
 {
+#pragma warning disable CA1710 // Identifiers should have correct suffix
     public sealed class ContentBuilder : Collection<ContentSource>
+#pragma warning restore CA1710 // Identifiers should have correct suffix
     {
         public ContentSourceBuilder From => new ContentSourceBuilder(this);
 

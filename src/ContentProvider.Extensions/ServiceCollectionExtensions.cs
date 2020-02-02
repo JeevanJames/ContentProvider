@@ -18,9 +18,11 @@ limitations under the License.
 #endregion
 
 using System;
+using System.IO;
 using System.Reflection;
 
 using ContentProvider.EmbeddedResources;
+using ContentProvider.Files;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,6 +34,9 @@ namespace ContentProvider
             string name,
             Action<ContentBuilder> sourceBuilder)
         {
+            if (sourceBuilder is null)
+                throw new ArgumentNullException(nameof(sourceBuilder));
+
             // TODO: Is it okay to repeat this call
             services.AddSingleton<IContentManager, ContentManagerImpl>();
 
@@ -73,15 +78,17 @@ namespace ContentProvider
             string baseDirectory = null)
         {
             if (string.IsNullOrWhiteSpace(fileExtension))
-                throw new ArgumentException("Specify a valid file extension.", nameof(fileExtension));
+                throw new ArgumentException(Errors.InvalidFileExtension, nameof(fileExtension));
             if (string.IsNullOrWhiteSpace(rootNamespace))
-                throw new ArgumentException("Specify a valid root namespace for the embedded resources.", nameof(rootNamespace));
+                throw new ArgumentException(Errors.InvalidRootNamespace, nameof(rootNamespace));
 
-            //if (string.IsNullOrWhiteSpace(baseDirectory))
-            //    baseDirectory = Directory.GetCurrentDirectory();
+            if (string.IsNullOrWhiteSpace(baseDirectory))
+                baseDirectory = Directory.GetCurrentDirectory();
 
             return services.AddContentProvider(fileExtension, builder =>
-                builder.From.ResourcesInExecutingAssembly(resourceFileExtension: fileExtension, rootNamespace: rootNamespace));
+                builder
+                    .From.FilesIn(baseDirectory, $"*.{fileExtension}", SearchOption.AllDirectories)
+                    .From.ResourcesInExecutingAssembly(resourceFileExtension: fileExtension, rootNamespace: rootNamespace));
         }
     }
 }

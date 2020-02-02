@@ -20,6 +20,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ContentProvider
@@ -34,13 +35,13 @@ namespace ContentProvider
         public ContentSet(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Specify a valid name for the content set.", nameof(name));
+                throw new ArgumentException(Errors.InvalidContentSetName, nameof(name));
             Name = name;
         }
 
         public string Name { get; }
 
-        public async Task<string> Get(string name)
+        public async Task<string> GetAsString(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -49,7 +50,8 @@ namespace ContentProvider
                     return content;
             }
 
-            throw new ContentException($"Could not find content entry {name} under the {Name} content.");
+            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+                Errors.ContentEntryNotFound, name, Name));
         }
 
         internal List<ContentSource> Sources { get; } = new List<ContentSource>();

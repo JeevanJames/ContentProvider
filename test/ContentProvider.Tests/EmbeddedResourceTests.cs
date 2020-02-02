@@ -28,7 +28,13 @@ namespace ContentProvider.Tests
     [Collection("Content")]
     public sealed class EmbeddedResourceTests
     {
+#pragma warning disable CA1801 // Unused parameter.
+#pragma warning disable RCS1163 // Unused parameter.
+#pragma warning disable IDE0060 // Remove unused parameter
         public EmbeddedResourceTests(ContentFixture fixture)
+#pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore RCS1163 // Unused parameter.
+#pragma warning restore CA1801 // Unused parameter.
         {
         }
 
@@ -36,7 +42,7 @@ namespace ContentProvider.Tests
         public async Task Able_to_load_embedded_resources()
         {
             ContentSet content = ContentManager.Get("Text");
-            string value = await content.Get("Content.txt")
+            string value = await content.GetAsString("Content.txt")
                 .ConfigureAwait(false);
 
             content.ShouldNotBeNull();

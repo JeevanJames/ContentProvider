@@ -21,12 +21,14 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
+#pragma warning disable CA1812
     internal sealed class ContentManagerImpl : IContentManager
+#pragma warning restore CA1812
     {
-        ContentSet IContentManager.Get(string name) =>
+        ContentSet IContentManager.GetContentSet(string name) =>
             ContentManager.Get(name);
 
-        async Task<string> IContentManager.Get(string name, string entryName) =>
-            await ContentManager.Get(name, entryName);
+        async Task<string> IContentManager.GetAsString(string name, string entryName) =>
+            await ContentManager.Get(name, entryName).ConfigureAwait(false);
     }
 }

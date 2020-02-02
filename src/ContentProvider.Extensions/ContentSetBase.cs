@@ -40,9 +40,9 @@ namespace ContentProvider
             _contentSet = ContentManager.Get(name);
         }
 
-        public Task<string> Get(string name)
+        public Task<string> GetAsString(string name)
         {
-            return _contentSet.Get(name);
+            return _contentSet.GetAsString(name);
         }
     }
 }
