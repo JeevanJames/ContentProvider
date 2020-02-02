@@ -1,0 +1,9 @@
+mode: ContinuousDelivery
+branches:
+  develop:
+    tag: beta
+  master:
+    increment: Minor
+ignore:
+  sha: []
+merge-message-formats: {}
