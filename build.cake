@@ -7,11 +7,11 @@ string version;
 bool isPrerelease = true;
 
 Task("CI")
-    .IsDependentOn("Version")
-    .IsDependentOn("Test")
-    .Does(() =>
-{
-});
+    .IsDependentOn("Test");
+
+Task("CICD")
+    .IsDependentOn("CI")
+    .IsDependentOn("Publish");
 
 Task("Version")
     .Does(() =>
@@ -51,6 +51,38 @@ Task("Test")
             NoRestore = true,
             NoBuild = true,
         });
+    });
+
+Task("Publish")
+    .IsDependentOn("Version")
+    .IsDependentOn("Test")
+    .Does(() =>
+    {
+        if (!BuildSystem.IsRunningOnAppVeyor)
+        {
+            Error("Need to be running on AppVeyor to publish.");
+            return;
+        }
+
+        var outputDir = new DirectoryPath("./nuget");
+
+        CleanDirectory(outputDir);
+
+        var settings = new DotNetCorePackSettings
+        {
+            Configuration = configuration,
+            IncludeSource = true,
+            IncludeSymbols = true,
+            OutputDirectory = outputDir.FullPath,
+            ArgumentCustomization = args => args.Append($"/p:Version={version}")
+        };
+
+        DotNetCorePack("./src/ContentProvider/ContentProvider.csproj", settings);
+
+        if (isPrerelease)
+            Information($"Publishing to MyGet - {EnvironmentVariable("MYGET_SOURCE")}");
+        else
+            Information($"Publishing to NuGet - {EnvironmentVariable("NUGET_SOURCE")}");
     });
 
 RunTarget(target);
