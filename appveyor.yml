@@ -4,6 +4,7 @@ version: 1.0.0-{branch}+{build}
 
 environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  CAKE_SETTINGS_SKIPPACKAGEVERSIONCHECK: true
 
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
   NUGET_APIKEY:
