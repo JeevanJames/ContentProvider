@@ -65,6 +65,7 @@ Task("Publish")
         }
 
         var outputDir = new DirectoryPath("./nuget");
+        var projects = new string[] { "ContentProvider", "ContentProvider.Extensions" };
 
         CleanDirectory(outputDir);
 
@@ -77,12 +78,19 @@ Task("Publish")
             ArgumentCustomization = args => args.Append($"/p:Version={version}")
         };
 
-        DotNetCorePack("./src/ContentProvider/ContentProvider.csproj", settings);
+        foreach (string project in projects)
+        {
+            DotNetCorePack($"./src/{project}/{project}.csproj", settings);
 
-        if (isPrerelease)
-            Information($"Publishing to MyGet - {EnvironmentVariable("MYGET_SOURCE")}");
-        else
-            Information($"Publishing to NuGet - {EnvironmentVariable("NUGET_SOURCE")}");
+            if (isPrerelease)
+                Information($"Publishing to MyGet - {EnvironmentVariable("MYGET_SOURCE")}");
+            else
+                Information($"Publishing to NuGet - {EnvironmentVariable("NUGET_SOURCE")}");
+        }
+
+        var packageFiles = GetFiles("./nuget/*.nupkg");
+        foreach (var packageFile in packageFiles)
+            AppVeyor.UploadArtifact(packageFile);
     });
 
 RunTarget(target);
