@@ -97,7 +97,11 @@ Task("Publish")
 
         var packageFiles = GetFiles("./nuget/*.nupkg", new GlobberSettings
         {
-            Predicate = fsi => !fsi.Path.FullPath.EndsWith(".symbols.nupkg", StringComparison.OrdinalIgnoreCase)
+            Predicate = fsi =>
+            {
+                Information(fsi.Path.FullPath);
+                return !fsi.Path.FullPath.EndsWith(".symbols.nupkg", StringComparison.OrdinalIgnoreCase);
+            }
         });
 
         foreach (var packageFile in packageFiles)
