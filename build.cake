@@ -1,6 +1,6 @@
 #tool "nuget:?package=GitVersion.CommandLine"
 
-var target = Argument("target", "CI");
+var target = Argument("target", "CICD");
 var configuration = Argument("configuration", "Release");
 
 string version;
