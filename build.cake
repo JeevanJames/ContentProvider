@@ -97,19 +97,13 @@ Task("Publish")
 
         var packageFiles = GetFiles("./nuget/*.nupkg", new GlobberSettings
         {
-            Predicate = fsi =>
-            {
-                Information($"Predicate: {fsi.Path.FullPath}");
-                return !fsi.Path.FullPath.EndsWith(".symbols.nupkg", StringComparison.OrdinalIgnoreCase);
-            }
+            FilePredicate = file => !file.Path.FullPath.EndsWith(".symbols.nupkg", StringComparison.OrdinalIgnoreCase),
         });
 
         foreach (var packageFile in packageFiles)
         {
-            Information($"Uploading artifact: {packageFile.FullPath}");
             AppVeyor.UploadArtifact(packageFile);
         
-            Information($"Pushing package: {packageFile.FullPath}");
             DotNetCoreNuGetPush(packageFile.FullPath, new DotNetCoreNuGetPushSettings
             {
                 ApiKey = apiKey,
