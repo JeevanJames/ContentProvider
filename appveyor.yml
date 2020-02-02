@@ -9,6 +9,9 @@ environment:
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
   NUGET_APIKEY:
     secure: j4h+o37uqm7LmUncRqQ7KA/M6dBZVo07idthknTFF/k1aVO+MbfT1EecNEJqjPoR
+  NUGET_SYMBOL_SOURCE: https://api.nuget.org/v3/index.json
+  NUGET_SYMBOL_APIKEY:
+    secure: j4h+o37uqm7LmUncRqQ7KA/M6dBZVo07idthknTFF/k1aVO+MbfT1EecNEJqjPoR
   MYGET_SOURCE: https://www.myget.org/F/jeevanjames/api/v3/index.json
   MYGET_APIKEY:
     secure: 3tEiaoqZlTJcJkAX+3wWyp3mbCYuJpALEFzTEaum6ACiXbWgsa1kWYGBi3TUFY7c
