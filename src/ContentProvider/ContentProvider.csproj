@@ -5,6 +5,7 @@
     <AssemblyName>$(BaseNamespace)</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
+    <Description>$(ProductDescription)This package contains the core framework.</Description>
   </PropertyGroup>
 
   <ItemGroup>

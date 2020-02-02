@@ -3,7 +3,7 @@
     <PropertyGroup>
         <BaseNamespace>ContentProvider</BaseNamespace>
         <ProductId>ContentProvider</ProductId>
-        <ProductDescription>ConsoleFx is a suite of .NET libraries for building command-line (CLI) applications, including support for a sophisticated command line argument parser, interactive prompts, ASCII art, console capture and extensions to the Console class.
+        <ProductDescription>Content Provider is an extensible framework to provide content from various sources to a .NET application
 
 
 </ProductDescription>
