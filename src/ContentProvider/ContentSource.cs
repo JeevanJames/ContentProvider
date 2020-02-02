@@ -50,6 +50,15 @@ namespace ContentProvider
             return (true, contentString);
         }
 
+        /// <summary>
+        ///     Attempts to load an item from the content source as a byte array, given its
+        ///     <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the content item to retrieve.</param>
+        /// <returns>
+        ///     A tuple indicating whether the content item could be loaded, and if so, the byte
+        ///     array content itself.
+        /// </returns>
         public abstract Task<(bool success, byte[] content)> TryLoadAsBinary(string name);
     }
 }

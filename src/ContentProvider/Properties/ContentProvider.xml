@@ -10,6 +10,33 @@
                 fallback sources.
             </summary>
         </member>
+        <member name="M:ContentProvider.ContentSet.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:ContentProvider.ContentSet"/> class with the specified
+                <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the content set.</param>
+        </member>
+        <member name="P:ContentProvider.ContentSet.Name">
+            <summary>
+                Gets the name of the content set.
+            </summary>
+        </member>
+        <member name="M:ContentProvider.ContentSet.GetAsString(System.String)">
+            <summary>
+                Gets a content entry as a string value, given its <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the content entry.</param>
+            <returns>The string value of the content entry.</returns>
+            <exception cref="T:ContentProvider.ContentException">
+                Thrown if the content entry is not found in this content set.
+            </exception>
+        </member>
+        <member name="P:ContentProvider.ContentSet.Sources">
+            <summary>
+                Gets the list of content sources registered with this content set.
+            </summary>
+        </member>
         <member name="T:ContentProvider.ContentSource">
             <summary>
                 Represents a source from which to retrieve content.
@@ -26,6 +53,17 @@
             <returns>
                 A tuple indicating whether the content item could be loaded, and if so, the string
                 content itself.
+            </returns>
+        </member>
+        <member name="M:ContentProvider.ContentSource.TryLoadAsBinary(System.String)">
+            <summary>
+                Attempts to load an item from the content source as a byte array, given its
+                <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the content item to retrieve.</param>
+            <returns>
+                A tuple indicating whether the content item could be loaded, and if so, the byte
+                array content itself.
             </returns>
         </member>
         <member name="T:ContentProvider.Errors">
