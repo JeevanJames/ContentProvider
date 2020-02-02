@@ -13,7 +13,7 @@ environment:
     secure: 3tEiaoqZlTJcJkAX+3wWyp3mbCYuJpALEFzTEaum6ACiXbWgsa1kWYGBi3TUFY7c
 
 build_script:
-  - ps: .\build.ps1 -target Test
+  - ps: .\build.ps1
 
 test: off
 
