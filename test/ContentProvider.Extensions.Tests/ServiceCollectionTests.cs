@@ -37,8 +37,8 @@ namespace ContentProvider.Tests
             _fixture = fixture;
         }
 
-        [Fact]
-        public async Task Can_inject_service_manager_and_retrieve_content()
+        [Fact(DisplayName = "Can inject content manager and retrieve content")]
+        public async Task Can_inject_content_manager_and_retrieve_content()
         {
             var manager = _fixture.ServiceProvider.GetService<IContentManager>();
             manager.ShouldNotBeNull();
@@ -50,7 +50,7 @@ namespace ContentProvider.Tests
             value.ShouldBe("This is the content.");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Can inject content set with attribute")]
         public async Task Can_inject_content_set_with_attribute()
         {
             var textContentSet = _fixture.ServiceProvider.GetService<TextContentSet>();
@@ -60,7 +60,7 @@ namespace ContentProvider.Tests
             value.ShouldBe("This is the content.");
         }
 
-        [Fact]
+        [Fact(DisplayName = "Can inject content set with name")]
         public async Task Can_inject_content_set_with_name()
         {
             var jsonContentSet = _fixture.ServiceProvider.GetService<JsonContentSet>();
