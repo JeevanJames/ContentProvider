@@ -1,9 +1,14 @@
-mode: ContinuousDelivery
+mode: Mainline
+continuous-delivery-fallback-tag: ''
 branches:
   develop:
     tag: beta
   master:
     increment: Minor
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: true
 ignore:
   sha: []
 merge-message-formats: {}
