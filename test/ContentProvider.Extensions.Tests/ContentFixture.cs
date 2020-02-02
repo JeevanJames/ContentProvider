@@ -29,13 +29,14 @@ namespace ContentProvider.Tests
     {
         public ContentFixture()
         {
-            IServiceCollection services = new ServiceCollection();
-            services.AddContentProvider("Text", b => b
-                .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace));
-            services.AddContentProvider("Json", b => b
-                .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"));
-            services.AddContentSet<TextContentSet>();
-            services.AddContentSet<JsonContentSet>("Json");
+            IServiceCollection services = new ServiceCollection()
+                .AddContentProvider("Text", b => b
+                    .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace))
+                .AddContentProvider("Json", b => b
+                    .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"))
+                .AddContentSet<TextContentSet>()
+                .AddContentSet<JsonContentSet>("Json");
+
             ServiceProvider = services.BuildServiceProvider();
         }
 

@@ -58,15 +58,15 @@ Task("Publish")
     .IsDependentOn("Test")
     .Does(() =>
     {
+        // Only run on AppVeyor
         if (!BuildSystem.IsRunningOnAppVeyor)
         {
             Error("Need to be running on AppVeyor to publish.");
             return;
         }
 
+        // Clean nuget output path
         var outputDir = new DirectoryPath("./nuget");
-        var projects = new string[] { "ContentProvider", "ContentProvider.Extensions" };
-
         CleanDirectory(outputDir);
 
         var packSettings = new DotNetCorePackSettings
@@ -78,23 +78,33 @@ Task("Publish")
             ArgumentCustomization = args => args.Append($"/p:Version={version}")
         };
 
+        // Package the src projects
+        var projects = new string[] { "ContentProvider", "ContentProvider.Extensions" };
         foreach (string project in projects)
             DotNetCorePack($"./src/{project}/{project}.csproj", packSettings);
 
-        string source, apiKey;
+        //Figure out the feed sources and API keys.
+        string source, apiKey, symbolSource, symbolApiKey;
         if (isPrerelease)
         {
+            // Pre-release version, so publish to MyGet
             source = EnvironmentVariable("MYGET_SOURCE");
             apiKey = EnvironmentVariable("MYGET_APIKEY");
+            symbolSource = EnvironmentVariable("MYGET_SYMBOL_SOURCE");
+            symbolApiKey = EnvironmentVariable("MYGET_SYMBOL_APIKEY");
             Information($"Publishing to MyGet - {source}");
         }
         else
         {
+            // Release version, so publish to NuGet
             source = EnvironmentVariable("NUGET_SOURCE");
             apiKey = EnvironmentVariable("NUGET_APIKEY");
+            symbolSource = EnvironmentVariable("NUGET_SYMBOL_SOURCE");
+            symbolApiKey = EnvironmentVariable("NUGET_SYMBOL_APIKEY");
             Information($"Publishing to NuGet - {source}");
         }
 
+        // Find all created .nupkg files (not symbols)
         var packageFiles = GetFiles("./nuget/*.nupkg", new GlobberSettings
         {
             FilePredicate = file => !file.Path.FullPath.EndsWith(".symbols.nupkg", StringComparison.OrdinalIgnoreCase),
@@ -102,12 +112,16 @@ Task("Publish")
 
         foreach (var packageFile in packageFiles)
         {
+            // Upload the package as an AppVeyor artifact
             AppVeyor.UploadArtifact(packageFile);
         
+            // Publish the package to the feed
             DotNetCoreNuGetPush(packageFile.FullPath, new DotNetCoreNuGetPushSettings
             {
                 ApiKey = apiKey,
                 Source = source,
+                SymbolSource = symbolSource,
+                SymbolApiKey = symbolApiKey,
             });
         }
     });

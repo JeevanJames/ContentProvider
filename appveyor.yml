@@ -12,6 +12,9 @@ environment:
   MYGET_SOURCE: https://www.myget.org/F/jeevanjames/api/v3/index.json
   MYGET_APIKEY:
     secure: 3tEiaoqZlTJcJkAX+3wWyp3mbCYuJpALEFzTEaum6ACiXbWgsa1kWYGBi3TUFY7c
+  MYGET_SYMBOL_SOURCE: https://www.myget.org/F/jeevanjames/symbols/api/v2/package
+  MYGET_SYMBOL_APIKEY:
+    secure: 3tEiaoqZlTJcJkAX+3wWyp3mbCYuJpALEFzTEaum6ACiXbWgsa1kWYGBi3TUFY7c
 
 build_script:
   - ps: .\build.ps1
