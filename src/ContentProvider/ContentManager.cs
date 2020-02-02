@@ -25,22 +25,30 @@ namespace ContentProvider
 {
     public static class ContentManager
     {
-        private static readonly Dictionary<string, ContentSet> _contents = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, ContentSet> _contentSets = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
 
         public static void Register(string name, params ContentSource[] sources)
         {
             var contentSet = new ContentSet(name);
             foreach (ContentSource source in sources)
                 contentSet.Sources.Add(source);
-            _contents.Add(name, contentSet);
+            _contentSets.Add(name, contentSet);
+        }
+
+        public static void Register(string name, Action<ContentBuilder> builderSetup)
+        {
+            var builder = new ContentBuilder();
+            builderSetup(builder);
+            ContentSource[] sources = builder.Build();
+
+            Register(name, sources);
         }
 
         public static ContentSet Get(string name)
         {
-            if (!_contents.TryGetValue(name, out ContentSet contentSet))
-                throw new ArgumentException($"Could not find content named {name}.", nameof(name));
-
-            return contentSet;
+            return _contentSets.TryGetValue(name, out ContentSet contentSet)
+                ? contentSet
+                : throw new ArgumentException($"Could not find a content set named {name}.", nameof(name));
         }
 
         public static async Task<string> Get(string name, string entryName)
