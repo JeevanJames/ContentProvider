@@ -1,0 +1,33 @@
+image: Visual Studio 2019
+
+version: 1.0.0-{branch}+{build}
+
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+  NUGET_APIKEY:
+    secure: j4h+o37uqm7LmUncRqQ7KA/M6dBZVo07idthknTFF/k1aVO+MbfT1EecNEJqjPoR
+  MYGET_SOURCE: https://www.myget.org/F/jeevanjames/api/v3/index.json
+  MYGET_APIKEY:
+    secure: 3tEiaoqZlTJcJkAX+3wWyp3mbCYuJpALEFzTEaum6ACiXbWgsa1kWYGBi3TUFY7c
+
+build_script:
+  - ps: .\build.ps1 -target Test
+
+test: off
+
+branches:
+  only:
+    - master
+    - develop
+
+skip_commits:
+  files:
+    - .editorconfig
+    - .gitattributes
+    - .gitignore
+    - ContentProvider.sln.DotSettings
+    - ContentProvider.sln.licenseheader
+    - LICENSE
+    - README.md
