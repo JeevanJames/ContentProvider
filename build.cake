@@ -20,10 +20,10 @@ Task("Version")
         Information($"Branch: {gitVersion.BranchName}");
 
         isPrerelease = !string.IsNullOrWhiteSpace(gitVersion.PreReleaseTag);
-        
+
         if (BuildSystem.AppVeyor.IsRunningOnAppVeyor)
         {
-            version = $"{gitVersion}+{AppVeyor.Environment.Build.Number}";
+            version = $"{gitVersion.SemVer}+{AppVeyor.Environment.Build.Number}";
             AppVeyor.UpdateBuildVersion(version);
         }
         else
