@@ -69,7 +69,7 @@ Task("Publish")
 
         CleanDirectory(outputDir);
 
-        var settings = new DotNetCorePackSettings
+        var packSettings = new DotNetCorePackSettings
         {
             Configuration = configuration,
             IncludeSource = true,
@@ -79,18 +79,37 @@ Task("Publish")
         };
 
         foreach (string project in projects)
-        {
-            DotNetCorePack($"./src/{project}/{project}.csproj", settings);
+            DotNetCorePack($"./src/{project}/{project}.csproj", packSettings);
 
-            if (isPrerelease)
-                Information($"Publishing to MyGet - {EnvironmentVariable("MYGET_SOURCE")}");
-            else
-                Information($"Publishing to NuGet - {EnvironmentVariable("NUGET_SOURCE")}");
+        string source, apiKey;
+        if (isPrerelease)
+        {
+            source = EnvironmentVariable("MYGET_SOURCE");
+            apiKey = EnvironmentVariable("MYGET_APIKEY");
+            Information($"Publishing to MyGet - {source}");
+        }
+        else
+        {
+            source = EnvironmentVariable("NUGET_SOURCE");
+            apiKey = EnvironmentVariable("NUGET_APIKEY");
+            Information($"Publishing to NuGet - {source}");
         }
 
-        var packageFiles = GetFiles("./nuget/*.nupkg");
+        var packageFiles = GetFiles("./nuget/*.nupkg", new GlobberSettings
+        {
+            Predicate = fsi => !fsi.Path.FullPath.EndsWith(".symbols.nupkg", StringComparison.OrdinalIgnoreCase)
+        });
+
         foreach (var packageFile in packageFiles)
+        {
             AppVeyor.UploadArtifact(packageFile);
+        
+            DotNetCoreNuGetPush(packageFile.FullPath, new DotNetCoreNuGetPushSettings
+            {
+                ApiKey = apiKey,
+                Source = source,
+            });
+        }
     });
 
 RunTarget(target);
