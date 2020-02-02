@@ -116,13 +116,18 @@ Task("Publish")
             AppVeyor.UploadArtifact(packageFile);
         
             // Publish the package to the feed
-            DotNetCoreNuGetPush(packageFile.FullPath, new DotNetCoreNuGetPushSettings
+            var pushSettings = new DotNetCoreNuGetPushSettings
             {
                 ApiKey = apiKey,
                 Source = source,
-                SymbolSource = symbolSource,
-                SymbolApiKey = symbolApiKey,
-            });
+            };
+            if (isPrerelease)
+            {
+                pushSettings.SymbolSource = symbolSource;
+                pushSettings.SymbolApiKey = symbolApiKey;
+            }
+
+            DotNetCoreNuGetPush(packageFile.FullPath, pushSettings);
         }
     });
 
