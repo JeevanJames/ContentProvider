@@ -68,22 +68,22 @@ namespace ContentProvider
 
         public static IServiceCollection AddFileContent(this IServiceCollection services,
             string fileExtension,
-            string rootNamespace,
-            string baseDirectory = null)
+            string baseDirectory,
+            string rootNamespace)
         {
             if (string.IsNullOrWhiteSpace(fileExtension))
                 throw new ArgumentException(Errors.InvalidFileExtension, nameof(fileExtension));
+            if (string.IsNullOrWhiteSpace(baseDirectory))
+                throw new ArgumentException(Errors.InvalidBaseDirectory, nameof(baseDirectory));
             if (string.IsNullOrWhiteSpace(rootNamespace))
                 throw new ArgumentException(Errors.InvalidRootNamespace, nameof(rootNamespace));
-
-            if (string.IsNullOrWhiteSpace(baseDirectory))
-                baseDirectory = Directory.GetCurrentDirectory();
 
             return services.AddContent(fileExtension, builder => builder
                 .From.FilesIn(baseDirectory, new FileContentSourceOptions
                 {
                     SearchPattern = $"*.{fileExtension}",
                     SearchOption = SearchOption.AllDirectories,
+                    NameTransformer = name => name.Replace('/', '.').Replace('\\', '.'),
                 })
                 .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                 {

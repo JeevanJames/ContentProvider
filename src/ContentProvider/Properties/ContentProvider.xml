@@ -32,6 +32,16 @@
                 Thrown if the content entry is not found in this content set.
             </exception>
         </member>
+        <member name="M:ContentProvider.ContentSet.GetAsBinary(System.String)">
+            <summary>
+                Gets a content entry as a binary value (byte[]), given its <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the content entry.</param>
+            <returns>The byte[] value of the content entry.</returns>
+            <exception cref="T:ContentProvider.ContentException">
+                Thrown if the content entry is not found in this content set.
+            </exception>
+        </member>
         <member name="P:ContentProvider.ContentSet.Sources">
             <summary>
                 Gets the list of content sources registered with this content set.

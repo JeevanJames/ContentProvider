@@ -120,6 +120,9 @@
   <data name="CannotAssignInternalContentSet" xml:space="preserve">
     <value>Cannot assign the internal content set property.</value>
   </data>
+  <data name="InvalidBaseDirectory" xml:space="preserve">
+    <value>Specify a valid base directory.</value>
+  </data>
   <data name="InvalidFileExtension" xml:space="preserve">
     <value>Specify a valid file extension.</value>
   </data>

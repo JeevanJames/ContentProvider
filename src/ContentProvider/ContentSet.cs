@@ -61,7 +61,8 @@ namespace ContentProvider
         {
             foreach (ContentSource source in Sources)
             {
-                (bool success, string? content) = await source.TryLoadAsString(name).ConfigureAwait(false);
+                (bool success, string? content) = await source.TryLoadAsString(name)
+                    .ConfigureAwait(false);
                 if (success)
                     return content!;
             }
@@ -69,6 +70,33 @@ namespace ContentProvider
             throw new ContentException(string.Format(CultureInfo.CurrentCulture,
                 Errors.ContentEntryNotFound, name, Name));
         }
+
+        /// <summary>
+        ///     Gets a content entry as a binary value (byte[]), given its <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the content entry.</param>
+        /// <returns>The byte[] value of the content entry.</returns>
+        /// <exception cref="ContentException">
+        ///     Thrown if the content entry is not found in this content set.
+        /// </exception>
+        public async Task<byte[]> GetAsBinary(string name)
+        {
+            foreach (ContentSource source in Sources)
+            {
+                (bool success, byte[]? content) = await source.TryLoadAsBinary(name)
+                    .ConfigureAwait(false);
+                if (success)
+                    return content!;
+            }
+
+            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+                Errors.ContentEntryNotFound, name, Name));
+        }
+
+        //public IEnumerable<string> GetNames()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         /// <summary>
         ///     Gets the list of content sources registered with this content set.

@@ -25,6 +25,11 @@
               Looks up a localized string similar to Cannot assign the internal content set property..
             </summary>
         </member>
+        <member name="P:ContentProvider.Errors.InvalidBaseDirectory">
+            <summary>
+              Looks up a localized string similar to Specify a valid base directory..
+            </summary>
+        </member>
         <member name="P:ContentProvider.Errors.InvalidFileExtension">
             <summary>
               Looks up a localized string similar to Specify a valid file extension..
