@@ -30,12 +30,10 @@ namespace ContentProvider.Tests
         public ContentFixture()
         {
             IServiceCollection services = new ServiceCollection()
-                .AddContentProvider("Text", b => b
+                .AddContent<TextContentSet>("Text", b => b
                     .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace))
-                .AddContentProvider("Json", b => b
-                    .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"))
-                .AddContentSet<TextContentSet>()
-                .AddContentSet<JsonContentSet>("Json");
+                .AddContent<JsonContentSet>("Json", b => b
+                    .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"));
 
             ServiceProvider = services.BuildServiceProvider();
         }

@@ -18,31 +18,28 @@ limitations under the License.
 #endregion
 
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ContentProvider
 {
     public abstract class ContentSetBase : IContentSet
     {
-        private readonly ContentSet _contentSet;
-
-        protected ContentSetBase()
-        {
-            ContentSetAttribute attribute = GetType().GetCustomAttribute<ContentSetAttribute>(false);
-            if (attribute is null)
-                throw new InvalidOperationException($"Decorate the ${GetType().FullName} class with a {typeof(ContentSetAttribute).FullName} attribute to indicate the name of the content to load.");
-            _contentSet = ContentManager.Get(attribute.Name);
-        }
-
-        protected ContentSetBase(string name)
-        {
-            _contentSet = ContentManager.Get(name);
-        }
+        private ContentSet _contentSet;
 
         public Task<string> GetAsString(string name)
         {
             return _contentSet.GetAsString(name);
+        }
+
+        public ContentSet ContentSet
+        {
+            get => _contentSet;
+            set
+            {
+                if (_contentSet != null)
+                    throw new InvalidOperationException(Errors.CannotAssignInternalContentSet);
+                _contentSet = value;
+            }
         }
     }
 }

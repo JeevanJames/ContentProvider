@@ -73,16 +73,11 @@ namespace ContentProvider.Tests
         }
     }
 
-    [ContentSet("Text")]
     public sealed class TextContentSet : ContentSetBase
     {
     }
 
     public sealed class JsonContentSet : ContentSetBase
     {
-        public JsonContentSet(string name)
-            : base(name)
-        {
-        }
     }
 }

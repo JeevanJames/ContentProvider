@@ -61,6 +61,15 @@ namespace ContentProvider {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot assign the internal content set property..
+        /// </summary>
+        internal static string CannotAssignInternalContentSet {
+            get {
+                return ResourceManager.GetString("CannotAssignInternalContentSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specify a valid file extension..
         /// </summary>
         internal static string InvalidFileExtension {

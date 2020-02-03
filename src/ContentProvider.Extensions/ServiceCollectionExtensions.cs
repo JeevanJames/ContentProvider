@@ -19,7 +19,6 @@ limitations under the License.
 
 using System;
 using System.IO;
-using System.Reflection;
 
 using ContentProvider.EmbeddedResources;
 using ContentProvider.Files;
@@ -30,7 +29,7 @@ namespace ContentProvider
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddContentProvider(this IServiceCollection services,
+        public static IServiceCollection AddContent(this IServiceCollection services,
             string name,
             Action<ContentBuilder> sourceBuilder)
         {
@@ -47,29 +46,24 @@ namespace ContentProvider
             return services;
         }
 
-        public static IServiceCollection AddContentSet<TContent>(this IServiceCollection services, string name)
-            where TContent : ContentSetBase
-        {
-            services.AddSingleton(_ =>
-            {
-                var constructor = Array.Find(typeof(TContent).GetConstructors(), ctor =>
-                    {
-                        ParameterInfo[] parameters = ctor.GetParameters();
-                        return parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
-                    });
-                if (constructor is null)
-                    throw new ArgumentException($"Specific content type should contain a constructor with a single string parameter.");
-
-                object contentObject = constructor.Invoke(new[] { name });
-                return (TContent)contentObject;
-            });
-            return services;
-        }
-
-        public static IServiceCollection AddContentSet<TContentSet>(this IServiceCollection services)
+        public static IServiceCollection AddContent<TContentSet>(this IServiceCollection services,
+            string name,
+            Action<ContentBuilder> sourceBuilder)
             where TContentSet : ContentSetBase, new()
         {
-            return services.AddSingleton(_ => new TContentSet());
+            services.AddContent(name, sourceBuilder);
+
+            services.AddSingleton(sp =>
+            {
+                ContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(name);
+                var contentSet = new TContentSet
+                {
+                    ContentSet = internalContentSet,
+                };
+                return contentSet;
+            });
+
+            return services;
         }
 
         public static IServiceCollection AddFileContent(this IServiceCollection services,
@@ -85,7 +79,7 @@ namespace ContentProvider
             if (string.IsNullOrWhiteSpace(baseDirectory))
                 baseDirectory = Directory.GetCurrentDirectory();
 
-            return services.AddContentProvider(fileExtension, builder =>
+            return services.AddContent(fileExtension, builder =>
                 builder
                     .From.FilesIn(baseDirectory, $"*.{fileExtension}", SearchOption.AllDirectories)
                     .From.ResourcesInExecutingAssembly(resourceFileExtension: fileExtension, rootNamespace: rootNamespace));
