@@ -20,6 +20,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,25 +28,27 @@ using System.Threading.Tasks;
 namespace ContentProvider.Files
 {
     [DebuggerDisplay("File content source: {_baseDirectory} ({_files.Count} items)")]
-    public sealed class FileContentSource : ContentSource
+    public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
     {
         private readonly string _baseDirectory;
         private readonly List<string> _files;
 
-        public FileContentSource(string baseDirectory = null,
-            string searchPattern = "*",
-            SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        public FileContentSource(string baseDirectory, FileContentSourceOptions options)
+            : base(options)
         {
-            if (baseDirectory is null)
-                baseDirectory = Directory.GetCurrentDirectory();
+            if (string.IsNullOrWhiteSpace(baseDirectory))
+                throw new ArgumentException(Errors.FilesInvalidBaseDirectory, nameof(baseDirectory));
+            if (!Directory.Exists(baseDirectory))
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.CurrentCulture, Errors.FilesMissingBaseDirectory, baseDirectory));
 
             _baseDirectory = Path.GetFullPath(baseDirectory);
-            _files = Directory.EnumerateFiles(_baseDirectory, searchPattern, searchOption)
+            _files = Directory.EnumerateFiles(_baseDirectory, Options.SearchPattern, Options.SearchOption)
                 .Select(path => path.Substring(_baseDirectory.Length + 1))
+                .Select(name => Options.NameTransformer is null ? name : Options.NameTransformer(name))
                 .ToList();
         }
 
-        public async override Task<(bool success, string content)> TryLoadAsString(string name)
+        public async override Task<(bool success, string? content)> TryLoadAsString(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -66,7 +69,7 @@ namespace ContentProvider.Files
             return (true, content);
         }
 
-        public async override Task<(bool success, byte[] content)> TryLoadAsBinary(string name)
+        public async override Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)

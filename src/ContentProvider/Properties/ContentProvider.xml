@@ -37,13 +37,6 @@
                 Gets the list of content sources registered with this content set.
             </summary>
         </member>
-        <member name="T:ContentProvider.ContentSource">
-            <summary>
-                Represents a source from which to retrieve content.
-                <para/>
-                Examples include assembly embedded resources, files, web sites, etc.
-            </summary>
-        </member>
         <member name="M:ContentProvider.ContentSource.TryLoadAsString(System.String)">
             <summary>
                 Attempts to load an item from the content source as a string, given its
@@ -66,6 +59,19 @@
                 array content itself.
             </returns>
         </member>
+        <member name="T:ContentProvider.ContentSource`1">
+            <summary>
+                Represents a source from which to retrieve content.
+                <para/>
+                Examples include assembly embedded resources, files, web sites, etc.
+            </summary>
+        </member>
+        <member name="P:ContentProvider.ContentSourceOptions.NameTransformer">
+            <summary>
+                Gets or sets an optional delegate that can be used to transform the content source
+                item names.
+            </summary>
+        </member>
         <member name="T:ContentProvider.Errors">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -85,6 +91,16 @@
         <member name="P:ContentProvider.Errors.ContentEntryNotFound">
             <summary>
               Looks up a localized string similar to Could not find content entry {0} under the {1} content..
+            </summary>
+        </member>
+        <member name="P:ContentProvider.Errors.FilesInvalidBaseDirectory">
+            <summary>
+              Looks up a localized string similar to Specify a valid base directory..
+            </summary>
+        </member>
+        <member name="P:ContentProvider.Errors.FilesMissingBaseDirectory">
+            <summary>
+              Looks up a localized string similar to The base directory {0} does not exist..
             </summary>
         </member>
         <member name="P:ContentProvider.Errors.InvalidContentSetName">

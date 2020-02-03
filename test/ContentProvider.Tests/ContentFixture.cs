@@ -28,7 +28,10 @@ namespace ContentProvider.Tests
         public ContentFixture()
         {
             ContentManager.Register("Text", new ContentBuilder()
-                .From.ResourcesInExecutingAssembly(rootNamespace: "ContentProvider.Tests")
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    RootNamespace = "ContentProvider.Tests",
+                })
                 .Build());
         }
     }

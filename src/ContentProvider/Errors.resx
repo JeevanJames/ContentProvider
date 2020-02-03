@@ -120,6 +120,12 @@
   <data name="ContentEntryNotFound" xml:space="preserve">
     <value>Could not find content entry {0} under the {1} content.</value>
   </data>
+  <data name="FilesInvalidBaseDirectory" xml:space="preserve">
+    <value>Specify a valid base directory.</value>
+  </data>
+  <data name="FilesMissingBaseDirectory" xml:space="preserve">
+    <value>The base directory {0} does not exist.</value>
+  </data>
   <data name="InvalidContentSetName" xml:space="preserve">
     <value>Specify a valid name for the content set.</value>
   </data>

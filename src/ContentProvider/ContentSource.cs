@@ -17,16 +17,12 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ContentProvider
 {
-    /// <summary>
-    ///     Represents a source from which to retrieve content.
-    ///     <para/>
-    ///     Examples include assembly embedded resources, files, web sites, etc.
-    /// </summary>
     public abstract class ContentSource
     {
         /// <summary>
@@ -38,9 +34,9 @@ namespace ContentProvider
         ///     A tuple indicating whether the content item could be loaded, and if so, the string
         ///     content itself.
         /// </returns>
-        public async virtual Task<(bool success, string content)> TryLoadAsString(string name)
+        public async virtual Task<(bool success, string? content)> TryLoadAsString(string name)
         {
-            (bool success, byte[] content) = await TryLoadAsBinary(name).ConfigureAwait(false);
+            (bool success, byte[]? content) = await TryLoadAsBinary(name).ConfigureAwait(false);
             if (!success)
                 return (false, null);
 
@@ -59,6 +55,24 @@ namespace ContentProvider
         ///     A tuple indicating whether the content item could be loaded, and if so, the byte
         ///     array content itself.
         /// </returns>
-        public abstract Task<(bool success, byte[] content)> TryLoadAsBinary(string name);
+        public abstract Task<(bool success, byte[]? content)> TryLoadAsBinary(string name);
+    }
+
+    /// <summary>
+    ///     Represents a source from which to retrieve content.
+    ///     <para/>
+    ///     Examples include assembly embedded resources, files, web sites, etc.
+    /// </summary>
+    public abstract class ContentSource<TOptions> : ContentSource
+        where TOptions : ContentSourceOptions
+    {
+        protected ContentSource(TOptions options)
+        {
+            if (options is null)
+                throw new ArgumentNullException(nameof(options));
+            Options = options;
+        }
+
+        protected TOptions Options { get; set; }
     }
 }

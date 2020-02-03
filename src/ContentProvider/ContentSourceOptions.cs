@@ -19,19 +19,14 @@ limitations under the License.
 
 using System;
 
-namespace ContentProvider.Files
+namespace ContentProvider
 {
-    public static class SourceBuilderExtensions
+    public abstract class ContentSourceOptions
     {
-        public static ContentBuilder FilesIn(this ContentSourceBuilder builder,
-            string baseDirectory, FileContentSourceOptions options)
-        {
-            if (builder is null)
-                throw new ArgumentNullException(nameof(builder));
-            if (options is null)
-                throw new ArgumentNullException(nameof(options));
-
-            return builder.Source(new FileContentSource(baseDirectory, options));
-        }
+        /// <summary>
+        ///     Gets or sets an optional delegate that can be used to transform the content source
+        ///     item names.
+        /// </summary>
+        public Func<string, string>? NameTransformer { get; set; }
     }
 }

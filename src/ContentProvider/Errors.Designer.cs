@@ -70,6 +70,24 @@ namespace ContentProvider {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specify a valid base directory..
+        /// </summary>
+        internal static string FilesInvalidBaseDirectory {
+            get {
+                return ResourceManager.GetString("FilesInvalidBaseDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The base directory {0} does not exist..
+        /// </summary>
+        internal static string FilesMissingBaseDirectory {
+            get {
+                return ResourceManager.GetString("FilesMissingBaseDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specify a valid name for the content set..
         /// </summary>
         internal static string InvalidContentSetName {

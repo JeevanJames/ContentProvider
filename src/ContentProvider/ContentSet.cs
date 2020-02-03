@@ -61,9 +61,9 @@ namespace ContentProvider
         {
             foreach (ContentSource source in Sources)
             {
-                (bool success, string content) = await source.TryLoadAsString(name).ConfigureAwait(false);
+                (bool success, string? content) = await source.TryLoadAsString(name).ConfigureAwait(false);
                 if (success)
-                    return content;
+                    return content!;
             }
 
             throw new ContentException(string.Format(CultureInfo.CurrentCulture,

@@ -17,21 +17,14 @@ limitations under the License.
 */
 #endregion
 
-using System;
+using System.IO;
 
 namespace ContentProvider.Files
 {
-    public static class SourceBuilderExtensions
+    public sealed class FileContentSourceOptions : ContentSourceOptions
     {
-        public static ContentBuilder FilesIn(this ContentSourceBuilder builder,
-            string baseDirectory, FileContentSourceOptions options)
-        {
-            if (builder is null)
-                throw new ArgumentNullException(nameof(builder));
-            if (options is null)
-                throw new ArgumentNullException(nameof(options));
+        public string SearchPattern { get; set; } = "*";
 
-            return builder.Source(new FileContentSource(baseDirectory, options));
-        }
+        public SearchOption SearchOption { get; set; } = SearchOption.AllDirectories;
     }
 }

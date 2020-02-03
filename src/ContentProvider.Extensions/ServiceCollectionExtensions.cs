@@ -79,10 +79,17 @@ namespace ContentProvider
             if (string.IsNullOrWhiteSpace(baseDirectory))
                 baseDirectory = Directory.GetCurrentDirectory();
 
-            return services.AddContent(fileExtension, builder =>
-                builder
-                    .From.FilesIn(baseDirectory, $"*.{fileExtension}", SearchOption.AllDirectories)
-                    .From.ResourcesInExecutingAssembly(resourceFileExtension: fileExtension, rootNamespace: rootNamespace));
+            return services.AddContent(fileExtension, builder => builder
+                .From.FilesIn(baseDirectory, new FileContentSourceOptions
+                {
+                    SearchPattern = $"*.{fileExtension}",
+                    SearchOption = SearchOption.AllDirectories,
+                })
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    FileExtension = fileExtension,
+                    RootNamespace = rootNamespace,
+                }));
         }
     }
 }

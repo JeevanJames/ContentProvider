@@ -31,9 +31,16 @@ namespace ContentProvider.Tests
         {
             IServiceCollection services = new ServiceCollection()
                 .AddContent<TextContentSet>("Text", b => b
-                    .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace))
+                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                    {
+                        RootNamespace = typeof(ServiceCollectionTests).Namespace,
+                    }))
                 .AddContent<JsonContentSet>("Json", b => b
-                    .From.ResourcesInExecutingAssembly(rootNamespace: typeof(ServiceCollectionTests).Namespace, resourceFileExtension: "json"));
+                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                    {
+                        RootNamespace = typeof(ServiceCollectionTests).Namespace,
+                        FileExtension = "json",
+                    }));
 
             ServiceProvider = services.BuildServiceProvider();
         }

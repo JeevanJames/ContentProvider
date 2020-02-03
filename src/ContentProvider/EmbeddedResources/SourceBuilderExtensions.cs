@@ -19,29 +19,34 @@ limitations under the License.
 
 using System;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace ContentProvider.EmbeddedResources
 {
     public static class SourceBuilderExtensions
     {
         public static ContentBuilder ResourcesInExecutingAssembly(this ContentSourceBuilder builder,
-            Regex resourceNameMatcher = null,
-            string resourceFileExtension = null,
-            string rootNamespace = null)
+            EmbeddedResourceContentSourceOptions options)
         {
             if (builder is null)
                 throw new ArgumentNullException(nameof(builder));
+            if (options is null)
+                throw new ArgumentNullException(nameof(options));
+
             return builder.Source(new EmbeddedResourceContentSource(
-                new[] { Assembly.GetCallingAssembly() },
-                resourceNameMatcher, resourceFileExtension, rootNamespace));
+                new[] { Assembly.GetCallingAssembly() }, options));
         }
 
-        public static ContentBuilder ResourcesIn(this ContentSourceBuilder builder, params Assembly[] assemblies)
+        public static ContentBuilder ResourcesIn(this ContentSourceBuilder builder, Assembly assembly,
+            EmbeddedResourceContentSourceOptions options)
         {
             if (builder is null)
                 throw new ArgumentNullException(nameof(builder));
-            return builder.Source(new EmbeddedResourceContentSource(assemblies));
+            if (assembly is null)
+                throw new ArgumentNullException(nameof(assembly));
+            if (options is null)
+                throw new ArgumentNullException(nameof(options));
+
+            return builder.Source(new EmbeddedResourceContentSource(new[] { assembly }, options));
         }
     }
 }

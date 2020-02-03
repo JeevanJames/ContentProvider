@@ -17,21 +17,16 @@ limitations under the License.
 */
 #endregion
 
-using System;
+using System.Text.RegularExpressions;
 
-namespace ContentProvider.Files
+namespace ContentProvider.EmbeddedResources
 {
-    public static class SourceBuilderExtensions
+    public sealed class EmbeddedResourceContentSourceOptions : ContentSourceOptions
     {
-        public static ContentBuilder FilesIn(this ContentSourceBuilder builder,
-            string baseDirectory, FileContentSourceOptions options)
-        {
-            if (builder is null)
-                throw new ArgumentNullException(nameof(builder));
-            if (options is null)
-                throw new ArgumentNullException(nameof(options));
+        public string? FileExtension { get; set; }
 
-            return builder.Source(new FileContentSource(baseDirectory, options));
-        }
+        public Regex? NameMatcher { get; set; }
+
+        public string? RootNamespace { get; set; }
     }
 }

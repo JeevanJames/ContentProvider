@@ -29,44 +29,52 @@ using System.Threading.Tasks;
 namespace ContentProvider.EmbeddedResources
 {
     [DebuggerDisplay("Embedded resources content source ({_resources.Count} items)")]
-    public sealed class EmbeddedResourceContentSource : ContentSource
+    public sealed class EmbeddedResourceContentSource : ContentSource<EmbeddedResourceContentSourceOptions>
     {
         private readonly Dictionary<string, ResourceDetail> _resources = new Dictionary<string, ResourceDetail>();
 
         public EmbeddedResourceContentSource(IEnumerable<Assembly> assemblies,
-            Regex resourceNameMatcher = null,
-            string resourceFileExtension = null,
-            string rootNamespace = null)
+            EmbeddedResourceContentSourceOptions options)
+            : base(options)
         {
             if (assemblies is null)
                 throw new ArgumentNullException(nameof(assemblies));
-            DiscoverResources(assemblies, resourceNameMatcher, resourceFileExtension, rootNamespace);
+            DiscoverResources(assemblies);
         }
 
-        private void DiscoverResources(IEnumerable<Assembly> assemblies,
-            Regex resourceNameMatcher, string resourceFileExtension, string rootNamespace)
+        public EmbeddedResourceContentSource(IEnumerable<Assembly> assemblies, string rootNamespace)
+            : this(assemblies, new EmbeddedResourceContentSourceOptions
+            {
+                RootNamespace = rootNamespace,
+            })
         {
-            var contentNameGetter = string.IsNullOrWhiteSpace(rootNamespace)
+        }
+
+        private void DiscoverResources(IEnumerable<Assembly> assemblies)
+        {
+            var contentNameGetter = string.IsNullOrWhiteSpace(Options.RootNamespace)
                 ? (Func<string, string>)(res => res)
-                : res => res.Substring(rootNamespace.Length + 1);
+                : res => res.Substring(Options.RootNamespace!.Length + 1);
 
             foreach (Assembly assembly in assemblies)
             {
                 IEnumerable<string> resourceNames = assembly.GetManifestResourceNames();
-                if (resourceNameMatcher != null)
-                    resourceNames = resourceNames.Where(res => resourceNameMatcher.IsMatch(res));
-                if (!string.IsNullOrWhiteSpace(resourceFileExtension))
-                    resourceNames = resourceNames.Where(res => res.EndsWith($".{resourceFileExtension}", System.StringComparison.OrdinalIgnoreCase));
+                if (Options.NameMatcher != null)
+                    resourceNames = resourceNames.Where(res => Options.NameMatcher.IsMatch(res));
+                if (!string.IsNullOrWhiteSpace(Options.FileExtension))
+                    resourceNames = resourceNames.Where(res => res.EndsWith($".{Options.FileExtension}", StringComparison.OrdinalIgnoreCase));
 
                 foreach (string resourceName in resourceNames.ToList())
                 {
-                    string contentName = contentNameGetter(resourceName);
+                    string contentName = Options.NameTransformer is null
+                        ? contentNameGetter(resourceName)
+                        : Options.NameTransformer(contentNameGetter(resourceName));
                     _resources.Add(contentName, new ResourceDetail(assembly, resourceName));
                 }
             }
         }
 
-        public async override Task<(bool success, string content)> TryLoadAsString(string name)
+        public async override Task<(bool success, string? content)> TryLoadAsString(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
@@ -82,7 +90,7 @@ namespace ContentProvider.EmbeddedResources
             return (true, content);
         }
 
-        public async override Task<(bool success, byte[] content)> TryLoadAsBinary(string name)
+        public async override Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
