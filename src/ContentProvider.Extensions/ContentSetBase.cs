@@ -31,7 +31,12 @@ namespace ContentProvider
             return _contentSet.GetAsString(name);
         }
 
-        public ContentSet ContentSet
+        public Task<byte[]> GetAsBinary(string name)
+        {
+            return _contentSet.GetAsBinary(name);
+        }
+
+        internal ContentSet ContentSet
         {
             get => _contentSet;
             set

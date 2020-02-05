@@ -93,11 +93,6 @@ namespace ContentProvider
                 Errors.ContentEntryNotFound, name, Name));
         }
 
-        //public IEnumerable<string> GetNames()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         /// <summary>
         ///     Gets the list of content sources registered with this content set.
         /// </summary>

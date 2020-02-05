@@ -68,15 +68,15 @@ namespace ContentProvider
 
         public static IServiceCollection AddFileContent(this IServiceCollection services,
             string fileExtension,
-            string baseDirectory,
-            string rootNamespace)
+            string rootNamespace,
+            string baseDirectory = null)
         {
             if (string.IsNullOrWhiteSpace(fileExtension))
                 throw new ArgumentException(Errors.InvalidFileExtension, nameof(fileExtension));
-            if (string.IsNullOrWhiteSpace(baseDirectory))
-                throw new ArgumentException(Errors.InvalidBaseDirectory, nameof(baseDirectory));
             if (string.IsNullOrWhiteSpace(rootNamespace))
                 throw new ArgumentException(Errors.InvalidRootNamespace, nameof(rootNamespace));
+            if (string.IsNullOrWhiteSpace(baseDirectory))
+                baseDirectory = Directory.GetCurrentDirectory();
 
             return services.AddContent(fileExtension, builder => builder
                 .From.FilesIn(baseDirectory, new FileContentSourceOptions
@@ -90,6 +90,17 @@ namespace ContentProvider
                     FileExtension = fileExtension,
                     RootNamespace = rootNamespace,
                 }));
+        }
+
+        public static IServiceCollection AddFileContent<TContentSet>(this IServiceCollection services,
+            string fileExtension,
+            string rootNamespace = null,
+            string baseDirectory = null)
+            where TContentSet : ContentSetBase
+        {
+            if (string.IsNullOrWhiteSpace(rootNamespace))
+                rootNamespace = typeof(TContentSet).Namespace;
+            return AddFileContent(services, fileExtension, rootNamespace, baseDirectory);
         }
     }
 }

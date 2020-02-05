@@ -24,5 +24,9 @@ namespace ContentProvider
     public interface IContentSet
     {
         Task<string> GetAsString(string name);
+
+        Task<byte[]> GetAsBinary(string name);
+
+        //TODO: GetRandom methods
     }
 }
