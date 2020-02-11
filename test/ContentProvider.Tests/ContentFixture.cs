@@ -33,6 +33,13 @@ namespace ContentProvider.Tests
                     RootNamespace = "ContentProvider.Tests",
                 })
                 .Build());
+            ContentManager.Register("Json", new ContentBuilder()
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    FileExtension = "json",
+                    RootNamespace = "ContentProvider.Tests",
+                })
+                .Build());
         }
     }
 

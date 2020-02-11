@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7F8945CB-611E-420B-940D-A3A914041C4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentProvider", "src\ContentProvider\ContentProvider.csproj", "{B43A5EE1-6452-40F0-9E25-FDC30270157A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentProvider", "src\ContentProvider\ContentProvider.csproj", "{B43A5EE1-6452-40F0-9E25-FDC30270157A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B04F235D-A25F-4A9D-B3A0-56CD308B97F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentProvider.Tests", "test\ContentProvider.Tests\ContentProvider.Tests.csproj", "{DBC65CFA-5CF1-4171-B8C1-62F52B869C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentProvider.Tests", "test\ContentProvider.Tests\ContentProvider.Tests.csproj", "{DBC65CFA-5CF1-4171-B8C1-62F52B869C03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentProvider.Extensions", "src\ContentProvider.Extensions\ContentProvider.Extensions.csproj", "{6B55564E-D95A-458C-87AD-480480321199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentProvider.Extensions", "src\ContentProvider.Extensions\ContentProvider.Extensions.csproj", "{6B55564E-D95A-458C-87AD-480480321199}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentProvider.Extensions.Tests", "test\ContentProvider.Extensions.Tests\ContentProvider.Extensions.Tests.csproj", "{F3BC4643-3E92-44E8-A18B-63D728FDFE34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentProvider.Extensions.Tests", "test\ContentProvider.Extensions.Tests\ContentProvider.Extensions.Tests.csproj", "{F3BC4643-3E92-44E8-A18B-63D728FDFE34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentProvider.Formats.Json", "src\ContentProvider.Formats.Json\ContentProvider.Formats.Json.csproj", "{601F5527-CB27-4B99-87C5-31EAE25AE7F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,9 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B43A5EE1-6452-40F0-9E25-FDC30270157A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -76,11 +75,30 @@ Global
 		{F3BC4643-3E92-44E8-A18B-63D728FDFE34}.Release|x64.Build.0 = Release|Any CPU
 		{F3BC4643-3E92-44E8-A18B-63D728FDFE34}.Release|x86.ActiveCfg = Release|Any CPU
 		{F3BC4643-3E92-44E8-A18B-63D728FDFE34}.Release|x86.Build.0 = Release|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Release|x64.Build.0 = Release|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B43A5EE1-6452-40F0-9E25-FDC30270157A} = {7F8945CB-611E-420B-940D-A3A914041C4D}
 		{DBC65CFA-5CF1-4171-B8C1-62F52B869C03} = {B04F235D-A25F-4A9D-B3A0-56CD308B97F1}
 		{6B55564E-D95A-458C-87AD-480480321199} = {7F8945CB-611E-420B-940D-A3A914041C4D}
 		{F3BC4643-3E92-44E8-A18B-63D728FDFE34} = {B04F235D-A25F-4A9D-B3A0-56CD308B97F1}
+		{601F5527-CB27-4B99-87C5-31EAE25AE7F5} = {7F8945CB-611E-420B-940D-A3A914041C4D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5BCC3B8-3704-4903-AD43-AF9E7927DC9B}
 	EndGlobalSection
 EndGlobal

@@ -18,6 +18,7 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)resources/Content.json" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)resources/Content.txt" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)resources/CustomListEntry.json" />
   </ItemGroup>
 
 </Project>

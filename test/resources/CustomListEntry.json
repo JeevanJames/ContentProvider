@@ -1,0 +1,20 @@
+[
+  {
+    "Inputs": [ "Flash", 2 ],
+    "Data": {
+      "Name": "Barry Allen"
+    }
+  },
+  {
+    "Inputs": [ "Flash", 3 ],
+    "Data": {
+      "Name": "Wally West"
+    }
+  },
+  {
+    "Inputs": [ "Superman", 1 ],
+    "Data": {
+      "Name": "Clark Kent"
+    }
+  }
+]
