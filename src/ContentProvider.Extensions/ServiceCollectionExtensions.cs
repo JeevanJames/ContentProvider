@@ -96,11 +96,24 @@ namespace ContentProvider
             string fileExtension,
             string rootNamespace = null,
             string baseDirectory = null)
-            where TContentSet : ContentSetBase
+            where TContentSet : ContentSetBase, new()
         {
             if (string.IsNullOrWhiteSpace(rootNamespace))
                 rootNamespace = typeof(TContentSet).Namespace;
-            return AddFileContent(services, fileExtension, rootNamespace, baseDirectory);
+
+            services.AddFileContent(fileExtension, rootNamespace, baseDirectory);
+
+            services.AddSingleton(sp =>
+            {
+                ContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(fileExtension);
+                var contentSet = new TContentSet
+                {
+                    ContentSet = internalContentSet,
+                };
+                return contentSet;
+            });
+
+            return services;
         }
     }
 }
