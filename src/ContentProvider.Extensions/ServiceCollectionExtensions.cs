@@ -69,7 +69,8 @@ namespace ContentProvider
         public static IServiceCollection AddFileContent(this IServiceCollection services,
             string fileExtension,
             string rootNamespace,
-            string baseDirectory = null)
+            string baseDirectory = null,
+            Action<ContentBuilder> sourceBuilder = null)
         {
             if (string.IsNullOrWhiteSpace(fileExtension))
                 throw new ArgumentException(Errors.InvalidFileExtension, nameof(fileExtension));
@@ -77,8 +78,9 @@ namespace ContentProvider
                 throw new ArgumentException(Errors.InvalidRootNamespace, nameof(rootNamespace));
             if (string.IsNullOrWhiteSpace(baseDirectory))
                 baseDirectory = Directory.GetCurrentDirectory();
-
-            return services.AddContent(fileExtension, builder => builder
+            
+            sourceBuilder ??= _ => { };
+            Action<ContentBuilder> compositeBuilder = builder => sourceBuilder(builder
                 .From.FilesIn(baseDirectory, new FileContentSourceOptions
                 {
                     SearchPattern = $"*.{fileExtension}",
@@ -90,6 +92,8 @@ namespace ContentProvider
                     FileExtension = fileExtension,
                     RootNamespace = rootNamespace,
                 }));
+
+            return services.AddContent(fileExtension, compositeBuilder);
         }
 
         public static IServiceCollection AddFileContent<TContentSet>(this IServiceCollection services,
@@ -101,7 +105,12 @@ namespace ContentProvider
             if (string.IsNullOrWhiteSpace(rootNamespace))
                 rootNamespace = typeof(TContentSet).Namespace;
 
-            services.AddFileContent(fileExtension, rootNamespace, baseDirectory);
+            services.AddFileContent(fileExtension, rootNamespace, baseDirectory, builder => builder
+                .From.ResourcesIn(typeof(TContentSet).Assembly, new EmbeddedResourceContentSourceOptions
+                {
+                    FileExtension = fileExtension,
+                    RootNamespace = rootNamespace,
+                }));
 
             services.AddSingleton(sp =>
             {
