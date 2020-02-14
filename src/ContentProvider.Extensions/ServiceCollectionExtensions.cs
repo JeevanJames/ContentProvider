@@ -78,7 +78,7 @@ namespace ContentProvider
                 throw new ArgumentException(Errors.InvalidRootNamespace, nameof(rootNamespace));
             if (string.IsNullOrWhiteSpace(baseDirectory))
                 baseDirectory = Directory.GetCurrentDirectory();
-            
+
             sourceBuilder ??= _ => { };
             Action<ContentBuilder> compositeBuilder = builder => sourceBuilder(builder
                 .From.FilesIn(baseDirectory, new FileContentSourceOptions
