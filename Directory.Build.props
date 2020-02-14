@@ -16,10 +16,10 @@
 
         <!-- Package properties -->
         <Version>0.1.0</Version>
-        <Authors>Jeevan James</Authors>
-        <Company>Jeevan James</Company>
+        <Authors>Damian Kulik,Jeevan James</Authors>
+        <Company>Damian Kulik,Jeevan James</Company>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Copyright>Copyright (c) 2020 Jeevan James</Copyright>
+        <Copyright>Copyright (c) 2020 Damian Kulik, Jeevan James</Copyright>
         <Product>Content Provider</Product>
         <PackageProjectUrl>https://github.com/JeevanJames/$(ProductId)/</PackageProjectUrl>
         <PackageIconUrl>https://github.com/JeevanJames/$(ProductId)/raw/master/Logo.png</PackageIconUrl>
