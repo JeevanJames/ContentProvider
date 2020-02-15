@@ -40,5 +40,33 @@
               Looks up a localized string similar to Specify a valid root namespace for the embedded resources..
             </summary>
         </member>
+        <member name="M:ContentProvider.ServiceCollectionExtensions.AddFileContentWithFallbackToResources``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String)">
+            <summary>
+                Shortcut method to register content from the typical sources, namely files on the file
+                system, with a fallback to embedded resources.
+                <para/>
+                This method will take care to normalize the content names for the files and resources,
+                so that they match each other, thereby allowing for a clean fallback.
+            </summary>
+            <typeparam name="TContentSet">The content set class to register with the DI container.</typeparam>
+            <param name="services">The services collection.</param>
+            <param name="fileExtension">
+                The file extension (without the dot) of the files and resources to register.
+            </param>
+            <param name="rootNamespace">
+                The root namespace of the embedded resources. This part will be stripped from the
+                content name.
+                <para/>
+                If not specified, the namespace of the content set type
+                (<typeparamref name="TContentSet"/>) will be used.
+            </param>
+            <param name="baseDirectory">
+                The base directory under which to find the file content. This should follow the same
+                hierarchy as the embedded resources to work correctly.
+                <para/>
+                If not specified, the current directory will be used.
+            </param>
+            <returns>A reference to this instance after the operation has completed.</returns>
+        </member>
     </members>
 </doc>
