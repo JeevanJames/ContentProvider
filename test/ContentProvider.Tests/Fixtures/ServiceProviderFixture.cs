@@ -18,35 +18,40 @@ limitations under the License.
 #endregion
 
 using ContentProvider.EmbeddedResources;
+using ContentProvider.Tests.Content;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-namespace ContentProvider.Tests
+namespace ContentProvider.Tests.Fixtures
 {
-    public sealed class ContentFixture
+    public sealed class ServiceProviderFixture
     {
-        public ContentFixture()
+        public ServiceProviderFixture()
         {
-            ContentManager = new ContentManager()
-                .Register("Text", builder => builder
+            IServiceCollection services = new ServiceCollection()
+                .AddContent<TextContentSet>("Text", b => b
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
-                        RootNamespace = "ContentProvider.Tests",
+                        RootNamespace = typeof(TextContentSet).Namespace,
                     }))
-                .Register("Json", builder => builder
+                .AddContent<JsonContentSet>("Json", b => b
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
+                        RootNamespace = typeof(JsonContentSet).Namespace,
                         FileExtension = "json",
-                        RootNamespace = "ContentProvider.Tests",
                     }));
+
+            ServiceProvider = services.BuildServiceProvider();
         }
 
-        public ContentManager ContentManager { get; }
+        public ServiceProvider ServiceProvider { get; }
     }
 
     [CollectionDefinition("Content")]
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public sealed class ContentCollection : ICollectionFixture<ContentFixture>
+    public sealed class ContentCollection : ICollectionFixture<ServiceProviderFixture>
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
     }

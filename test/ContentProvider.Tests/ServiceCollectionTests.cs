@@ -18,7 +18,8 @@ limitations under the License.
 #endregion
 
 using System.Threading.Tasks;
-
+using ContentProvider.Tests.Content;
+using ContentProvider.Tests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 
 using Shouldly;
@@ -30,9 +31,9 @@ namespace ContentProvider.Tests
     [Collection("Content")]
     public sealed class ServiceCollectionTests
     {
-        private readonly ContentFixture _fixture;
+        private readonly ServiceProviderFixture _fixture;
 
-        public ServiceCollectionTests(ContentFixture fixture)
+        public ServiceCollectionTests(ServiceProviderFixture fixture)
         {
             _fixture = fixture;
         }
@@ -71,13 +72,5 @@ namespace ContentProvider.Tests
 
             //value.ShouldBe("This is the content.");
         }
-    }
-
-    public sealed class TextContentSet : ContentSetBase
-    {
-    }
-
-    public sealed class JsonContentSet : ContentSetBase
-    {
     }
 }

@@ -18,39 +18,35 @@ limitations under the License.
 #endregion
 
 using ContentProvider.EmbeddedResources;
-
-using Microsoft.Extensions.DependencyInjection;
-
+using ContentProvider.Tests.Content;
 using Xunit;
 
-namespace ContentProvider.Tests
+namespace ContentProvider.Tests.Fixtures
 {
-    public sealed class ContentFixture
+    public sealed class ContentManagerFixture
     {
-        public ContentFixture()
+        public ContentManagerFixture()
         {
-            IServiceCollection services = new ServiceCollection()
-                .AddContent<TextContentSet>("Text", b => b
+            ContentManager = new ContentManager()
+                .Register("Text", builder => builder
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
-                        RootNamespace = typeof(ServiceCollectionTests).Namespace,
+                        RootNamespace = typeof(TextContentSet).Namespace,
                     }))
-                .AddContent<JsonContentSet>("Json", b => b
+                .Register("Json", builder => builder
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
-                        RootNamespace = typeof(ServiceCollectionTests).Namespace,
                         FileExtension = "json",
+                        RootNamespace = typeof(JsonContentSet).Namespace,
                     }));
-
-            ServiceProvider = services.BuildServiceProvider();
         }
 
-        public ServiceProvider ServiceProvider { get; }
+        public ContentManager ContentManager { get; }
     }
 
-    [CollectionDefinition("Content")]
+    [CollectionDefinition("ContentManager")]
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public sealed class ContentCollection : ICollectionFixture<ContentFixture>
+    public sealed class ContentManagerFixtureCollection : ICollectionFixture<ContentManagerFixture>
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     {
     }

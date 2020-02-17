@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<!--
+﻿#region --- License & Copyright Notice ---
+/*
 ContentProvider Framework
 Copyright (c) 2020 Damian Kulik, Jeevan James
 
@@ -14,12 +14,12 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
+*/
+#endregion
 
-<doc>
-    <assembly>
-        <name>ContentProvider.Tests</name>
-    </assembly>
-    <members>
-    </members>
-</doc>
+namespace ContentProvider.Tests.Content
+{
+    public sealed class JsonContentSet : ContentSetBase
+    {
+    }
+}

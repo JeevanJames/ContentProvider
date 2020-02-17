@@ -17,7 +17,10 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.Threading.Tasks;
+
+using ContentProvider.Tests.Fixtures;
 
 using Shouldly;
 
@@ -25,23 +28,22 @@ using Xunit;
 
 namespace ContentProvider.Tests
 {
-    [Collection("Content")]
+    [Collection("ContentManager")]
     public sealed class EmbeddedResourceTests
     {
-#pragma warning disable CA1801 // Unused parameter.
-#pragma warning disable RCS1163 // Unused parameter.
-#pragma warning disable IDE0060 // Remove unused parameter
-        public EmbeddedResourceTests(ContentFixture fixture)
-#pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore RCS1163 // Unused parameter.
-#pragma warning restore CA1801 // Unused parameter.
+        private readonly ContentManager _contentManager;
+
+        public EmbeddedResourceTests(ContentManagerFixture fixture)
         {
+            if (fixture is null)
+                throw new ArgumentNullException(nameof(fixture));
+            _contentManager = fixture.ContentManager;
         }
 
         [Fact]
         public async Task Able_to_load_embedded_resources()
         {
-            ContentSet content = ContentManager.Global.Get("Text");
+            ContentSet content = _contentManager.Get("Text");
             string value = await content.GetAsString("Content.txt")
                 .ConfigureAwait(false);
 

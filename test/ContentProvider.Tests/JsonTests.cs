@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 
 using ContentProvider.Formats.Json;
 using ContentProvider.Formats.Json.Structures;
+using ContentProvider.Tests.Fixtures;
 
 using Shouldly;
 
@@ -29,12 +30,12 @@ using Xunit;
 
 namespace ContentProvider.Tests
 {
-    [Collection("Content")]
+    [Collection("ContentManager")]
     public sealed class JsonTests
     {
         private readonly ContentSet _contentSet;
 
-        public JsonTests(ContentFixture fixture)
+        public JsonTests(ContentManagerFixture fixture)
         {
             if (fixture is null)
                 throw new ArgumentNullException(nameof(fixture));

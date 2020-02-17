@@ -8,6 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\Content.json" />
+    <None Remove="Content\Content.txt" />
+    <None Remove="Content\CustomListEntry.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Content.json" />
+    <EmbeddedResource Include="Content\Content.txt" />
+    <EmbeddedResource Include="Content\CustomListEntry.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ContentProvider.Extensions\ContentProvider.Extensions.csproj" />
     <ProjectReference Include="..\..\src\ContentProvider.Formats.Json\ContentProvider.Formats.Json.csproj" />
     <ProjectReference Include="..\..\src\ContentProvider\ContentProvider.csproj" />
   </ItemGroup>
