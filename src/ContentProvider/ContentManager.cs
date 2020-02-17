@@ -20,7 +20,6 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace ContentProvider
 {
@@ -56,20 +55,6 @@ namespace ContentProvider
             return _contentSets.TryGetValue(name, out ContentSet contentSet)
                 ? contentSet
                 : throw new ArgumentException($"Could not find a content set named {name}.", nameof(name));
-        }
-
-        /// <inheritdoc/>
-        public async Task<string> GetAsString(string name, string entryName)
-        {
-            IContentSet contentSet = GetContentSet(name);
-            return await contentSet.GetAsString(entryName).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        public async Task<byte[]> GetAsBinary(string name, string entryName)
-        {
-            IContentSet contentSet = GetContentSet(name);
-            return await contentSet.GetAsBinary(entryName).ConfigureAwait(false);
         }
     }
 

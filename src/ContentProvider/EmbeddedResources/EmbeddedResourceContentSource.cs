@@ -42,14 +42,6 @@ namespace ContentProvider.EmbeddedResources
             DiscoverResources(assemblies);
         }
 
-        public EmbeddedResourceContentSource(IEnumerable<Assembly> assemblies, string rootNamespace)
-            : this(assemblies, new EmbeddedResourceContentSourceOptions
-            {
-                RootNamespace = rootNamespace,
-            })
-        {
-        }
-
         private void DiscoverResources(IEnumerable<Assembly> assemblies)
         {
             var contentNameGetter = string.IsNullOrWhiteSpace(Options.RootNamespace)

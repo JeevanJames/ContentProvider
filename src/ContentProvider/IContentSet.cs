@@ -23,8 +23,18 @@ namespace ContentProvider
 {
     public interface IContentSet
     {
+        /// <summary>
+        ///     Gets the value of the content entry named <paramref name="name"/> as a string.
+        /// </summary>
+        /// <param name="name">The content entry name.</param>
+        /// <returns>The content value as a string, if found; otherwise <c>null</c>.</returns>
         Task<string> GetAsString(string name);
 
+        /// <summary>
+        ///     Gets the value of the content entry named <paramref name="name"/> as a byte array.
+        /// </summary>
+        /// <param name="name">The content entry name.</param>
+        /// <returns>The content value as a byte array, if found; otherwise <c>null</c>.</returns>
         Task<byte[]> GetAsBinary(string name);
 
         //TODO: GetRandom methods

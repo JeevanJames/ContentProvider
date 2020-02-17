@@ -27,7 +27,9 @@ namespace ContentProvider.Formats.Json
 {
     public static class ContentSetExtensions
     {
-        public static Task<T> GetAsJson<T>(this IContentSet contentSet, string name, JsonSerializerOptions? serializerOptions = null)
+        public static Task<T> GetAsJson<T>(this IContentSet contentSet,
+            string name,
+            JsonSerializerOptions? serializerOptions = null)
         {
             if (contentSet is null)
                 throw new ArgumentNullException(nameof(contentSet));
@@ -35,7 +37,9 @@ namespace ContentProvider.Formats.Json
             return contentSet.GetAsJsonInternal<T>(name, serializerOptions);
         }
 
-        private static async Task<T> GetAsJsonInternal<T>(this IContentSet contentSet, string name, JsonSerializerOptions? serializerOptions = null)
+        private static async Task<T> GetAsJsonInternal<T>(this IContentSet contentSet,
+            string name,
+            JsonSerializerOptions? serializerOptions = null)
         {
             string json = await contentSet.GetAsString(name).ConfigureAwait(false);
 
@@ -47,7 +51,9 @@ namespace ContentProvider.Formats.Json
             writer.Flush();
             ms.Position = 0;
 
-            T result = await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions).ConfigureAwait(false);
+            T result = await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
+                .ConfigureAwait(false);
+
             return result;
         }
     }

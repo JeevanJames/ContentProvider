@@ -17,10 +17,6 @@ limitations under the License.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace ContentProvider
 {
     public interface IContentManager
@@ -31,46 +27,5 @@ namespace ContentProvider
         /// <param name="name">The content set name.</param>
         /// <returns>The <see cref="IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
         IContentSet GetContentSet(string name);
-
-        /// <summary>
-        ///     Gets the value of the content entry named <paramref name="entryName"/> from the content
-        ///     set named <paramref name="name"/>, as a string.
-        /// </summary>
-        /// <param name="name">The content set name.</param>
-        /// <param name="entryName">The content entry name.</param>
-        /// <returns>The content value as a string, if found; otherwise <c>null</c>.</returns>
-        Task<string> GetAsString(string name, string entryName);
-
-        /// <summary>
-        ///     Gets the value of the content entry named <paramref name="entryName"/> from the content
-        ///     set named <paramref name="name"/>, as a byte array.
-        /// </summary>
-        /// <param name="name">The content set name.</param>
-        /// <param name="entryName">The content entry name.</param>
-        /// <returns>The content value as a byte array, if found; otherwise <c>null</c>.</returns>
-        Task<byte[]> GetAsBinary(string name, string entryName);
-    }
-
-    public static class ContentManagerExtensions
-    {
-        /// <summary>
-        ///     Gets the value of the content entry named <paramref name="entryName"/> from the content
-        ///     set named <paramref name="name"/>, as a byte collection.
-        /// </summary>
-        /// <param name="contentManager">The <see cref="IContentManager"/> instance to get the content from.</param>
-        /// <param name="name">The content set name.</param>
-        /// <param name="entryName">The content entry name.</param>
-        /// <returns>The content value as a byte collection, if found; otherwise <c>null</c>.</returns>
-        public static Task<IList<byte>> GetAsBinary(this IContentManager contentManager, string name, string entryName)
-        {
-            if (contentManager is null)
-                throw new ArgumentNullException(nameof(contentManager));
-            return contentManager.GetAsBinaryInternal(name, entryName);
-        }
-
-        private static async Task<IList<byte>> GetAsBinaryInternal(this IContentManager contentManager, string name, string entryName)
-        {
-            return await contentManager.GetAsBinary(name, entryName).ConfigureAwait(false);
-        }
     }
 }

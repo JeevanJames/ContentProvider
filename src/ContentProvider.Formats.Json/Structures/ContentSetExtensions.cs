@@ -30,14 +30,17 @@ namespace ContentProvider.Formats.Json.Structures
         public static async Task<IEnumerable<T>> GetJsonAsList<T>(this IContentSet contentSet, string name,
             Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
         {
-            IEnumerable<T> value = await contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions).ConfigureAwait(false);
+            IEnumerable<T> value = await contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions)
+                .ConfigureAwait(false);
             if (predicate != null)
                 value = value.Where(predicate);
             return value;
         }
 
-        public static Task<T> GetJsonAsListEntry<T>(this IContentSet contentSet, string name,
-            Func<T, bool> predicate, JsonSerializerOptions? serializerOptions = null)
+        public static Task<T> GetJsonAsListEntry<T>(this IContentSet contentSet,
+            string name,
+            Func<T, bool> predicate,
+            JsonSerializerOptions? serializerOptions = null)
         {
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
@@ -45,15 +48,20 @@ namespace ContentProvider.Formats.Json.Structures
             return contentSet.GetJsonAsListEntryInternal(name, predicate, serializerOptions);
         }
 
-        private static async Task<T> GetJsonAsListEntryInternal<T>(this IContentSet contentSet, string name,
-            Func<T, bool> predicate, JsonSerializerOptions? serializerOptions = null)
+        private static async Task<T> GetJsonAsListEntryInternal<T>(this IContentSet contentSet,
+            string name,
+            Func<T, bool> predicate,
+            JsonSerializerOptions? serializerOptions = null)
         {
-            IEnumerable<T> collection = await contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions).ConfigureAwait(false);
+            IEnumerable<T> collection = await contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions)
+                .ConfigureAwait(false);
             T result = collection.FirstOrDefault(predicate);
             return result;
         }
 
-        public static Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet, string name, params object[] args)
+        public static Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet,
+            string name,
+            params object[] args)
             where T : class
         {
             if (contentSet is null)
@@ -66,7 +74,9 @@ namespace ContentProvider.Formats.Json.Structures
             return contentSet.GetJsonAsCustomListEntryInternal<T>(name, args);
         }
 
-        private static async Task<T?> GetJsonAsCustomListEntryInternal<T>(this IContentSet contentSet, string name, params object[] args)
+        private static async Task<T?> GetJsonAsCustomListEntryInternal<T>(this IContentSet contentSet,
+            string name,
+            params object[] args)
             where T : class
         {
             string json = await contentSet.GetAsString(name).ConfigureAwait(false);
@@ -109,16 +119,21 @@ namespace ContentProvider.Formats.Json.Structures
             return default;
         }
 
-        public static async Task<IDictionary<string, T>> GetJsonAsDictionary<T>(this IContentSet contentSet, string name,
+        public static async Task<IDictionary<string, T>> GetJsonAsDictionary<T>(this IContentSet contentSet,
+            string name,
             JsonSerializerOptions? serializerOptions = null)
         {
             return await contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions).ConfigureAwait(false);
         }
 
-        public static async Task<T> GetJsonAsDictionaryEntry<T>(this IContentSet contentSet, string name, string key,
-            StringComparison keyComparison = StringComparison.Ordinal, JsonSerializerOptions? serializerOptions = null)
+        public static async Task<T> GetJsonAsDictionaryEntry<T>(this IContentSet contentSet,
+            string name,
+            string key,
+            StringComparison keyComparison = StringComparison.Ordinal,
+            JsonSerializerOptions? serializerOptions = null)
         {
-            var dictionary = await contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions).ConfigureAwait(false);
+            var dictionary = await contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions)
+                .ConfigureAwait(false);
             KeyValuePair<string, T> matchingEntry = dictionary.FirstOrDefault(kvp => kvp.Key.Equals(key, keyComparison));
             return matchingEntry.Value;
         }

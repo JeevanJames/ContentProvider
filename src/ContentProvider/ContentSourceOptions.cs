@@ -21,11 +21,14 @@ using System;
 
 namespace ContentProvider
 {
+    /// <summary>
+    ///     Base class for all content source options.
+    /// </summary>
     public abstract class ContentSourceOptions
     {
         /// <summary>
-        ///     Gets or sets an optional delegate that can be used to transform the content source
-        ///     item names.
+        ///     Gets or sets an optional delegate that can be used to transform the content entry names
+        ///     generated from the content source.
         /// </summary>
         public Func<string, string>? NameTransformer { get; set; }
     }

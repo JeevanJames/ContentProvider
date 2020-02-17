@@ -159,7 +159,7 @@ namespace ContentProvider
 
         private static IServiceCollection AddPredefinedContent<TContentSet>(this IServiceCollection services,
             string fileExtension,
-            Action<IServiceCollection, Type, IList<string>> registrationAction,
+            Action<IServiceCollection, Type, IList<string>> registrationAction, // Delegate contains all needed params to avoid closures
             params string[] args)
             where TContentSet : ContentSetBase, new()
         {
@@ -185,8 +185,9 @@ namespace ContentProvider
             return services;
         }
 
-        private static FileContentSourceOptions FileOptions(string fileExtension) =>
-            new FileContentSourceOptions
+        private static FileContentSourceOptions FileOptions(string fileExtension)
+        {
+            return new FileContentSourceOptions
             {
                 SearchPattern = $"*.{fileExtension}",
                 SearchOption = SearchOption.AllDirectories,
@@ -197,13 +198,16 @@ namespace ContentProvider
                     .Replace('/', '.')
                     .Replace('\\', '.'),
             };
+        }
 
-        private static EmbeddedResourceContentSourceOptions ResourceOptions(string fileExtension, string rootNamespace) =>
-            new EmbeddedResourceContentSourceOptions
+        private static EmbeddedResourceContentSourceOptions ResourceOptions(string fileExtension, string rootNamespace)
+        {
+            return new EmbeddedResourceContentSourceOptions
             {
                 FileExtension = fileExtension,
                 RootNamespace = rootNamespace,
                 NameTransformer = name => name.Substring(0, name.Length - fileExtension.Length - 1),
             };
+        }
     }
 }
