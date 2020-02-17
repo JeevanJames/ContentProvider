@@ -26,7 +26,6 @@ test: off
 
 branches:
   only:
-    - master
     - develop
 
 skip_commits:
