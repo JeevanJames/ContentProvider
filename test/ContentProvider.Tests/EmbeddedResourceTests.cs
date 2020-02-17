@@ -41,7 +41,7 @@ namespace ContentProvider.Tests
         [Fact]
         public async Task Able_to_load_embedded_resources()
         {
-            ContentSet content = ContentManager.Get("Text");
+            ContentSet content = ContentManager.Global.Get("Text");
             string value = await content.GetAsString("Content.txt")
                 .ConfigureAwait(false);
 

@@ -23,19 +23,20 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
-    public static class ContentManager
+    public sealed partial class ContentManager
     {
-        private static readonly Dictionary<string, ContentSet> _contentSets = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, ContentSet> _contentSets = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
 
-        public static void Register(string name, params ContentSource[] sources)
+        public ContentManager Register(string name, params ContentSource[] sources)
         {
             var contentSet = new ContentSet(name);
             foreach (ContentSource source in sources)
                 contentSet.Sources.Add(source);
             _contentSets.Add(name, contentSet);
+            return this;
         }
 
-        public static void Register(string name, Action<ContentBuilder> builderSetup)
+        public ContentManager Register(string name, Action<ContentBuilder> builderSetup)
         {
             if (builderSetup is null)
                 throw new ArgumentNullException(nameof(builderSetup));
@@ -44,20 +45,25 @@ namespace ContentProvider
             builderSetup(builder);
             ContentSource[] sources = builder.Build();
 
-            Register(name, sources);
+            return Register(name, sources);
         }
 
-        public static ContentSet Get(string name)
+        public ContentSet Get(string name)
         {
             return _contentSets.TryGetValue(name, out ContentSet contentSet)
                 ? contentSet
                 : throw new ArgumentException($"Could not find a content set named {name}.", nameof(name));
         }
 
-        public static async Task<string> Get(string name, string entryName)
+        public async Task<string> Get(string name, string entryName)
         {
             ContentSet contentSet = Get(name);
             return await contentSet.GetAsString(entryName).ConfigureAwait(false);
         }
+    }
+
+    public sealed partial class ContentManager
+    {
+        public static ContentManager Global { get; } = new ContentManager();
     }
 }

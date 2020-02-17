@@ -17,6 +17,7 @@ limitations under the License.
 */
 #endregion
 
+using System;
 using System.Threading.Tasks;
 
 using ContentProvider.Formats.Json;
@@ -33,15 +34,11 @@ namespace ContentProvider.Tests
     {
         private readonly ContentSet _contentSet;
 
-#pragma warning disable CA1801 // Unused parameter.
-#pragma warning disable RCS1163 // Unused parameter.
-#pragma warning disable IDE0060 // Remove unused parameter
         public JsonTests(ContentFixture fixture)
-#pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore RCS1163 // Unused parameter.
-#pragma warning restore CA1801 // Unused parameter.
         {
-            _contentSet = ContentManager.Get("Json");
+            if (fixture is null)
+                throw new ArgumentNullException(nameof(fixture));
+            _contentSet = fixture.ContentManager.Get("Json");
         }
 
         [Fact]

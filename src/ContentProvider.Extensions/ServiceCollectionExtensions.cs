@@ -43,7 +43,7 @@ namespace ContentProvider
             // Create the content builder and register it.
             var builder = new ContentBuilder();
             sourceBuilder(builder);
-            ContentManager.Register(name, builder.Build());
+            ContentManager.Global.Register(name, builder.Build());
 
             return services;
         }

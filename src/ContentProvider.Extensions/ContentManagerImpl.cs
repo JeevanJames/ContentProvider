@@ -26,9 +26,9 @@ namespace ContentProvider
 #pragma warning restore CA1812
     {
         ContentSet IContentManager.GetContentSet(string name) =>
-            ContentManager.Get(name);
+            ContentManager.Global.Get(name);
 
         async Task<string> IContentManager.GetAsString(string name, string entryName) =>
-            await ContentManager.Get(name, entryName).ConfigureAwait(false);
+            await ContentManager.Global.Get(name, entryName).ConfigureAwait(false);
     }
 }

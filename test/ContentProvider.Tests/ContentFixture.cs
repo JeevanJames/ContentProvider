@@ -27,20 +27,21 @@ namespace ContentProvider.Tests
     {
         public ContentFixture()
         {
-            ContentManager.Register("Text", new ContentBuilder()
-                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                {
-                    RootNamespace = "ContentProvider.Tests",
-                })
-                .Build());
-            ContentManager.Register("Json", new ContentBuilder()
-                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                {
-                    FileExtension = "json",
-                    RootNamespace = "ContentProvider.Tests",
-                })
-                .Build());
+            ContentManager = new ContentManager()
+                .Register("Text", builder => builder
+                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                    {
+                        RootNamespace = "ContentProvider.Tests",
+                    }))
+                .Register("Json", builder => builder
+                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                    {
+                        FileExtension = "json",
+                        RootNamespace = "ContentProvider.Tests",
+                    }));
         }
+
+        public ContentManager ContentManager { get; }
     }
 
     [CollectionDefinition("Content")]
