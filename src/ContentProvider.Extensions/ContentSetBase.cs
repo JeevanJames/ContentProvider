@@ -24,7 +24,7 @@ namespace ContentProvider
 {
     public abstract class ContentSetBase : IContentSet
     {
-        private ContentSet _contentSet;
+        private IContentSet _contentSet;
 
         public Task<string> GetAsString(string name)
         {
@@ -36,7 +36,7 @@ namespace ContentProvider
             return _contentSet.GetAsBinary(name);
         }
 
-        internal ContentSet ContentSet
+        internal IContentSet ContentSet
         {
             get => _contentSet;
             set

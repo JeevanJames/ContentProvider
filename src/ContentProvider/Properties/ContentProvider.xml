@@ -4,6 +4,15 @@
         <name>ContentProvider</name>
     </assembly>
     <members>
+        <member name="M:ContentProvider.ContentManager.GetContentSet(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ContentProvider.ContentManager.GetAsString(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:ContentProvider.ContentManager.GetAsBinary(System.String,System.String)">
+            <inheritdoc/>
+        </member>
         <member name="T:ContentProvider.ContentSet">
             <summary>
                 Represents a named set of contents, consisting of a primary content source and zero or more
@@ -117,6 +126,41 @@
             <summary>
               Looks up a localized string similar to Specify a valid name for the content set..
             </summary>
+        </member>
+        <member name="M:ContentProvider.IContentManager.GetContentSet(System.String)">
+            <summary>
+                Returns the <see cref="T:ContentProvider.IContentSet"/> with the specified <paramref name="name"/>.
+            </summary>
+            <param name="name">The content set name.</param>
+            <returns>The <see cref="T:ContentProvider.IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
+        </member>
+        <member name="M:ContentProvider.IContentManager.GetAsString(System.String,System.String)">
+            <summary>
+                Gets the value of the content entry named <paramref name="entryName"/> from the content
+                set named <paramref name="name"/>, as a string.
+            </summary>
+            <param name="name">The content set name.</param>
+            <param name="entryName">The content entry name.</param>
+            <returns>The content value as a string, if found; otherwise <c>null</c>.</returns>
+        </member>
+        <member name="M:ContentProvider.IContentManager.GetAsBinary(System.String,System.String)">
+            <summary>
+                Gets the value of the content entry named <paramref name="entryName"/> from the content
+                set named <paramref name="name"/>, as a byte array.
+            </summary>
+            <param name="name">The content set name.</param>
+            <param name="entryName">The content entry name.</param>
+            <returns>The content value as a byte array, if found; otherwise <c>null</c>.</returns>
+        </member>
+        <member name="M:ContentProvider.ContentManagerExtensions.GetAsBinary(ContentProvider.IContentManager,System.String,System.String)">
+            <summary>
+                Gets the value of the content entry named <paramref name="entryName"/> from the content
+                set named <paramref name="name"/>, as a byte collection.
+            </summary>
+            <param name="contentManager">The <see cref="T:ContentProvider.IContentManager"/> instance to get the content from.</param>
+            <param name="name">The content set name.</param>
+            <param name="entryName">The content entry name.</param>
+            <returns>The content value as a byte collection, if found; otherwise <c>null</c>.</returns>
         </member>
     </members>
 </doc>

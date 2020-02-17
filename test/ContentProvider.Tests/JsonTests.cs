@@ -33,13 +33,13 @@ namespace ContentProvider.Tests
     [Collection("ContentManager")]
     public sealed class JsonTests
     {
-        private readonly ContentSet _contentSet;
+        private readonly IContentSet _contentSet;
 
         public JsonTests(ContentManagerFixture fixture)
         {
             if (fixture is null)
                 throw new ArgumentNullException(nameof(fixture));
-            _contentSet = fixture.ContentManager.Get("Json");
+            _contentSet = fixture.ContentManager.GetContentSet("Json");
         }
 
         [Fact]

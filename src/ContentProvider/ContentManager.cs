@@ -19,11 +19,13 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ContentProvider
 {
-    public sealed partial class ContentManager
+    [DebuggerDisplay("{_contentSets.Count} registered content sets")]
+    public sealed partial class ContentManager : IContentManager
     {
         private readonly Dictionary<string, ContentSet> _contentSets = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
 
@@ -48,17 +50,26 @@ namespace ContentProvider
             return Register(name, sources);
         }
 
-        public ContentSet Get(string name)
+        /// <inheritdoc/>
+        public IContentSet GetContentSet(string name)
         {
             return _contentSets.TryGetValue(name, out ContentSet contentSet)
                 ? contentSet
                 : throw new ArgumentException($"Could not find a content set named {name}.", nameof(name));
         }
 
-        public async Task<string> Get(string name, string entryName)
+        /// <inheritdoc/>
+        public async Task<string> GetAsString(string name, string entryName)
         {
-            ContentSet contentSet = Get(name);
+            IContentSet contentSet = GetContentSet(name);
             return await contentSet.GetAsString(entryName).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task<byte[]> GetAsBinary(string name, string entryName)
+        {
+            IContentSet contentSet = GetContentSet(name);
+            return await contentSet.GetAsBinary(entryName).ConfigureAwait(false);
         }
     }
 

@@ -38,7 +38,7 @@ namespace ContentProvider
                 throw new ArgumentNullException(nameof(sourceBuilder));
 
             // Register the IContentManager interface. This can be done multiple times.
-            services.AddSingleton<IContentManager, ContentManagerImpl>();
+            services.AddSingleton<IContentManager>(ContentManager.Global);
 
             // Create the content builder and register it.
             var builder = new ContentBuilder();
@@ -59,7 +59,7 @@ namespace ContentProvider
             // Register the content set type (TContentSet) with the container.
             services.AddSingleton(sp =>
             {
-                ContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(name);
+                IContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(name);
                 return new TContentSet
                 {
                     ContentSet = internalContentSet,
@@ -175,7 +175,7 @@ namespace ContentProvider
             // Register the content set type (TContentSet) with the container.
             services.AddSingleton(sp =>
             {
-                ContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(fileExtension);
+                IContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(fileExtension);
                 return new TContentSet
                 {
                     ContentSet = internalContentSet,

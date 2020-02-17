@@ -44,7 +44,7 @@ namespace ContentProvider.Tests
             var manager = _fixture.ServiceProvider.GetService<IContentManager>();
             manager.ShouldNotBeNull();
 
-            ContentSet contentSet = manager.GetContentSet("Text");
+            IContentSet contentSet = manager.GetContentSet("Text");
             contentSet.ShouldNotBeNull();
 
             string value = await contentSet.GetAsString("Content.txt").ConfigureAwait(false);
