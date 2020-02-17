@@ -48,7 +48,5 @@ namespace ContentProvider.EmbeddedResources
 
             return builder.Source(new EmbeddedResourceContentSource(new[] { assembly }, options));
         }
-
-
     }
 }
