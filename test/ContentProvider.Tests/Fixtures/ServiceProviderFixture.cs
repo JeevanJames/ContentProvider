@@ -35,6 +35,7 @@ namespace ContentProvider.Tests.Fixtures
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
                         RootNamespace = typeof(TextContentSet).Namespace,
+                        FileExtension = "txt",
                     }))
                 .AddContent<JsonContentSet>("Json", b => b
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions

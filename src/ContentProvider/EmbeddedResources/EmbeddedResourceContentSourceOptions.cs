@@ -28,5 +28,7 @@ namespace ContentProvider.EmbeddedResources
         public Regex? NameMatcher { get; set; }
 
         public string? RootNamespace { get; set; }
+
+        public bool KeepExtension { get; set; }
     }
 }

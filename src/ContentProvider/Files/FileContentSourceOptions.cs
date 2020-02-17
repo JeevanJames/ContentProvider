@@ -37,5 +37,7 @@ namespace ContentProvider.Files
         ///     include all subdirectories or only the current directory.
         /// </summary>
         public SearchOption SearchOption { get; set; } = SearchOption.AllDirectories;
+
+        public bool KeepExtension { get; set; }
     }
 }

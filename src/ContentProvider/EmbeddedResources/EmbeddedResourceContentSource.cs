@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ContentProvider.EmbeddedResources
@@ -39,6 +38,7 @@ namespace ContentProvider.EmbeddedResources
         {
             if (assemblies is null)
                 throw new ArgumentNullException(nameof(assemblies));
+
             DiscoverResources(assemblies);
         }
 
@@ -61,6 +61,13 @@ namespace ContentProvider.EmbeddedResources
                     string contentName = Options.NameTransformer is null
                         ? contentNameGetter(resourceName)
                         : Options.NameTransformer(contentNameGetter(resourceName));
+                    if (!Options.KeepExtension)
+                    {
+                        int dotIndex = contentName.LastIndexOf('.');
+                        if (dotIndex > 0)
+                            contentName = contentName.Substring(0, dotIndex);
+                    }
+
                     _resources.Add(contentName, new ResourceDetail(assembly, resourceName));
                 }
             }

@@ -44,7 +44,18 @@ namespace ContentProvider.Files
             _baseDirectory = Path.GetFullPath(baseDirectory);
             _files = Directory.EnumerateFiles(_baseDirectory, Options.SearchPattern, Options.SearchOption)
                 .Select(path => path.Substring(_baseDirectory.Length + 1))
-                .Select(name => Options.NameTransformer is null ? name : Options.NameTransformer(name))
+                .Select(name =>
+                {
+                    string contentName = Options.NameTransformer is null ? name : Options.NameTransformer(name);
+                    if (!Options.KeepExtension)
+                    {
+                        int dotIndex = contentName.LastIndexOf('.');
+                        if (dotIndex > 0)
+                            contentName = contentName.Substring(0, dotIndex);
+                    }
+
+                    return contentName;
+                })
                 .ToList();
         }
 

@@ -45,7 +45,7 @@ namespace ContentProvider.Tests
         [Fact]
         public async Task Able_to_load_json_resources()
         {
-            var value = await _contentSet.GetAsJson<JsonStruct>("Content.json")
+            var value = await _contentSet.GetAsJson<JsonStruct>("Content")
                 .ConfigureAwait(false);
 
             value.ShouldNotBeNull();
@@ -54,7 +54,7 @@ namespace ContentProvider.Tests
         [Fact]
         public async Task Able_to_load_custom_list_entry()
         {
-            var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry.json", "Flash", 2)
+            var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry", "Flash", 2)
                 .ConfigureAwait(false);
 
             value.ShouldNotBeNull();

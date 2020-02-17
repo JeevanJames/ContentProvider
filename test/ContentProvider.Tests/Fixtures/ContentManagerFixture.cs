@@ -31,6 +31,7 @@ namespace ContentProvider.Tests.Fixtures
                 .Register("Text", builder => builder
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
+                        FileExtension = "txt",
                         RootNamespace = typeof(TextContentSet).Namespace,
                     }))
                 .Register("Json", builder => builder

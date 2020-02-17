@@ -47,7 +47,7 @@ namespace ContentProvider.Tests
             IContentSet contentSet = manager.GetContentSet("Text");
             contentSet.ShouldNotBeNull();
 
-            string value = await contentSet.GetAsString("Content.txt").ConfigureAwait(false);
+            string value = await contentSet.GetAsString("Content").ConfigureAwait(false);
             value.ShouldBe("This is the content.");
         }
 
@@ -57,7 +57,7 @@ namespace ContentProvider.Tests
             var textContentSet = _fixture.ServiceProvider.GetService<TextContentSet>();
             textContentSet.ShouldNotBeNull();
 
-            string value = await textContentSet.GetAsString("Content.txt").ConfigureAwait(false);
+            string value = await textContentSet.GetAsString("Content").ConfigureAwait(false);
             value.ShouldBe("This is the content.");
         }
 
@@ -67,7 +67,7 @@ namespace ContentProvider.Tests
             var jsonContentSet = _fixture.ServiceProvider.GetService<JsonContentSet>();
             jsonContentSet.ShouldNotBeNull();
 
-            string value = await jsonContentSet.GetAsString("Content.json").ConfigureAwait(false);
+            string value = await jsonContentSet.GetAsString("Content").ConfigureAwait(false);
             value.ShouldNotBeNull();
 
             //value.ShouldBe("This is the content.");
