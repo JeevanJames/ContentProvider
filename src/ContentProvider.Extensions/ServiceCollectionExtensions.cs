@@ -133,7 +133,8 @@ namespace ContentProvider
         ///     If not specified, the current directory will be used.
         /// </param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddFileContentWithFallbackToResources<TContentSet>(this IServiceCollection services,
+        public static IServiceCollection AddFileContentWithFallbackToResources<TContentSet>(
+            this IServiceCollection services,
             string fileExtension,
             string rootNamespace = null,
             string baseDirectory = null)
@@ -194,7 +195,6 @@ namespace ContentProvider
 
                 // Replace all path separators with dots and remove the file extension
                 NameTransformer = name => name
-                    .Substring(0, name.Length - fileExtension.Length - 1)
                     .Replace('/', '.')
                     .Replace('\\', '.'),
             };
@@ -206,7 +206,6 @@ namespace ContentProvider
             {
                 FileExtension = fileExtension,
                 RootNamespace = rootNamespace,
-                NameTransformer = name => name.Substring(0, name.Length - fileExtension.Length - 1),
             };
         }
     }
