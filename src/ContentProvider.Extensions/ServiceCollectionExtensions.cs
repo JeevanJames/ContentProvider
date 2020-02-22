@@ -30,10 +30,37 @@ namespace ContentProvider
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        ///     Registers content from one or more sources that can be injected into the application.
+        ///     <para/>
+        ///     This method does not associate the content with a specific type, so to access it later,
+        ///     you must inject a <see cref="IContentManager"/> instance and use it's
+        ///     <see cref="IContentManager.GetContentSet(string)"/> to get this content set by name.
+        /// </summary>
+        /// <param name="services">The services collection.</param>
+        /// <param name="name">
+        ///     A name that can be used to reference this content when accessing through an injected
+        ///     <see cref="IContentManager"/>.
+        /// </param>
+        /// <param name="sourceBuilder">
+        ///     A function used to set up the source for the content, along with any fallback sources.
+        /// </param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if the <paramref name="services"/> or <paramref name="sourceBuilder"/> parameters
+        ///     are <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if the <paramref name="name"/> parameter is <c>null</c>, empty or whitespaces.
+        /// </exception>
         public static IServiceCollection AddContent(this IServiceCollection services,
             string name,
             Action<ContentBuilder> sourceBuilder)
         {
+            if (services is null)
+                throw new ArgumentNullException(nameof(services));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException(Errors.InvalidContentSetName, nameof(name));
             if (sourceBuilder is null)
                 throw new ArgumentNullException(nameof(sourceBuilder));
 
@@ -48,6 +75,32 @@ namespace ContentProvider
             return services;
         }
 
+        /// <summary>
+        ///     Registers content from one or more sources that can be injected into the application.
+        ///     <para/>
+        ///     This method associates the content with a specific <see cref="ContentSetBase"/> type, so
+        ///     to access it later, you can simply inject the <typeparamref name="TContentSet"/> type
+        ///     into your code.
+        /// </summary>
+        /// <typeparam name="TContentSet">
+        ///     The content set class to register with the DI container.
+        /// </typeparam>
+        /// <param name="services">The services collection.</param>
+        /// <param name="name">
+        ///     A name that can be used to reference this content when accessing through an injected
+        ///     <see cref="IContentManager"/>.
+        /// </param>
+        /// <param name="sourceBuilder">
+        ///     A function used to set up the source for the content, along with any fallback sources.
+        /// </param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if the <paramref name="services"/> or <paramref name="sourceBuilder"/> parameters
+        ///     are <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if the <paramref name="name"/> parameter is <c>null</c>, empty or whitespaces.
+        /// </exception>
         public static IServiceCollection AddContent<TContentSet>(this IServiceCollection services,
             string name,
             Action<ContentBuilder> sourceBuilder)
@@ -69,6 +122,25 @@ namespace ContentProvider
             return services;
         }
 
+        /// <summary>
+        ///     Shortcut method to register content from files on the file system.
+        /// </summary>
+        /// <typeparam name="TContentSet">
+        ///     The content set class to register with the DI container.
+        /// </typeparam>
+        /// <param name="services">The services collection.</param>
+        /// <param name="fileExtension">
+        ///     The file extension of the files to register. If multiple file extensions are needed, use
+        ///     the advanced <see cref="AddContent(IServiceCollection, string, Action{ContentBuilder})"/>
+        ///     or <see cref="AddContent{TContentSet}(IServiceCollection, string, Action{ContentBuilder})"/>
+        ///     methods to have more control on the content that is added.
+        /// </param>
+        /// <param name="baseDirectory">
+        ///     The base directory under which to find the file content.
+        ///     <para/>
+        ///     If not specified, the current directory will be used.
+        /// </param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddFileContent<TContentSet>(this IServiceCollection services,
             string fileExtension,
             string baseDirectory = null)
@@ -88,6 +160,25 @@ namespace ContentProvider
             }, baseDirectory);
         }
 
+        /// <summary>
+        ///     Shortcut method to register content from embedded resources in the assembly where the
+        ///     type argument <typeparamref name="TContentSet"/> is contained.
+        /// </summary>
+        /// <typeparam name="TContentSet">
+        ///     The content set class to register with the DI container.
+        /// </typeparam>
+        /// <param name="services">The services collection.</param>
+        /// <param name="fileExtension">
+        ///     The file extension of the resources to register.
+        /// </param>
+        /// <param name="rootNamespace">
+        ///     The root namespace of the embedded resources. This part will be stripped from the
+        ///     content name.
+        ///     <para/>
+        ///     If not specified, the namespace of the content set type
+        ///     (<typeparamref name="TContentSet"/>) will be used.
+        /// </param>
+        /// <returns>A reference to this instance after the operation has completed.</returns>
         public static IServiceCollection AddResourceContent<TContentSet>(this IServiceCollection services,
             string fileExtension,
             string rootNamespace = null)
@@ -108,16 +199,18 @@ namespace ContentProvider
         }
 
         /// <summary>
-        ///     Shortcut method to register content from the typical sources, namely files on the file
-        ///     system, with a fallback to embedded resources.
+        ///     Shortcut method to register content from files on the file system, with a fallback to
+        ///     embedded resources if the file does not exist.
         ///     <para/>
         ///     This method will take care to normalize the content names for the files and resources,
         ///     so that they match each other, thereby allowing for a clean fallback.
         /// </summary>
-        /// <typeparam name="TContentSet">The content set class to register with the DI container.</typeparam>
+        /// <typeparam name="TContentSet">
+        ///     The content set class to register with the DI container.
+        /// </typeparam>
         /// <param name="services">The services collection.</param>
         /// <param name="fileExtension">
-        ///     The file extension (without the dot) of the files and resources to register.
+        ///     The file extension of the files and resources to register.
         /// </param>
         /// <param name="rootNamespace">
         ///     The root namespace of the embedded resources. This part will be stripped from the
@@ -158,6 +251,8 @@ namespace ContentProvider
             }, rootNamespace, baseDirectory);
         }
 
+        // Common method used by AddFileContent, AddResourceContent and
+        // AddAddFileContentWithFallbackToResources methods.
         private static IServiceCollection AddPredefinedContent<TContentSet>(this IServiceCollection services,
             string fileExtension,
             Action<IServiceCollection, Type, IList<string>> registrationAction, // Delegate contains all needed params to avoid closures
@@ -193,7 +288,7 @@ namespace ContentProvider
                 SearchPattern = $"*.{fileExtension}",
                 SearchOption = SearchOption.AllDirectories,
 
-                // Replace all path separators with dots and remove the file extension
+                // Replace all path separators with dots
                 NameTransformer = name => name
                     .Replace('/', '.')
                     .Replace('\\', '.'),

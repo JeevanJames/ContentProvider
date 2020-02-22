@@ -79,6 +79,15 @@ namespace ContentProvider {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specify a valid name for the content set..
+        /// </summary>
+        internal static string InvalidContentSetName {
+            get {
+                return ResourceManager.GetString("InvalidContentSetName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specify a valid file extension..
         /// </summary>
         internal static string InvalidFileExtension {

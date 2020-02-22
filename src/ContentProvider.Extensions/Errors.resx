@@ -123,6 +123,9 @@
   <data name="InvalidBaseDirectory" xml:space="preserve">
     <value>Specify a valid base directory.</value>
   </data>
+  <data name="InvalidContentSetName" xml:space="preserve">
+    <value>Specify a valid name for the content set.</value>
+  </data>
   <data name="InvalidFileExtension" xml:space="preserve">
     <value>Specify a valid file extension.</value>
   </data>
