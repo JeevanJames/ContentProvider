@@ -34,15 +34,13 @@ namespace ContentProvider
         ///     A tuple indicating whether the content item could be loaded, and if so, the string
         ///     content itself.
         /// </returns>
-        public async virtual Task<(bool success, string? content)> TryLoadAsString(string name)
+        public virtual async Task<(bool success, string? content)> TryLoadAsString(string name)
         {
             (bool success, byte[]? content) = await TryLoadAsBinary(name).ConfigureAwait(false);
             if (!success)
                 return (false, null);
 
-#pragma warning disable S1854 // Unused assignments should be removed
             string contentString = Encoding.UTF8.GetString(content);
-#pragma warning restore S1854 // Unused assignments should be removed
             return (true, contentString);
         }
 

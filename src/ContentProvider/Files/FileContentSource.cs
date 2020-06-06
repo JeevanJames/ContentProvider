@@ -59,7 +59,7 @@ namespace ContentProvider.Files
                 .ToList();
         }
 
-        public async override Task<(bool success, string? content)> TryLoadAsString(string name)
+        public override async Task<(bool success, string? content)> TryLoadAsString(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -67,20 +67,14 @@ namespace ContentProvider.Files
 
             string filePath = Path.Combine(_baseDirectory, file);
 
-#pragma warning disable S1854 // Unused assignments should be removed
-#if NETSTANDARD2_0
             string content;
             using (var reader = new StreamReader(filePath))
                 content = await reader.ReadToEndAsync().ConfigureAwait(false);
-#else
-            string content = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-#endif
-#pragma warning restore S1854 // Unused assignments should be removed
 
             return (true, content);
         }
 
-        public async override Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
+        public override async Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -88,18 +82,11 @@ namespace ContentProvider.Files
 
             string filePath = Path.Combine(_baseDirectory, file);
 
-#pragma warning disable S1854 // Unused assignments should be removed
-#if NETSTANDARD2_0
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var ms = new MemoryStream();
             await fs.CopyToAsync(ms).ConfigureAwait(false);
             byte[] content = ms.ToArray();
             return (true, content);
-#else
-            byte[] content = await File.ReadAllBytesAsync(filePath).ConfigureAwait(false);
-            return (true, content);
-#endif
-#pragma warning restore S1854 // Unused assignments should be removed
         }
     }
 }
