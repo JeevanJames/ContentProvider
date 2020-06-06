@@ -212,6 +212,12 @@ namespace ContentProvider
         /// <param name="fileExtension">
         ///     The file extension of the files and resources to register.
         /// </param>
+        /// <param name="baseDirectory">
+        ///     The base directory under which to find the file content. This should follow the same
+        ///     hierarchy as the embedded resources to work correctly.
+        ///     <para/>
+        ///     If not specified, the current directory will be used.
+        /// </param>
         /// <param name="rootNamespace">
         ///     The root namespace of the embedded resources. This part will be stripped from the
         ///     content name.
@@ -219,24 +225,18 @@ namespace ContentProvider
         ///     If not specified, the namespace of the content set type
         ///     (<typeparamref name="TContentSet"/>) will be used.
         /// </param>
-        /// <param name="baseDirectory">
-        ///     The base directory under which to find the file content. This should follow the same
-        ///     hierarchy as the embedded resources to work correctly.
-        ///     <para/>
-        ///     If not specified, the current directory will be used.
-        /// </param>
         /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IServiceCollection AddFileContentWithFallbackToResources<TContentSet>(
+        public static IServiceCollection AddFileContentWithResourcesFallback<TContentSet>(
             this IServiceCollection services,
             string fileExtension,
-            string rootNamespace = null,
-            string baseDirectory = null)
+            string baseDirectory = null,
+            string rootNamespace = null)
             where TContentSet : ContentSetBase, new()
         {
             return services.AddPredefinedContent<TContentSet>(fileExtension, (services, contentSetType, args) =>
             {
-                string rootNamespaceCopy = args[0];
-                string baseDirectoryCopy = args[1];
+                string baseDirectoryCopy = args[0];
+                string rootNamespaceCopy = args[1];
 
                 // Assign defaults to parameters
                 if (string.IsNullOrWhiteSpace(rootNamespaceCopy))
@@ -248,7 +248,7 @@ namespace ContentProvider
                 services.AddContent(contentSetType.AssemblyQualifiedName, builder => builder
                     .From.FilesIn(baseDirectoryCopy, FileOptions(fileExtension))
                     .From.ResourcesIn(typeof(TContentSet).Assembly, ResourceOptions(fileExtension, rootNamespaceCopy)));
-            }, rootNamespace, baseDirectory);
+            }, baseDirectory, rootNamespace);
         }
 
         // Common method used by AddFileContent, AddResourceContent and

@@ -140,7 +140,7 @@
             </param>
             <returns>A reference to this instance after the operation has completed.</returns>
         </member>
-        <member name="M:ContentProvider.ServiceCollectionExtensions.AddFileContentWithFallbackToResources``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String)">
+        <member name="M:ContentProvider.ServiceCollectionExtensions.AddFileContentWithResourcesFallback``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String)">
             <summary>
                 Shortcut method to register content from files on the file system, with a fallback to
                 embedded resources if the file does not exist.
@@ -155,18 +155,18 @@
             <param name="fileExtension">
                 The file extension of the files and resources to register.
             </param>
+            <param name="baseDirectory">
+                The base directory under which to find the file content. This should follow the same
+                hierarchy as the embedded resources to work correctly.
+                <para/>
+                If not specified, the current directory will be used.
+            </param>
             <param name="rootNamespace">
                 The root namespace of the embedded resources. This part will be stripped from the
                 content name.
                 <para/>
                 If not specified, the namespace of the content set type
                 (<typeparamref name="TContentSet"/>) will be used.
-            </param>
-            <param name="baseDirectory">
-                The base directory under which to find the file content. This should follow the same
-                hierarchy as the embedded resources to work correctly.
-                <para/>
-                If not specified, the current directory will be used.
             </param>
             <returns>A reference to this instance after the operation has completed.</returns>
         </member>
