@@ -45,7 +45,7 @@ namespace ContentProvider.Tests
         [Fact]
         public async Task Able_to_load_json_resources()
         {
-            var value = await _contentSet.GetAsJson<JsonStruct>("Content")
+            var value = await _contentSet.GetAsJsonAsync<JsonStruct>("Content")
                 .ConfigureAwait(false);
 
             value.ShouldNotBeNull();
