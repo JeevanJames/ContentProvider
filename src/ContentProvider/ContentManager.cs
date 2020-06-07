@@ -26,7 +26,8 @@ namespace ContentProvider
     [DebuggerDisplay("{_contentSets.Count} registered content sets")]
     public sealed partial class ContentManager : IContentManager
     {
-        private readonly Dictionary<string, ContentSet> _contentSets = new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, ContentSet> _contentSets =
+            new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
 
         public ContentManager Register(string name, params ContentSource[] sources)
         {

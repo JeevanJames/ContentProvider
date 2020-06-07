@@ -279,7 +279,8 @@ namespace ContentProvider
             // Register the content set type (TContentSet) with the container.
             services.AddSingleton(sp =>
             {
-                IContentSet internalContentSet = sp.GetRequiredService<IContentManager>().GetContentSet(typeof(TContentSet).AssemblyQualifiedName);
+                IContentSet internalContentSet = sp.GetRequiredService<IContentManager>()
+                    .GetContentSet(typeof(TContentSet).AssemblyQualifiedName);
                 return new TContentSet
                 {
                     ContentSet = internalContentSet,
