@@ -7,6 +7,11 @@
         <member name="M:ContentProvider.ContentManager.GetContentSet(System.String)">
             <inheritdoc/>
         </member>
+        <member name="P:ContentProvider.ContentManager.Global">
+            <summary>
+                Gets a pre-instatiated global instance of <see cref="T:ContentProvider.ContentManager"/>.
+            </summary>
+        </member>
         <member name="T:ContentProvider.ContentSet">
             <summary>
                 Represents a named set of contents, consisting of a primary content source and zero or more
@@ -25,7 +30,7 @@
                 Gets the name of the content set.
             </summary>
         </member>
-        <member name="M:ContentProvider.ContentSet.GetAsString(System.String)">
+        <member name="M:ContentProvider.ContentSet.GetAsStringAsync(System.String)">
             <summary>
                 Gets a content entry as a string value, given its <paramref name="name"/>.
             </summary>
@@ -35,7 +40,7 @@
                 Thrown if the content entry is not found in this content set.
             </exception>
         </member>
-        <member name="M:ContentProvider.ContentSet.GetAsBinary(System.String)">
+        <member name="M:ContentProvider.ContentSet.GetAsBinaryAsync(System.String)">
             <summary>
                 Gets a content entry as a binary value (byte[]), given its <paramref name="name"/>.
             </summary>
@@ -90,6 +95,64 @@
                 generated from the content source.
             </summary>
         </member>
+        <member name="P:ContentProvider.EmbeddedResources.EmbeddedResourceContentSourceOptions.FileExtension">
+            <summary>
+                Gets or sets the file extension to filter embedded resources. If not specified, all
+                embedded resources are considered.
+            </summary>
+        </member>
+        <member name="P:ContentProvider.EmbeddedResources.EmbeddedResourceContentSourceOptions.RootNamespace">
+            <summary>
+                Gets or sets the namespace to filter embedded resources. If not specified, all embedded
+                resources are considered.
+            </summary>
+        </member>
+        <member name="P:ContentProvider.EmbeddedResources.EmbeddedResourceContentSourceOptions.KeepExtension">
+            <summary>
+                Gets or sets a value indicating whether to keep the file extension in the content name.
+            </summary>
+        </member>
+        <member name="M:ContentProvider.EmbeddedResources.SourceBuilderExtensions.ResourcesInExecutingAssembly(ContentProvider.ContentSourceBuilder,ContentProvider.EmbeddedResources.EmbeddedResourceContentSourceOptions)">
+            <summary>
+                Registers a <see cref="T:ContentProvider.ContentSource"/> for content from embedded resources in the
+                executing assembly.
+            </summary>
+            <param name="builder">The <see cref="T:ContentProvider.ContentSourceBuilder"/> instance.</param>
+            <param name="options">Options for registering the content source.</param>
+            <returns>An instance of <see cref="T:ContentProvider.ContentBuilder"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if the <paramref name="builder"/> or <paramref name="options"/> parameters are
+                <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:ContentProvider.EmbeddedResources.SourceBuilderExtensions.ResourcesIn(ContentProvider.ContentSourceBuilder,System.Reflection.Assembly,ContentProvider.EmbeddedResources.EmbeddedResourceContentSourceOptions)">
+            <summary>
+                Registers a <see cref="T:ContentProvider.ContentSource"/> for content from embedded resources in the
+                specified <paramref name="assembly"/>.
+            </summary>
+            <param name="builder">The <see cref="T:ContentProvider.ContentSourceBuilder"/> instance.</param>
+            <param name="assembly">The assembly to load resources from.</param>
+            <param name="options">Options for registering the content source.</param>
+            <returns>An instance of <see cref="T:ContentProvider.ContentBuilder"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if the <paramref name="builder"/>, <paramref name="assembly"/> or
+                <paramref name="options"/> parameters are <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:ContentProvider.EmbeddedResources.SourceBuilderExtensions.ResourcesIn(ContentProvider.ContentSourceBuilder,System.Collections.Generic.IEnumerable{System.Reflection.Assembly},ContentProvider.EmbeddedResources.EmbeddedResourceContentSourceOptions)">
+            <summary>
+                Registers a <see cref="T:ContentProvider.ContentSource"/> for content from embedded resources in the
+                specified <paramref name="assemblies"/>.
+            </summary>
+            <param name="builder">The <see cref="T:ContentProvider.ContentSourceBuilder"/> instance.</param>
+            <param name="assemblies">The assembly to load resources from.</param>
+            <param name="options">Options for registering the content source.</param>
+            <returns>An instance of <see cref="T:ContentProvider.ContentBuilder"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if the <paramref name="builder"/>, <paramref name="assemblies"/>
+                or <paramref name="options"/> parameters are <c>null</c>.
+            </exception>
+        </member>
         <member name="T:ContentProvider.Errors">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -141,6 +204,24 @@
                 include all subdirectories or only the current directory.
             </summary>
         </member>
+        <member name="P:ContentProvider.Files.FileContentSourceOptions.KeepExtension">
+            <summary>
+                Gets or sets a value indicating whether to keep the file extension in the content name.
+            </summary>
+        </member>
+        <member name="M:ContentProvider.Files.SourceBuilderExtensions.FilesIn(ContentProvider.ContentSourceBuilder,System.String,ContentProvider.Files.FileContentSourceOptions)">
+            <summary>
+                Registers a <see cref="T:ContentProvider.ContentSource"/> for content from files on the file system.
+            </summary>
+            <param name="builder">The <see cref="T:ContentProvider.ContentSourceBuilder"/> instance.</param>
+            <param name="baseDirectory">The base directory to retrieve the files from.</param>
+            <param name="options">Options for registering the content source.</param>
+            <returns>An instance of <see cref="T:ContentProvider.ContentBuilder"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if the <paramref name="builder"/> or <paramref name="options"/> parameters are
+                <c>null</c>.
+            </exception>
+        </member>
         <member name="M:ContentProvider.IContentManager.GetContentSet(System.String)">
             <summary>
                 Returns the <see cref="T:ContentProvider.IContentSet"/> with the specified <paramref name="name"/>.
@@ -148,14 +229,14 @@
             <param name="name">The content set name.</param>
             <returns>The <see cref="T:ContentProvider.IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
         </member>
-        <member name="M:ContentProvider.IContentSet.GetAsString(System.String)">
+        <member name="M:ContentProvider.IContentSet.GetAsStringAsync(System.String)">
             <summary>
                 Gets the value of the content entry named <paramref name="name"/> as a string.
             </summary>
             <param name="name">The content entry name.</param>
             <returns>The content value as a string, if found; otherwise <c>null</c>.</returns>
         </member>
-        <member name="M:ContentProvider.IContentSet.GetAsBinary(System.String)">
+        <member name="M:ContentProvider.IContentSet.GetAsBinaryAsync(System.String)">
             <summary>
                 Gets the value of the content entry named <paramref name="name"/> as a byte array.
             </summary>

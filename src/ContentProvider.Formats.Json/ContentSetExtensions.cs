@@ -41,7 +41,7 @@ namespace ContentProvider.Formats.Json
             string name,
             JsonSerializerOptions? serializerOptions = null)
         {
-            string json = await contentSet.GetAsString(name).ConfigureAwait(false);
+            string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
 
             using var ms = new MemoryStream();
 #pragma warning disable CA2000 // Dispose objects before losing scope

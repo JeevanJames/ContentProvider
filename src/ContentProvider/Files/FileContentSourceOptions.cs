@@ -38,6 +38,9 @@ namespace ContentProvider.Files
         /// </summary>
         public SearchOption SearchOption { get; set; } = SearchOption.AllDirectories;
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether to keep the file extension in the content name.
+        /// </summary>
         public bool KeepExtension { get; set; }
     }
 }

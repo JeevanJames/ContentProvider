@@ -79,7 +79,7 @@ namespace ContentProvider.Formats.Json.Structures
             params object[] args)
             where T : class
         {
-            string json = await contentSet.GetAsString(name).ConfigureAwait(false);
+            string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
 
             JsonDocument doc = JsonDocument.Parse(json, new JsonDocumentOptions
             {

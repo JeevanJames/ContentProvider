@@ -23,8 +23,19 @@ namespace ContentProvider.Files
 {
     public static class SourceBuilderExtensions
     {
-        public static ContentBuilder FilesIn(this ContentSourceBuilder builder,
-            string baseDirectory, FileContentSourceOptions options)
+        /// <summary>
+        ///     Registers a <see cref="ContentSource"/> for content from files on the file system.
+        /// </summary>
+        /// <param name="builder">The <see cref="ContentSourceBuilder"/> instance.</param>
+        /// <param name="baseDirectory">The base directory to retrieve the files from.</param>
+        /// <param name="options">Options for registering the content source.</param>
+        /// <returns>An instance of <see cref="ContentBuilder"/>.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if the <paramref name="builder"/> or <paramref name="options"/> parameters are
+        ///     <c>null</c>.
+        /// </exception>
+        public static ContentBuilder FilesIn(this ContentSourceBuilder builder, string baseDirectory,
+            FileContentSourceOptions options)
         {
             if (builder is null)
                 throw new ArgumentNullException(nameof(builder));

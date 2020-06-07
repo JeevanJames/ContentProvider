@@ -26,14 +26,14 @@ namespace ContentProvider
     {
         private IContentSet _contentSet;
 
-        public Task<string> GetAsString(string name)
+        public Task<string> GetAsStringAsync(string name)
         {
-            return _contentSet.GetAsString(name);
+            return _contentSet.GetAsStringAsync(name);
         }
 
-        public Task<byte[]> GetAsBinary(string name)
+        public Task<byte[]> GetAsBinaryAsync(string name)
         {
-            return _contentSet.GetAsBinary(name);
+            return _contentSet.GetAsBinaryAsync(name);
         }
 
         internal IContentSet ContentSet

@@ -57,7 +57,7 @@ namespace ContentProvider
         /// <exception cref="ContentException">
         ///     Thrown if the content entry is not found in this content set.
         /// </exception>
-        public async Task<string> GetAsString(string name)
+        public async Task<string> GetAsStringAsync(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -79,7 +79,7 @@ namespace ContentProvider
         /// <exception cref="ContentException">
         ///     Thrown if the content entry is not found in this content set.
         /// </exception>
-        public async Task<byte[]> GetAsBinary(string name)
+        public async Task<byte[]> GetAsBinaryAsync(string name)
         {
             foreach (ContentSource source in Sources)
             {

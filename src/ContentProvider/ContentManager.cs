@@ -61,6 +61,9 @@ namespace ContentProvider
 
     public sealed partial class ContentManager
     {
+        /// <summary>
+        ///     Gets a pre-instatiated global instance of <see cref="ContentManager"/>.
+        /// </summary>
         public static ContentManager Global { get; } = new ContentManager();
     }
 }

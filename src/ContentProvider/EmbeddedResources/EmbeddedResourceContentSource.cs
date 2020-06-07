@@ -54,7 +54,10 @@ namespace ContentProvider.EmbeddedResources
                 if (Options.NameMatcher != null)
                     resourceNames = resourceNames.Where(res => Options.NameMatcher.IsMatch(res));
                 if (!string.IsNullOrWhiteSpace(Options.FileExtension))
-                    resourceNames = resourceNames.Where(res => res.EndsWith($".{Options.FileExtension}", StringComparison.OrdinalIgnoreCase));
+                {
+                    resourceNames = resourceNames
+                        .Where(res => res.EndsWith($".{Options.FileExtension}", StringComparison.OrdinalIgnoreCase));
+                }
 
                 foreach (string resourceName in resourceNames.ToList())
                 {
@@ -73,7 +76,7 @@ namespace ContentProvider.EmbeddedResources
             }
         }
 
-        public async override Task<(bool success, string? content)> TryLoadAsString(string name)
+        public override async Task<(bool success, string? content)> TryLoadAsString(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
@@ -83,13 +86,11 @@ namespace ContentProvider.EmbeddedResources
             using var reader = new StreamReader(resourceStream);
 #pragma warning restore S3966 // Objects should not be disposed more than once
 
-#pragma warning disable S1854 // Unused assignments should be removed
             string content = await reader.ReadToEndAsync().ConfigureAwait(false);
-#pragma warning restore S1854 // Unused assignments should be removed
             return (true, content);
         }
 
-        public async override Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
+        public override async Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
@@ -102,9 +103,7 @@ namespace ContentProvider.EmbeddedResources
             int read;
             while ((read = await resourceStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
                 await ms.WriteAsync(buffer, 0, read).ConfigureAwait(false);
-#pragma warning disable S1854 // Unused assignments should be removed
             byte[] content = ms.ToArray();
-#pragma warning restore S1854 // Unused assignments should be removed
 
             return (true, content);
         }
