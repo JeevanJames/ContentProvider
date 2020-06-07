@@ -55,7 +55,7 @@
                 Gets the list of content sources registered with this content set.
             </summary>
         </member>
-        <member name="M:ContentProvider.ContentSource.TryLoadAsString(System.String)">
+        <member name="M:ContentProvider.ContentSource.TryLoadAsStringAsync(System.String)">
             <summary>
                 Attempts to load an item from the content source as a string, given its
                 <paramref name="name"/>.
@@ -66,7 +66,7 @@
                 content itself.
             </returns>
         </member>
-        <member name="M:ContentProvider.ContentSource.TryLoadAsBinary(System.String)">
+        <member name="M:ContentProvider.ContentSource.TryLoadAsBinaryAsync(System.String)">
             <summary>
                 Attempts to load an item from the content source as a byte array, given its
                 <paramref name="name"/>.

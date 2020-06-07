@@ -76,7 +76,7 @@ namespace ContentProvider.EmbeddedResources
             }
         }
 
-        public override async Task<(bool success, string? content)> TryLoadAsString(string name)
+        public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
@@ -90,7 +90,7 @@ namespace ContentProvider.EmbeddedResources
             return (true, content);
         }
 
-        public override async Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
+        public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
@@ -103,6 +103,38 @@ namespace ContentProvider.EmbeddedResources
             int read;
             while ((read = await resourceStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
                 await ms.WriteAsync(buffer, 0, read).ConfigureAwait(false);
+            byte[] content = ms.ToArray();
+
+            return (true, content);
+        }
+
+        public override (bool success, string? content) TryLoadAsString(string name)
+        {
+            if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+                return (false, null);
+
+            using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+#pragma warning disable S3966 // Objects should not be disposed more than once
+            using var reader = new StreamReader(resourceStream);
+#pragma warning restore S3966 // Objects should not be disposed more than once
+
+            string content = reader.ReadToEnd();
+            return (true, content);
+        }
+
+        public override (bool success, byte[]? content) TryLoadAsBinary(string name)
+        {
+            if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+                return default;
+
+            using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+
+            var buffer = new byte[2048];
+
+            using var ms = new MemoryStream();
+            int read;
+            while ((read = resourceStream.Read(buffer, 0, buffer.Length)) > 0)
+                ms.WriteAsync(buffer, 0, read);
             byte[] content = ms.ToArray();
 
             return (true, content);

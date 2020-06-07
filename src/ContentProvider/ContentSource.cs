@@ -34,9 +34,9 @@ namespace ContentProvider
         ///     A tuple indicating whether the content item could be loaded, and if so, the string
         ///     content itself.
         /// </returns>
-        public virtual async Task<(bool success, string? content)> TryLoadAsString(string name)
+        public virtual async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
         {
-            (bool success, byte[]? content) = await TryLoadAsBinary(name).ConfigureAwait(false);
+            (bool success, byte[]? content) = await TryLoadAsBinaryAsync(name).ConfigureAwait(false);
             if (!success)
                 return (false, null);
 
@@ -53,7 +53,22 @@ namespace ContentProvider
         ///     A tuple indicating whether the content item could be loaded, and if so, the byte
         ///     array content itself.
         /// </returns>
-        public abstract Task<(bool success, byte[]? content)> TryLoadAsBinary(string name);
+        public virtual Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
+        {
+            return Task.FromResult(TryLoadAsBinary(name));
+        }
+
+        public virtual (bool success, string? content) TryLoadAsString(string name)
+        {
+            (bool success, byte[]? content) = TryLoadAsBinary(name);
+            if (!success)
+                return default;
+
+            string contentString = Encoding.UTF8.GetString(content);
+            return (true, contentString);
+        }
+
+        public abstract (bool success, byte[]? content) TryLoadAsBinary(string name);
     }
 
     /// <summary>

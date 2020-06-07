@@ -37,6 +37,10 @@ namespace ContentProvider
         /// <returns>The content value as a byte array, if found; otherwise <c>null</c>.</returns>
         Task<byte[]> GetAsBinaryAsync(string name);
 
+        string GetAsString(string name);
+
+        byte[] GetAsBinary(string name);
+
         //TODO: GetRandom methods
     }
 }

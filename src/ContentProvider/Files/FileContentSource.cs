@@ -59,7 +59,7 @@ namespace ContentProvider.Files
                 .ToList();
         }
 
-        public override async Task<(bool success, string? content)> TryLoadAsString(string name)
+        public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -74,7 +74,7 @@ namespace ContentProvider.Files
             return (true, content);
         }
 
-        public override async Task<(bool success, byte[]? content)> TryLoadAsBinary(string name)
+        public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -85,6 +85,36 @@ namespace ContentProvider.Files
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var ms = new MemoryStream();
             await fs.CopyToAsync(ms).ConfigureAwait(false);
+            byte[] content = ms.ToArray();
+            return (true, content);
+        }
+
+        public override (bool success, string? content) TryLoadAsString(string name)
+        {
+            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (file is null)
+                return (false, null);
+
+            string filePath = Path.Combine(_baseDirectory, file);
+
+            string content;
+            using (var reader = new StreamReader(filePath))
+                content = reader.ReadToEnd();
+
+            return (true, content);
+        }
+
+        public override (bool success, byte[]? content) TryLoadAsBinary(string name)
+        {
+            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (file is null)
+                return (false, null);
+
+            string filePath = Path.Combine(_baseDirectory, file);
+
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var ms = new MemoryStream();
+            fs.CopyToAsync(ms);
             byte[] content = ms.ToArray();
             return (true, content);
         }

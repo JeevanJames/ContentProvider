@@ -61,7 +61,7 @@ namespace ContentProvider
         {
             foreach (ContentSource source in Sources)
             {
-                (bool success, string? content) = await source.TryLoadAsString(name)
+                (bool success, string? content) = await source.TryLoadAsStringAsync(name)
                     .ConfigureAwait(false);
                 if (success)
                     return content!;
@@ -83,8 +83,34 @@ namespace ContentProvider
         {
             foreach (ContentSource source in Sources)
             {
-                (bool success, byte[]? content) = await source.TryLoadAsBinary(name)
+                (bool success, byte[]? content) = await source.TryLoadAsBinaryAsync(name)
                     .ConfigureAwait(false);
+                if (success)
+                    return content!;
+            }
+
+            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+                Errors.ContentEntryNotFound, name, Name));
+        }
+
+        public string GetAsString(string name)
+        {
+            foreach (ContentSource source in Sources)
+            {
+                (bool success, string? content) = source.TryLoadAsString(name);
+                if (success)
+                    return content!;
+            }
+
+            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+                Errors.ContentEntryNotFound, name, Name));
+        }
+
+        public byte[] GetAsBinary(string name)
+        {
+            foreach (ContentSource source in Sources)
+            {
+                (bool success, byte[]? content) = source.TryLoadAsBinary(name);
                 if (success)
                     return content!;
             }

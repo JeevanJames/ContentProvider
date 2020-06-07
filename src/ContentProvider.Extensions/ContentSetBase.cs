@@ -36,6 +36,16 @@ namespace ContentProvider
             return _contentSet.GetAsBinaryAsync(name);
         }
 
+        public string GetAsString(string name)
+        {
+            return _contentSet.GetAsString(name);
+        }
+
+        public byte[] GetAsBinary(string name)
+        {
+            return _contentSet.GetAsBinary(name);
+        }
+
         internal IContentSet ContentSet
         {
             get => _contentSet;
