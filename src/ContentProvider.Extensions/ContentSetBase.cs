@@ -26,6 +26,8 @@ namespace ContentProvider
     {
         private IContentSet _contentSet;
 
+        public string Name => _contentSet.Name;
+
         public Task<string> GetAsStringAsync(string name)
         {
             return _contentSet.GetAsStringAsync(name);

@@ -21,8 +21,17 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
+    /// <summary>
+    ///     Represents a named set of contents, consisting of a primary content source and zero or more
+    ///     fallback sources.
+    /// </summary>
     public interface IContentSet
     {
+        /// <summary>
+        ///     Gets the name of the content set.
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         ///     Gets the value of the content entry named <paramref name="name"/> as a string.
         /// </summary>

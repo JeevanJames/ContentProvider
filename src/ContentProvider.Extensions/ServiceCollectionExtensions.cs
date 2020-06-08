@@ -25,6 +25,7 @@ using ContentProvider.EmbeddedResources;
 using ContentProvider.Files;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ContentProvider
 {
@@ -64,8 +65,8 @@ namespace ContentProvider
             if (sourceBuilder is null)
                 throw new ArgumentNullException(nameof(sourceBuilder));
 
-            // Register the IContentManager interface. This can be done multiple times.
-            services.AddSingleton<IContentManager>(ContentManager.Global);
+            // Register the IContentManager interface.
+            services.TryAddSingleton<IContentManager>(ContentManager.Global);
 
             // Create the content builder and register it.
             var builder = new ContentBuilder();

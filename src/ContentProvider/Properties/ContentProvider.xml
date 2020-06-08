@@ -1,21 +1,4 @@
 <?xml version="1.0"?>
-<!--
-ContentProvider Framework
-Copyright (c) 2020 Damian Kulik, Jeevan James
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-
 <doc>
     <assembly>
         <name>ContentProvider</name>
@@ -43,29 +26,19 @@ limitations under the License.
             <param name="name">The name of the content set.</param>
         </member>
         <member name="P:ContentProvider.ContentSet.Name">
-            <summary>
-                Gets the name of the content set.
-            </summary>
+            <inheritdoc />
         </member>
-        <member name="M:ContentProvider.ContentSet.GetAsStringAsync(System.String)">
-            <summary>
-                Gets a content entry as a string value, given its <paramref name="name"/>.
-            </summary>
-            <param name="name">The name of the content entry.</param>
-            <returns>The string value of the content entry.</returns>
-            <exception cref="T:ContentProvider.ContentException">
-                Thrown if the content entry is not found in this content set.
-            </exception>
+        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsStringAsync(System.String)">
+            <inheritdoc />
         </member>
-        <member name="M:ContentProvider.ContentSet.GetAsBinaryAsync(System.String)">
-            <summary>
-                Gets a content entry as a binary value (byte[]), given its <paramref name="name"/>.
-            </summary>
-            <param name="name">The name of the content entry.</param>
-            <returns>The byte[] value of the content entry.</returns>
-            <exception cref="T:ContentProvider.ContentException">
-                Thrown if the content entry is not found in this content set.
-            </exception>
+        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsBinaryAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsString(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsBinary(System.String)">
+            <inheritdoc />
         </member>
         <member name="P:ContentProvider.ContentSet.Sources">
             <summary>
@@ -245,6 +218,17 @@ limitations under the License.
             </summary>
             <param name="name">The content set name.</param>
             <returns>The <see cref="T:ContentProvider.IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
+        </member>
+        <member name="T:ContentProvider.IContentSet">
+            <summary>
+                Represents a named set of contents, consisting of a primary content source and zero or more
+                fallback sources.
+            </summary>
+        </member>
+        <member name="P:ContentProvider.IContentSet.Name">
+            <summary>
+                Gets the name of the content set.
+            </summary>
         </member>
         <member name="M:ContentProvider.IContentSet.GetAsStringAsync(System.String)">
             <summary>

@@ -30,34 +30,25 @@ namespace ContentProvider
     ///     fallback sources.
     /// </summary>
     [DebuggerDisplay("Content Set {Name}")]
-    public sealed class ContentSet : IContentSet
+    internal sealed class ContentSet : IContentSet
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="ContentSet"/> class with the specified
         ///     <paramref name="name"/>.
         /// </summary>
         /// <param name="name">The name of the content set.</param>
-        public ContentSet(string name)
+        internal ContentSet(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException(Errors.InvalidContentSetName, nameof(name));
             Name = name;
         }
 
-        /// <summary>
-        ///     Gets the name of the content set.
-        /// </summary>
+        /// <inheritdoc />
         public string Name { get; }
 
-        /// <summary>
-        ///     Gets a content entry as a string value, given its <paramref name="name"/>.
-        /// </summary>
-        /// <param name="name">The name of the content entry.</param>
-        /// <returns>The string value of the content entry.</returns>
-        /// <exception cref="ContentException">
-        ///     Thrown if the content entry is not found in this content set.
-        /// </exception>
-        public async Task<string> GetAsStringAsync(string name)
+        /// <inheritdoc />
+        async Task<string> IContentSet.GetAsStringAsync(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -71,15 +62,8 @@ namespace ContentProvider
                 Errors.ContentEntryNotFound, name, Name));
         }
 
-        /// <summary>
-        ///     Gets a content entry as a binary value (byte[]), given its <paramref name="name"/>.
-        /// </summary>
-        /// <param name="name">The name of the content entry.</param>
-        /// <returns>The byte[] value of the content entry.</returns>
-        /// <exception cref="ContentException">
-        ///     Thrown if the content entry is not found in this content set.
-        /// </exception>
-        public async Task<byte[]> GetAsBinaryAsync(string name)
+        /// <inheritdoc />
+        async Task<byte[]> IContentSet.GetAsBinaryAsync(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -93,7 +77,8 @@ namespace ContentProvider
                 Errors.ContentEntryNotFound, name, Name));
         }
 
-        public string GetAsString(string name)
+        /// <inheritdoc />
+        string IContentSet.GetAsString(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -106,7 +91,8 @@ namespace ContentProvider
                 Errors.ContentEntryNotFound, name, Name));
         }
 
-        public byte[] GetAsBinary(string name)
+        /// <inheritdoc />
+        byte[] IContentSet.GetAsBinary(string name)
         {
             foreach (ContentSource source in Sources)
             {
