@@ -51,10 +51,8 @@ namespace ContentProvider.Formats.Json
             writer.Flush();
             ms.Position = 0;
 
-            T result = await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
+            return await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
                 .ConfigureAwait(false);
-
-            return result;
         }
 
         public static T GetAsJson<T>(this IContentSet contentSet, string name,
@@ -64,8 +62,7 @@ namespace ContentProvider.Formats.Json
                 throw new ArgumentNullException(nameof(contentSet));
 
             string json = contentSet.GetAsString(name);
-            T result = JsonSerializer.Deserialize<T>(json, serializerOptions ?? JsonOptions.SerializerOptions);
-            return result;
+            return JsonSerializer.Deserialize<T>(json, serializerOptions ?? JsonOptions.SerializerOptions);
         }
     }
 }
