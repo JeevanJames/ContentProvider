@@ -25,30 +25,32 @@ using System.Threading.Tasks;
 
 namespace ContentProvider
 {
-    /// <summary>
-    ///     Represents a named set of contents, consisting of a primary content source and zero or more
-    ///     fallback sources.
-    /// </summary>
+    /// <inheritdoc/>
     [DebuggerDisplay("Content Set {Name}")]
-    internal sealed class ContentSet : IContentSet
+    public class ContentSet : IContentSet
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ContentSet"/> class with the specified
-        ///     <paramref name="name"/>.
-        /// </summary>
-        /// <param name="name">The name of the content set.</param>
-        internal ContentSet(string name)
+        private string _name = null!;
+
+        /// <inheritdoc />
+        public string Name
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException(Errors.InvalidContentSetName, nameof(name));
-            Name = name;
+            get => _name;
+            internal set
+            {
+                if (value is null)
+                    throw new ArgumentNullException(nameof(value));
+                if (value.Trim().Length == 0)
+                    throw new ArgumentException(Errors.InvalidContentSetName, nameof(value));
+                _name = value;
+            }
         }
 
         /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        async Task<string> IContentSet.GetAsStringAsync(string name)
+        /// <exception cref="ContentException">
+        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+        ///     registered sources.
+        /// </exception>
+        public async Task<string> GetAsStringAsync(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -63,7 +65,11 @@ namespace ContentProvider
         }
 
         /// <inheritdoc />
-        async Task<byte[]> IContentSet.GetAsBinaryAsync(string name)
+        /// <exception cref="ContentException">
+        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+        ///     registered sources.
+        /// </exception>
+        public async Task<byte[]> GetAsBinaryAsync(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -78,7 +84,11 @@ namespace ContentProvider
         }
 
         /// <inheritdoc />
-        string IContentSet.GetAsString(string name)
+        /// <exception cref="ContentException">
+        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+        ///     registered sources.
+        /// </exception>
+        public string GetAsString(string name)
         {
             foreach (ContentSource source in Sources)
             {
@@ -92,7 +102,11 @@ namespace ContentProvider
         }
 
         /// <inheritdoc />
-        byte[] IContentSet.GetAsBinary(string name)
+        /// <exception cref="ContentException">
+        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+        ///     registered sources.
+        /// </exception>
+        public byte[] GetAsBinary(string name)
         {
             foreach (ContentSource source in Sources)
             {

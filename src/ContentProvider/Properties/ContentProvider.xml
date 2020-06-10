@@ -7,38 +7,47 @@
         <member name="M:ContentProvider.ContentManager.GetContentSet(System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:ContentProvider.ContentManager.GetContentSet``1">
+            <inheritdoc/>
+        </member>
         <member name="P:ContentProvider.ContentManager.Global">
             <summary>
                 Gets a pre-instatiated global instance of <see cref="T:ContentProvider.ContentManager"/>.
             </summary>
         </member>
         <member name="T:ContentProvider.ContentSet">
-            <summary>
-                Represents a named set of contents, consisting of a primary content source and zero or more
-                fallback sources.
-            </summary>
-        </member>
-        <member name="M:ContentProvider.ContentSet.#ctor(System.String)">
-            <summary>
-                Initializes a new instance of the <see cref="T:ContentProvider.ContentSet"/> class with the specified
-                <paramref name="name"/>.
-            </summary>
-            <param name="name">The name of the content set.</param>
+            <inheritdoc/>
         </member>
         <member name="P:ContentProvider.ContentSet.Name">
             <inheritdoc />
         </member>
-        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsStringAsync(System.String)">
+        <member name="M:ContentProvider.ContentSet.GetAsStringAsync(System.String)">
             <inheritdoc />
+            <exception cref="T:ContentProvider.ContentException">
+                Thrown if content with the specified <paramref name="name"/> is not found in any of the
+                registered sources.
+            </exception>
         </member>
-        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsBinaryAsync(System.String)">
+        <member name="M:ContentProvider.ContentSet.GetAsBinaryAsync(System.String)">
             <inheritdoc />
+            <exception cref="T:ContentProvider.ContentException">
+                Thrown if content with the specified <paramref name="name"/> is not found in any of the
+                registered sources.
+            </exception>
         </member>
-        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsString(System.String)">
+        <member name="M:ContentProvider.ContentSet.GetAsString(System.String)">
             <inheritdoc />
+            <exception cref="T:ContentProvider.ContentException">
+                Thrown if content with the specified <paramref name="name"/> is not found in any of the
+                registered sources.
+            </exception>
         </member>
-        <member name="M:ContentProvider.ContentSet.ContentProvider#IContentSet#GetAsBinary(System.String)">
+        <member name="M:ContentProvider.ContentSet.GetAsBinary(System.String)">
             <inheritdoc />
+            <exception cref="T:ContentProvider.ContentException">
+                Thrown if content with the specified <paramref name="name"/> is not found in any of the
+                registered sources.
+            </exception>
         </member>
         <member name="P:ContentProvider.ContentSet.Sources">
             <summary>

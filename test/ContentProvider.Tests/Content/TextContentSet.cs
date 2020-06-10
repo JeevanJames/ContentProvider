@@ -19,7 +19,7 @@ limitations under the License.
 
 namespace ContentProvider.Tests.Content
 {
-    public sealed class TextContentSet : ContentSetBase
+    public sealed class TextContentSet : ContentSet
     {
     }
 }

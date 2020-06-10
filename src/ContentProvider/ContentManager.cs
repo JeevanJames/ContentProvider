@@ -31,11 +31,7 @@ namespace ContentProvider
 
         public ContentManager Register(string name, params ContentSource[] sources)
         {
-            var contentSet = new ContentSet(name);
-            foreach (ContentSource source in sources)
-                contentSet.Sources.Add(source);
-            _contentSets.Add(name, contentSet);
-            return this;
+            return Register<ContentSet>(name, sources);
         }
 
         public ContentManager Register(string name, Action<ContentBuilder> builderSetup)
@@ -47,7 +43,44 @@ namespace ContentProvider
             builderSetup(builder);
             ContentSource[] sources = builder.Build();
 
-            return Register(name, sources);
+            return Register<ContentSet>(name, sources);
+        }
+
+        public ContentManager Register<TContentSet>(params ContentSource[] sources)
+            where TContentSet : ContentSet, new()
+        {
+            return Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, sources);
+        }
+
+        public ContentManager Register<TContentSet>(Action<ContentBuilder> builderSetup)
+            where TContentSet : ContentSet, new()
+        {
+            if (builderSetup is null)
+                throw new ArgumentNullException(nameof(builderSetup));
+
+            var builder = new ContentBuilder();
+            builderSetup(builder);
+            ContentSource[] sources = builder.Build();
+
+            return Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, sources);
+        }
+
+        private ContentManager Register<TContentSet>(string name, ContentSource[] sources)
+            where TContentSet : ContentSet, new()
+        {
+            if (name is null)
+                throw new ArgumentNullException(nameof(name));
+            if (sources is null)
+                throw new ArgumentNullException(nameof(sources));
+
+            var contentSet = new TContentSet
+            {
+                Name = name,
+            };
+            foreach (ContentSource source in sources)
+                contentSet.Sources.Add(source);
+            _contentSets.Add(name, contentSet);
+            return this;
         }
 
         /// <inheritdoc/>
@@ -56,6 +89,19 @@ namespace ContentProvider
             return _contentSets.TryGetValue(name, out ContentSet contentSet)
                 ? contentSet
                 : throw new ArgumentException($"Could not find a content set named {name}.", nameof(name));
+        }
+
+        /// <inheritdoc/>
+        public TContentSet GetContentSet<TContentSet>()
+            where TContentSet : ContentSet, new()
+        {
+            if (!_contentSets.TryGetValue(typeof(TContentSet).AssemblyQualifiedName, out ContentSet contentSet))
+                throw new ArgumentException($"Could not find a content set typed {typeof(TContentSet).FullName}.");
+
+            if (contentSet is TContentSet typedContentSet)
+                return typedContentSet;
+
+            throw new ContentException($"The content set for type {typeof(TContentSet).FullName} is a different type {contentSet.GetType().FullName}.");
         }
     }
 

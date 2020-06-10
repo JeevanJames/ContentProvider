@@ -10,6 +10,7 @@
 
         <!-- Build properties -->
         <LangVersion>8.0</LangVersion>
+        <Nullable>annotations</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <NoWarn>1701;1702;1591;NU5105</NoWarn>

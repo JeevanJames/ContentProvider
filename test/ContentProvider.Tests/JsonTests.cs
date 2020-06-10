@@ -64,13 +64,13 @@ namespace ContentProvider.Tests
 
     public sealed class JsonStruct
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
-        public string City { get; set; }
+        public string City { get; set; } = null!;
     }
 
     public sealed class CustomListEntry
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

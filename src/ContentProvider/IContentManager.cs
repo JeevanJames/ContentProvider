@@ -27,5 +27,8 @@ namespace ContentProvider
         /// <param name="name">The content set name.</param>
         /// <returns>The <see cref="IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
         IContentSet GetContentSet(string name);
+
+        TContentSet GetContentSet<TContentSet>()
+            where TContentSet : ContentSet, new();
     }
 }

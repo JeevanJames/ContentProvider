@@ -31,13 +31,13 @@ namespace ContentProvider.Tests.Fixtures
         public ServiceProviderFixture()
         {
             IServiceCollection services = new ServiceCollection()
-                .AddContent<TextContentSet>("Text", b => b
+                .AddContent<TextContentSet>(b => b
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
                         RootNamespace = typeof(TextContentSet).Namespace,
                         FileExtension = "txt",
                     }))
-                .AddContent<JsonContentSet>("Json", b => b
+                .AddContent<JsonContentSet>(b => b
                     .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
                     {
                         RootNamespace = typeof(JsonContentSet).Namespace,

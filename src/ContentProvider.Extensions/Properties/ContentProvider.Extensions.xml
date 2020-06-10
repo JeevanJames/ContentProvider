@@ -70,11 +70,11 @@
                 Thrown if the <paramref name="name"/> parameter is <c>null</c>, empty or whitespaces.
             </exception>
         </member>
-        <member name="M:ContentProvider.ServiceCollectionExtensions.AddContent``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{ContentProvider.ContentBuilder})">
+        <member name="M:ContentProvider.ServiceCollectionExtensions.AddContent``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{ContentProvider.ContentBuilder})">
             <summary>
                 Registers content from one or more sources that can be injected into the application.
                 <para/>
-                This method associates the content with a specific <see cref="T:ContentProvider.ContentSetBase"/> type, so
+                This method associates the content with a specific <see cref="T:ContentProvider.ContentSet"/> type, so
                 to access it later, you can simply inject the <typeparamref name="TContentSet"/> type
                 into your code.
             </summary>
@@ -82,10 +82,6 @@
                 The content set class to register with the DI container.
             </typeparam>
             <param name="services">The services collection.</param>
-            <param name="name">
-                A name that can be used to reference this content when accessing through an injected
-                <see cref="T:ContentProvider.IContentManager"/>.
-            </param>
             <param name="sourceBuilder">
                 A function used to set up the source for the content, along with any fallback sources.
             </param>
@@ -93,9 +89,6 @@
             <exception cref="T:System.ArgumentNullException">
                 Thrown if the <paramref name="services"/> or <paramref name="sourceBuilder"/> parameters
                 are <c>null</c>.
-            </exception>
-            <exception cref="T:System.ArgumentException">
-                Thrown if the <paramref name="name"/> parameter is <c>null</c>, empty or whitespaces.
             </exception>
         </member>
         <member name="M:ContentProvider.ServiceCollectionExtensions.AddFileContent``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String)">
@@ -106,12 +99,7 @@
                 The content set class to register with the DI container.
             </typeparam>
             <param name="services">The services collection.</param>
-            <param name="fileExtension">
-                The file extension of the files to register. If multiple file extensions are needed, use
-                the advanced <see cref="M:ContentProvider.ServiceCollectionExtensions.AddContent(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{ContentProvider.ContentBuilder})"/>
-                or <see cref="M:ContentProvider.ServiceCollectionExtensions.AddContent``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{ContentProvider.ContentBuilder})"/>
-                methods to have more control on the content that is added.
-            </param>
+            <param name="fileExtension">The file extension of the files to register.</param>
             <param name="baseDirectory">
                 The base directory under which to find the file content.
                 <para/>
