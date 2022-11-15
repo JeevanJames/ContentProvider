@@ -96,7 +96,7 @@ namespace ContentProvider
             where TContentSet : ContentSet, new()
         {
             if (!_contentSets.TryGetValue(typeof(TContentSet).AssemblyQualifiedName, out ContentSet contentSet))
-                throw new ArgumentException($"Could not find a content set typed {typeof(TContentSet).FullName}.");
+                throw new InvalidOperationException($"Could not find a content set typed {typeof(TContentSet).FullName}.");
 
             if (contentSet is TContentSet typedContentSet)
                 return typedContentSet;

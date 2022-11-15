@@ -1,68 +1,77 @@
 <Project>
 
-    <PropertyGroup>
-        <BaseNamespace>ContentProvider</BaseNamespace>
-        <ProductId>ContentProvider</ProductId>
-        <ProductDescription>Content Provider is an extensible framework to provide content from various sources to a .NET application
+  <PropertyGroup>
+    <BaseNamespace>ContentProvider</BaseNamespace>
+    <ProductId>ContentProvider</ProductId>
+    <ProductDescription>Content Provider is an extensible framework to provide content from various sources to a .NET application</ProductDescription>
 
+    <!-- Build properties -->
+    <LangVersion>8.0</LangVersion>
+    <Nullable>annotations</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>1701;1702;1591;NU5105</NoWarn>
 
-</ProductDescription>
+    <!-- Package properties -->
+    <Version>0.1.0</Version>
+    <Authors>Damian Kulik,Jeevan James</Authors>
+    <Company>Damian Kulik,Jeevan James</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Copyright>Copyright (c) 2020=2023 Damian Kulik, Jeevan James</Copyright>
+    <Product>Content Provider</Product>
+    <PackageProjectUrl>https://github.com/JeevanJames/$(ProductId)/</PackageProjectUrl>
+    <!--<PackageIcon>https://github.com/JeevanJames/$(ProductId)/raw/master/Logo.png</PackageIcon>-->
+    <RepositoryUrl>https://github.com/JeevanJames/$(ProductId).git</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>Content Provider ContentProvider Embedded Resources</PackageTags>
+    <PackageReleaseNotes>See https://github.com/JeevanJames/$(ProductId)/releases</PackageReleaseNotes>
+    <NeutralLanguage>en-US</NeutralLanguage>
 
-        <!-- Build properties -->
-        <LangVersion>8.0</LangVersion>
-        <Nullable>annotations</Nullable>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsAsErrors />
-        <NoWarn>1701;1702;1591;NU5105</NoWarn>
+    <!-- SourceLink properties-->
+    <DebugType>embedded</DebugType>
+    <EmbedAllSources>True</EmbedAllSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 
-        <!-- Package properties -->
-        <Version>0.1.0</Version>
-        <Authors>Damian Kulik,Jeevan James</Authors>
-        <Company>Damian Kulik,Jeevan James</Company>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Copyright>Copyright (c) 2020 Damian Kulik, Jeevan James</Copyright>
-        <Product>Content Provider</Product>
-        <PackageProjectUrl>https://github.com/JeevanJames/$(ProductId)/</PackageProjectUrl>
-        <PackageIconUrl>https://github.com/JeevanJames/$(ProductId)/raw/master/Logo.png</PackageIconUrl>
-        <RepositoryUrl>https://github.com/JeevanJames/$(ProductId).git</RepositoryUrl>
-        <RepositoryType>Git</RepositoryType>
-        <PackageTags>Content Provider ContentProvider Embedded Resources</PackageTags>
-        <PackageReleaseNotes>See https://github.com/JeevanJames/$(ProductId)/releases</PackageReleaseNotes>
-        <NeutralLanguage>en-US</NeutralLanguage>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)$(ProductId).ruleset</CodeAnalysisRuleSet>
 
-        <!-- SourceLink properties-->
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-      
-        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)$(ProductId).ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
 
-    </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.48.0.56517">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.8.0.18411">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.734">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

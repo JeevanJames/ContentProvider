@@ -30,7 +30,7 @@ namespace ContentProvider.EmbeddedResources
     [DebuggerDisplay("Embedded resources content source ({_resources.Count} items)")]
     public sealed class EmbeddedResourceContentSource : ContentSource<EmbeddedResourceContentSourceOptions>
     {
-        private readonly Dictionary<string, ResourceDetail> _resources = new Dictionary<string, ResourceDetail>();
+        private readonly Dictionary<string, ResourceDetail> _resources = new Dictionary<string, ResourceDetail>(StringComparer.OrdinalIgnoreCase);
 
         public EmbeddedResourceContentSource(IEnumerable<Assembly> assemblies,
             EmbeddedResourceContentSourceOptions options)
@@ -76,21 +76,19 @@ namespace ContentProvider.EmbeddedResources
             }
         }
 
-        public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
+        public override async Task<(bool Success, string? Content)> TryLoadAsStringAsync(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
 
             using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
-#pragma warning disable S3966 // Objects should not be disposed more than once
             using var reader = new StreamReader(resourceStream);
-#pragma warning restore S3966 // Objects should not be disposed more than once
 
             string content = await reader.ReadToEndAsync().ConfigureAwait(false);
             return (true, content);
         }
 
-        public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
+        public override async Task<(bool Success, byte[]? Content)> TryLoadAsBinaryAsync(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
@@ -108,21 +106,20 @@ namespace ContentProvider.EmbeddedResources
             return (true, content);
         }
 
-        public override (bool success, string? content) TryLoadAsString(string name)
+        public override (bool Success, string? Content) TryLoadAsString(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return (false, null);
 
             using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
-#pragma warning disable S3966 // Objects should not be disposed more than once
             using var reader = new StreamReader(resourceStream);
-#pragma warning restore S3966 // Objects should not be disposed more than once
 
             string content = reader.ReadToEnd();
+
             return (true, content);
         }
 
-        public override (bool success, byte[]? content) TryLoadAsBinary(string name)
+        public override (bool Success, byte[]? Content) TryLoadAsBinary(string name)
         {
             if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
                 return default;
@@ -134,23 +131,10 @@ namespace ContentProvider.EmbeddedResources
             using var ms = new MemoryStream();
             int read;
             while ((read = resourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                ms.WriteAsync(buffer, 0, read);
+                ms.Write(buffer, 0, read);
             byte[] content = ms.ToArray();
 
             return (true, content);
         }
-    }
-
-    internal readonly struct ResourceDetail
-    {
-        internal ResourceDetail(Assembly assembly, string resourceName)
-        {
-            Assembly = assembly;
-            ResourceName = resourceName;
-        }
-
-        internal Assembly Assembly { get; }
-
-        internal string ResourceName { get; }
     }
 }

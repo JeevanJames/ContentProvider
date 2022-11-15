@@ -22,8 +22,6 @@ using ContentProvider.Tests.Content;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xunit;
-
 namespace ContentProvider.Tests.Fixtures
 {
     public sealed class ServiceProviderFixture
@@ -48,12 +46,5 @@ namespace ContentProvider.Tests.Fixtures
         }
 
         public ServiceProvider ServiceProvider { get; }
-    }
-
-    [CollectionDefinition("Content")]
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public sealed class ContentCollection : ICollectionFixture<ServiceProviderFixture>
-#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
-    {
     }
 }

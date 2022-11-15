@@ -49,7 +49,5 @@ namespace ContentProvider
         string GetAsString(string name);
 
         byte[] GetAsBinary(string name);
-
-        //TODO: GetRandom methods
     }
 }

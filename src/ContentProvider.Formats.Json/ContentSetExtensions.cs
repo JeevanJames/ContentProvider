@@ -27,36 +27,39 @@ namespace ContentProvider.Formats.Json
 {
     public static class ContentSetExtensions
     {
-        public static Task<T> GetAsJsonAsync<T>(this IContentSet contentSet,
+        public static Task<T?> GetAsJsonAsync<T>(this IContentSet contentSet,
             string name,
             JsonSerializerOptions? serializerOptions = null)
+            where T : class
         {
             if (contentSet is null)
                 throw new ArgumentNullException(nameof(contentSet));
 
-            return contentSet.GetAsJsonAsyncInternal<T>(name, serializerOptions);
+            return contentSet.GetAsJsonAsyncInternalAsync<T>(name, serializerOptions);
         }
 
-        private static async Task<T> GetAsJsonAsyncInternal<T>(this IContentSet contentSet,
+        private static async Task<T?> GetAsJsonAsyncInternalAsync<T>(this IContentSet contentSet,
             string name,
             JsonSerializerOptions? serializerOptions = null)
+            where T : class
         {
             string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
 
             using var ms = new MemoryStream();
-#pragma warning disable CA2000 // Dispose objects before losing scope
-            var writer = new StreamWriter(ms, Encoding.UTF8);
-#pragma warning restore CA2000 // Dispose objects before losing scope
-            writer.Write(json);
-            writer.Flush();
+            using var writer = new StreamWriter(ms, Encoding.UTF8);
+
+            await writer.WriteAsync(json).ConfigureAwait(false);
+            await writer.FlushAsync().ConfigureAwait(false);
             ms.Position = 0;
 
-            return await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
+            return await JsonSerializer
+                .DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
                 .ConfigureAwait(false);
         }
 
-        public static T GetAsJson<T>(this IContentSet contentSet, string name,
+        public static T? GetAsJson<T>(this IContentSet contentSet, string name,
             JsonSerializerOptions? serializerOptions = null)
+            where T : class
         {
             if (contentSet is null)
                 throw new ArgumentNullException(nameof(contentSet));

@@ -43,7 +43,7 @@ namespace ContentProvider.Tests
         }
 
         [Fact]
-        public async Task Able_to_load_json_resources()
+        public async Task Able_to_load_json_resources_Async()
         {
             var value = await _contentSet.GetAsJsonAsync<JsonStruct>("Content")
                 .ConfigureAwait(false);
@@ -52,25 +52,13 @@ namespace ContentProvider.Tests
         }
 
         [Fact]
-        public async Task Able_to_load_custom_list_entry()
+        public async Task Able_to_load_custom_list_entry_Async()
         {
-            var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry", "Flash", 2)
+            var value = await _contentSet.GetJsonAsCustomListEntryAsync<CustomListEntry>("CustomListEntry", "Flash", 2)
                 .ConfigureAwait(false);
 
             value.ShouldNotBeNull();
             value.Name.ShouldBe("Barry Allen");
         }
-    }
-
-    public sealed class JsonStruct
-    {
-        public string Name { get; set; } = null!;
-
-        public string City { get; set; } = null!;
-    }
-
-    public sealed class CustomListEntry
-    {
-        public string Name { get; set; } = null!;
     }
 }

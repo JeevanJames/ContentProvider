@@ -19,7 +19,6 @@ limitations under the License.
 
 using ContentProvider.EmbeddedResources;
 using ContentProvider.Tests.Content;
-using Xunit;
 
 namespace ContentProvider.Tests.Fixtures
 {
@@ -43,12 +42,5 @@ namespace ContentProvider.Tests.Fixtures
         }
 
         public ContentManager ContentManager { get; }
-    }
-
-    [CollectionDefinition("ContentManager")]
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public sealed class ContentManagerFixtureCollection : ICollectionFixture<ContentManagerFixture>
-#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
-    {
     }
 }

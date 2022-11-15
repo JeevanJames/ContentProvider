@@ -30,8 +30,9 @@ namespace ContentProvider.Formats.Json.Structures
         public static async Task<IEnumerable<T>> GetJsonAsListAsync<T>(this IContentSet contentSet, string name,
             Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
         {
-            IEnumerable<T> value = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
-                .ConfigureAwait(false);
+            IEnumerable<T> value = await contentSet
+                .GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
+                .ConfigureAwait(false) ?? throw new InvalidOperationException($"Given resource {name} cannot be deserialized as collection.");
             if (predicate != null)
                 value = value.Where(predicate);
             return value;
@@ -40,7 +41,8 @@ namespace ContentProvider.Formats.Json.Structures
         public static IEnumerable<T> GetJsonAsList<T>(this IContentSet contentSet, string name,
             Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
         {
-            IEnumerable<T> value = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
+            IEnumerable<T> value = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions)
+                 ?? throw new InvalidOperationException($"Given resource {name} cannot be deserialized as collection.");
             if (predicate != null)
                 value = value.Where(predicate);
             return value;
@@ -54,16 +56,18 @@ namespace ContentProvider.Formats.Json.Structures
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            return contentSet.GetJsonAsListEntryAsyncInternal(name, predicate, serializerOptions);
+            return contentSet.GetJsonAsListEntryAsyncInternalAsync(name, predicate, serializerOptions);
         }
 
-        private static async Task<T> GetJsonAsListEntryAsyncInternal<T>(this IContentSet contentSet,
+        private static async Task<T> GetJsonAsListEntryAsyncInternalAsync<T>(this IContentSet contentSet,
             string name,
             Func<T, bool> predicate,
             JsonSerializerOptions? serializerOptions = null)
         {
-            IEnumerable<T> collection = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
-                .ConfigureAwait(false);
+            IEnumerable<T> collection = await contentSet
+                .GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
+                .ConfigureAwait(false)
+                ?? throw new InvalidOperationException($"Given resource {name} cannot be deserialized as collection.");
             T result = collection.FirstOrDefault(predicate);
             return result;
         }
@@ -76,12 +80,13 @@ namespace ContentProvider.Formats.Json.Structures
             if (predicate is null)
                 throw new ArgumentNullException(nameof(predicate));
 
-            IEnumerable<T> collection = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
+            IEnumerable<T> collection = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions)
+                ?? throw new InvalidOperationException($"Given resource {name} cannot be deserialized as collection.");
             T result = collection.FirstOrDefault(predicate);
             return result;
         }
 
-        public static Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet,
+        public static Task<T?> GetJsonAsCustomListEntryAsync<T>(this IContentSet contentSet,
             string name,
             params object[] args)
             where T : class
@@ -90,13 +95,12 @@ namespace ContentProvider.Formats.Json.Structures
                 throw new ArgumentNullException(nameof(contentSet));
 
             //IReadOnlyList<Type> argTypes = args.Select(arg => arg.GetType()).ToList();
+            //TODOO: Check all arg types are valid JSON types - number, string, boolean
 
-            //TODO: Check all arg types are valid JSON types - number, string, boolean
-
-            return contentSet.GetJsonAsCustomListEntryInternal<T>(name, args);
+            return contentSet.GetJsonAsCustomListEntryInternaAsync<T>(name, args ?? Array.Empty<object>());
         }
 
-        private static async Task<T?> GetJsonAsCustomListEntryInternal<T>(this IContentSet contentSet,
+        private static async Task<T?> GetJsonAsCustomListEntryInternaAsync<T>(this IContentSet contentSet,
             string name,
             params object[] args)
             where T : class
@@ -133,7 +137,8 @@ namespace ContentProvider.Formats.Json.Structures
                 {
                     if (!item.TryGetProperty("Data", out JsonElement dataProperty))
                         throw new JsonException($"Cannot find Data property in the JSON item {item}.");
-                    T value = JsonSerializer.Deserialize<T>(dataProperty.GetRawText(), JsonOptions.SerializerOptions);
+                    T value = JsonSerializer.Deserialize<T>(dataProperty.GetRawText(), JsonOptions.SerializerOptions)
+                        ?? throw new InvalidOperationException($"Data cannot be deserialized for {item}.");
                     return value;
                 }
             }
@@ -144,13 +149,15 @@ namespace ContentProvider.Formats.Json.Structures
         public static async Task<IDictionary<string, T>> GetJsonAsDictionaryAsync<T>(this IContentSet contentSet,
             string name, JsonSerializerOptions? serializerOptions = null)
         {
-            return await contentSet.GetAsJsonAsync<IDictionary<string, T>>(name, serializerOptions).ConfigureAwait(false);
+            return await contentSet.GetAsJsonAsync<IDictionary<string, T>>(name, serializerOptions).ConfigureAwait(false)
+                 ?? throw new InvalidOperationException($"Given resource {name} cannot be deserialized as dictionary.");
         }
 
         public static IDictionary<string, T> GetJsonAsDictionary<T>(this IContentSet contentSet, string name,
             JsonSerializerOptions? serializerOptions = null)
         {
-            return contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions);
+            return contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions)
+                 ?? throw new InvalidOperationException($"Given resource {name} cannot be deserialized as collection.");
         }
 
         public static async Task<T> GetJsonAsDictionaryEntryAsync<T>(this IContentSet contentSet,

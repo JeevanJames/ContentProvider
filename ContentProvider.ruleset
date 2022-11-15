@@ -710,8 +710,8 @@
     <Rule Id="S1135" Action="None" _Description="Track uses of TODO tags" _Justification="TODO tags should be allowed to be committed to version control, as they indicate pending work." />
     <Rule Id="S3376" Action="None" />
   </Rules>
-  <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
-    <!-- Design -->
-    <Rule Id="RCS1194" Action="None" _Description="Implement exception constructors." _Justification="No good reason to disallow custom constructors (except for the serialization ctor)." />
-  </Rules>
+  <!--<Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
+    --><!-- Design --><!--
+    <Rule Id="VSTHRD200" Action="None" _Description="Microsoft.VisualStudio.Threading.Analyzers." _Justification="There is no sync counterpart." />
+  </Rules>-->
 </RuleSet>

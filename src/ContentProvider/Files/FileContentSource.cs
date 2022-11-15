@@ -59,7 +59,7 @@ namespace ContentProvider.Files
                 .ToList();
         }
 
-        public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
+        public override async Task<(bool Success, string? Content)> TryLoadAsStringAsync(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -74,7 +74,7 @@ namespace ContentProvider.Files
             return (true, content);
         }
 
-        public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
+        public override async Task<(bool Success, byte[]? Content)> TryLoadAsBinaryAsync(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -89,7 +89,7 @@ namespace ContentProvider.Files
             return (true, content);
         }
 
-        public override (bool success, string? content) TryLoadAsString(string name)
+        public override (bool Success, string? Content) TryLoadAsString(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -104,7 +104,7 @@ namespace ContentProvider.Files
             return (true, content);
         }
 
-        public override (bool success, byte[]? content) TryLoadAsBinary(string name)
+        public override (bool Success, byte[]? Content) TryLoadAsBinary(string name)
         {
             string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
             if (file is null)
@@ -114,7 +114,7 @@ namespace ContentProvider.Files
 
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var ms = new MemoryStream();
-            fs.CopyToAsync(ms);
+            fs.CopyTo(ms);
             byte[] content = ms.ToArray();
             return (true, content);
         }
