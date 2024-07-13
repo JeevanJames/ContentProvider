@@ -18,16 +18,14 @@ limitations under the License.
 #endregion
 
 using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace ContentProvider
-{
+namespace ContentProvider;
+
 #pragma warning disable CA1710 // Identifiers should have correct suffix
-    public sealed class ContentBuilder : Collection<ContentSource>
+public sealed class ContentBuilder : Collection<ContentSource>
 #pragma warning restore CA1710 // Identifiers should have correct suffix
-    {
-        public ContentSourceBuilder From => new ContentSourceBuilder(this);
+{
+    public ContentSourceBuilder From => new ContentSourceBuilder(this);
 
-        public ContentSource[] Build() => this.ToArray();
-    }
+    public ContentSource[] Build() => this.ToArray();
 }

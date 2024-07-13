@@ -19,16 +19,15 @@ limitations under the License.
 
 using System.Text.Json;
 
-namespace ContentProvider.Formats.Json
-{
-    public static class JsonOptions
-    {
-        private static JsonSerializerOptions _serializerOptions = new JsonSerializerOptions();
+namespace ContentProvider.Formats.Json;
 
-        public static JsonSerializerOptions SerializerOptions
-        {
-            get => _serializerOptions ??= new JsonSerializerOptions();
-            set => _serializerOptions = value;
-        }
+public static class JsonOptions
+{
+    private static JsonSerializerOptions _serializerOptions = new JsonSerializerOptions();
+
+    public static JsonSerializerOptions SerializerOptions
+    {
+        get => _serializerOptions ??= new JsonSerializerOptions();
+        set => _serializerOptions = value;
     }
 }

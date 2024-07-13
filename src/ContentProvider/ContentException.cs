@@ -17,31 +17,29 @@ limitations under the License.
 */
 #endregion
 
-using System;
 using System.Runtime.Serialization;
 
-namespace ContentProvider
+namespace ContentProvider;
+
+[Serializable]
+public class ContentException : Exception
 {
-    [Serializable]
-    public class ContentException : Exception
+    public ContentException()
     {
-        public ContentException()
-        {
-        }
+    }
 
-        public ContentException(string message)
-            : base(message)
-        {
-        }
+    public ContentException(string message)
+        : base(message)
+    {
+    }
 
-        public ContentException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public ContentException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
 
-        protected ContentException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+    protected ContentException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
     }
 }

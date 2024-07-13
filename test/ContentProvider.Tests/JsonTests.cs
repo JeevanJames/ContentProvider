@@ -17,9 +17,6 @@ limitations under the License.
 */
 #endregion
 
-using System;
-using System.Threading.Tasks;
-
 using ContentProvider.Formats.Json;
 using ContentProvider.Formats.Json.Structures;
 using ContentProvider.Tests.Fixtures;
@@ -28,49 +25,48 @@ using Shouldly;
 
 using Xunit;
 
-namespace ContentProvider.Tests
+namespace ContentProvider.Tests;
+
+[Collection("ContentManager")]
+public sealed class JsonTests
 {
-    [Collection("ContentManager")]
-    public sealed class JsonTests
+    private readonly IContentSet _contentSet;
+
+    public JsonTests(ContentManagerFixture fixture)
     {
-        private readonly IContentSet _contentSet;
-
-        public JsonTests(ContentManagerFixture fixture)
-        {
-            if (fixture is null)
-                throw new ArgumentNullException(nameof(fixture));
-            _contentSet = fixture.ContentManager.GetContentSet("Json");
-        }
-
-        [Fact]
-        public async Task Able_to_load_json_resources()
-        {
-            var value = await _contentSet.GetAsJsonAsync<JsonStruct>("Content")
-                .ConfigureAwait(false);
-
-            value.ShouldNotBeNull();
-        }
-
-        [Fact]
-        public async Task Able_to_load_custom_list_entry()
-        {
-            var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry", "Flash", 2)
-                .ConfigureAwait(false);
-
-            value.ShouldNotBeNull();
-            value.Name.ShouldBe("Barry Allen");
-        }
+        if (fixture is null)
+            throw new ArgumentNullException(nameof(fixture));
+        _contentSet = fixture.ContentManager.GetContentSet("Json");
     }
 
-    public sealed class JsonStruct
+    [Fact]
+    public async Task Able_to_load_json_resources()
     {
-        public string Name { get; set; } = null!;
+        var value = await _contentSet.GetAsJsonAsync<JsonStruct>("Content")
+;
 
-        public string City { get; set; } = null!;
+        value.ShouldNotBeNull();
     }
 
-    public sealed class CustomListEntry
+    [Fact]
+    public async Task Able_to_load_custom_list_entry()
     {
-        public string Name { get; set; } = null!;
+        var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry", "Flash", 2)
+;
+
+        value.ShouldNotBeNull();
+        value.Name.ShouldBe("Barry Allen");
     }
+}
+
+public sealed class JsonStruct
+{
+    public string Name { get; set; } = null!;
+
+    public string City { get; set; } = null!;
+}
+
+public sealed class CustomListEntry
+{
+    public string Name { get; set; } = null!;
 }

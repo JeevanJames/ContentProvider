@@ -17,18 +17,17 @@ limitations under the License.
 */
 #endregion
 
-namespace ContentProvider
-{
-    public interface IContentManager
-    {
-        /// <summary>
-        ///     Returns the <see cref="IContentSet"/> with the specified <paramref name="name"/>.
-        /// </summary>
-        /// <param name="name">The content set name.</param>
-        /// <returns>The <see cref="IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
-        IContentSet GetContentSet(string name);
+namespace ContentProvider;
 
-        TContentSet GetContentSet<TContentSet>()
-            where TContentSet : ContentSet, new();
-    }
+public interface IContentManager
+{
+    /// <summary>
+    ///     Returns the <see cref="IContentSet"/> with the specified <paramref name="name"/>.
+    /// </summary>
+    /// <param name="name">The content set name.</param>
+    /// <returns>The <see cref="IContentSet"/> instance, if found; otherwise <c>null</c>.</returns>
+    IContentSet GetContentSet(string name);
+
+    TContentSet GetContentSet<TContentSet>()
+        where TContentSet : ContentSet, new();
 }

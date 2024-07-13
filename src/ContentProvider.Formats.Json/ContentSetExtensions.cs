@@ -17,52 +17,48 @@ limitations under the License.
 */
 #endregion
 
-using System;
-using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace ContentProvider.Formats.Json
+namespace ContentProvider.Formats.Json;
+
+public static class ContentSetExtensions
 {
-    public static class ContentSetExtensions
+    public static Task<T?> GetAsJsonAsync<T>(this IContentSet contentSet,
+        string name,
+        JsonSerializerOptions? serializerOptions = null)
     {
-        public static Task<T> GetAsJsonAsync<T>(this IContentSet contentSet,
-            string name,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            if (contentSet is null)
-                throw new ArgumentNullException(nameof(contentSet));
+        if (contentSet is null)
+            throw new ArgumentNullException(nameof(contentSet));
 
-            return contentSet.GetAsJsonAsyncInternal<T>(name, serializerOptions);
-        }
+        return contentSet.GetAsJsonAsyncInternal<T>(name, serializerOptions);
+    }
 
-        private static async Task<T> GetAsJsonAsyncInternal<T>(this IContentSet contentSet,
-            string name,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
+    private static async Task<T?> GetAsJsonAsyncInternal<T>(this IContentSet contentSet,
+        string name,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
 
-            using var ms = new MemoryStream();
+        using var ms = new MemoryStream();
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var writer = new StreamWriter(ms, Encoding.UTF8);
+        var writer = new StreamWriter(ms, Encoding.UTF8);
 #pragma warning restore CA2000 // Dispose objects before losing scope
-            writer.Write(json);
-            writer.Flush();
-            ms.Position = 0;
+        await writer.WriteAsync(json).ConfigureAwait(false);
+        await writer.FlushAsync().ConfigureAwait(false);
+        ms.Position = 0;
 
-            return await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
-                .ConfigureAwait(false);
-        }
+        return await JsonSerializer.DeserializeAsync<T>(ms, serializerOptions ?? JsonOptions.SerializerOptions)
+            .ConfigureAwait(false);
+    }
 
-        public static T GetAsJson<T>(this IContentSet contentSet, string name,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            if (contentSet is null)
-                throw new ArgumentNullException(nameof(contentSet));
+    public static T? GetAsJson<T>(this IContentSet contentSet, string name,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        if (contentSet is null)
+            throw new ArgumentNullException(nameof(contentSet));
 
-            string json = contentSet.GetAsString(name);
-            return JsonSerializer.Deserialize<T>(json, serializerOptions ?? JsonOptions.SerializerOptions);
-        }
+        string json = contentSet.GetAsString(name);
+        return JsonSerializer.Deserialize<T>(json, serializerOptions ?? JsonOptions.SerializerOptions);
     }
 }

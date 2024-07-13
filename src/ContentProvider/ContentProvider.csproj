@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>$(BaseNamespace)</AssemblyName>
-    <RootNamespace>$(AssemblyName)</RootNamespace>
-    <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
-    <Description>$(ProductDescription)This package contains the core framework.</Description>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <AssemblyName>$(BaseNamespace)</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+        <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
+        <Description>$(ProductDescription)This package contains the core framework.</Description>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Update="Errors.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Errors.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Errors.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Errors.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Errors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Errors.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 
 </Project>

@@ -17,39 +17,36 @@ limitations under the License.
 */
 #endregion
 
-using System.Threading.Tasks;
+namespace ContentProvider;
 
-namespace ContentProvider
+/// <summary>
+///     Represents a named set of contents, consisting of a primary content source and zero or more
+///     fallback sources.
+/// </summary>
+public interface IContentSet
 {
     /// <summary>
-    ///     Represents a named set of contents, consisting of a primary content source and zero or more
-    ///     fallback sources.
+    ///     Gets the name of the content set.
     /// </summary>
-    public interface IContentSet
-    {
-        /// <summary>
-        ///     Gets the name of the content set.
-        /// </summary>
-        string Name { get; }
+    string Name { get; }
 
-        /// <summary>
-        ///     Gets the value of the content entry named <paramref name="name"/> as a string.
-        /// </summary>
-        /// <param name="name">The content entry name.</param>
-        /// <returns>The content value as a string, if found; otherwise <c>null</c>.</returns>
-        Task<string> GetAsStringAsync(string name);
+    /// <summary>
+    ///     Gets the value of the content entry named <paramref name="name"/> as a string.
+    /// </summary>
+    /// <param name="name">The content entry name.</param>
+    /// <returns>The content value as a string, if found; otherwise <c>null</c>.</returns>
+    Task<string> GetAsStringAsync(string name);
 
-        /// <summary>
-        ///     Gets the value of the content entry named <paramref name="name"/> as a byte array.
-        /// </summary>
-        /// <param name="name">The content entry name.</param>
-        /// <returns>The content value as a byte array, if found; otherwise <c>null</c>.</returns>
-        Task<byte[]> GetAsBinaryAsync(string name);
+    /// <summary>
+    ///     Gets the value of the content entry named <paramref name="name"/> as a byte array.
+    /// </summary>
+    /// <param name="name">The content entry name.</param>
+    /// <returns>The content value as a byte array, if found; otherwise <c>null</c>.</returns>
+    Task<byte[]> GetAsBinaryAsync(string name);
 
-        string GetAsString(string name);
+    string GetAsString(string name);
 
-        byte[] GetAsBinary(string name);
+    byte[] GetAsBinary(string name);
 
-        //TODO: GetRandom methods
-    }
+    //TODO: GetRandom methods
 }

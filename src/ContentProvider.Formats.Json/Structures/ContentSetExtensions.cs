@@ -17,163 +17,160 @@ limitations under the License.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace ContentProvider.Formats.Json.Structures
+namespace ContentProvider.Formats.Json.Structures;
+
+public static class ContentSetExtensions
 {
-    public static class ContentSetExtensions
+    public static async Task<IEnumerable<T>?> GetJsonAsListAsync<T>(this IContentSet contentSet, string name,
+        Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
     {
-        public static async Task<IEnumerable<T>> GetJsonAsListAsync<T>(this IContentSet contentSet, string name,
-            Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
+        IEnumerable<T>? value = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
+            .ConfigureAwait(false);
+        if (predicate != null)
+            value = value.Where(predicate);
+        return value;
+    }
+
+    public static IEnumerable<T>? GetJsonAsList<T>(this IContentSet contentSet, string name,
+        Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
+    {
+        IEnumerable<T>? value = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
+        if (predicate != null)
+            value = value.Where(predicate);
+        return value;
+    }
+
+    public static Task<T?> GetJsonAsListEntryAsync<T>(this IContentSet contentSet,
+        string name,
+        Func<T, bool> predicate,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        if (predicate is null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        return contentSet.GetJsonAsListEntryAsyncInternal(name, predicate, serializerOptions);
+    }
+
+    private static async Task<T?> GetJsonAsListEntryAsyncInternal<T>(this IContentSet contentSet,
+        string name,
+        Func<T, bool> predicate,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        IEnumerable<T>? collection = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
+            .ConfigureAwait(false);
+        T result = collection.FirstOrDefault(predicate);
+        return result;
+    }
+
+    public static T GetJsonAsListEntry<T>(this IContentSet contentSet,
+        string name,
+        Func<T, bool> predicate,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        if (predicate is null)
+            throw new ArgumentNullException(nameof(predicate));
+
+        IEnumerable<T>? collection = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
+        T result = collection.FirstOrDefault(predicate);
+        return result;
+    }
+
+    public static Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet,
+        string name,
+        params object[] args)
+        where T : class
+    {
+        if (contentSet is null)
+            throw new ArgumentNullException(nameof(contentSet));
+        if (args is null)
+            throw new ArgumentNullException(nameof(args));
+
+        //IReadOnlyList<Type> argTypes = args.Select(arg => arg.GetType()).ToList();
+
+        //TODO: Check all arg types are valid JSON types - number, string, boolean
+
+        return contentSet.GetJsonAsCustomListEntryInternal<T>(name, args);
+    }
+
+    private static async Task<T?> GetJsonAsCustomListEntryInternal<T>(this IContentSet contentSet,
+        string name,
+        params object[] args)
+        where T : class
+    {
+        string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
+
+        JsonDocument doc = JsonDocument.Parse(json, new JsonDocumentOptions
         {
-            IEnumerable<T> value = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
-                .ConfigureAwait(false);
-            if (predicate != null)
-                value = value.Where(predicate);
-            return value;
-        }
+            AllowTrailingCommas = true,
+            CommentHandling = JsonCommentHandling.Skip,
+        });
 
-        public static IEnumerable<T> GetJsonAsList<T>(this IContentSet contentSet, string name,
-            Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
+        foreach (JsonElement item in doc.RootElement.EnumerateArray())
         {
-            IEnumerable<T> value = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
-            if (predicate != null)
-                value = value.Where(predicate);
-            return value;
-        }
+            if (!item.TryGetProperty("Inputs", out JsonElement inputsProperty))
+                throw new JsonException($"Cannot find Inputs property in the JSON item {item}.");
+            if (inputsProperty.ValueKind != JsonValueKind.Array)
+                throw new JsonException($"The Inputs property must be an array in the JSON item {item}.");
+            if (inputsProperty.GetArrayLength() != args.Length)
+                throw new JsonException($"Invalid number of arguments in the Inputs property for the JSON item {item}.");
 
-        public static Task<T> GetJsonAsListEntryAsync<T>(this IContentSet contentSet,
-            string name,
-            Func<T, bool> predicate,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            if (predicate is null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            return contentSet.GetJsonAsListEntryAsyncInternal(name, predicate, serializerOptions);
-        }
-
-        private static async Task<T> GetJsonAsListEntryAsyncInternal<T>(this IContentSet contentSet,
-            string name,
-            Func<T, bool> predicate,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            IEnumerable<T> collection = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
-                .ConfigureAwait(false);
-            T result = collection.FirstOrDefault(predicate);
-            return result;
-        }
-
-        public static T GetJsonAsListEntry<T>(this IContentSet contentSet,
-            string name,
-            Func<T, bool> predicate,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            if (predicate is null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            IEnumerable<T> collection = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
-            T result = collection.FirstOrDefault(predicate);
-            return result;
-        }
-
-        public static Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet,
-            string name,
-            params object[] args)
-            where T : class
-        {
-            if (contentSet is null)
-                throw new ArgumentNullException(nameof(contentSet));
-
-            //IReadOnlyList<Type> argTypes = args.Select(arg => arg.GetType()).ToList();
-
-            //TODO: Check all arg types are valid JSON types - number, string, boolean
-
-            return contentSet.GetJsonAsCustomListEntryInternal<T>(name, args);
-        }
-
-        private static async Task<T?> GetJsonAsCustomListEntryInternal<T>(this IContentSet contentSet,
-            string name,
-            params object[] args)
-            where T : class
-        {
-            string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
-
-            JsonDocument doc = JsonDocument.Parse(json, new JsonDocumentOptions
+            bool inputsMatch = true;
+            List<JsonElement> inputArgs = inputsProperty.EnumerateArray().ToList();
+            for (var i = 0; i < inputArgs.Count; i++)
             {
-                AllowTrailingCommas = true,
-                CommentHandling = JsonCommentHandling.Skip,
-            });
-
-            foreach (JsonElement item in doc.RootElement.EnumerateArray())
-            {
-                if (!item.TryGetProperty("Inputs", out JsonElement inputsProperty))
-                    throw new JsonException($"Cannot find Inputs property in the JSON item {item}.");
-                if (inputsProperty.ValueKind != JsonValueKind.Array)
-                    throw new JsonException($"The Inputs property must be an array in the JSON item {item}.");
-                if (inputsProperty.GetArrayLength() != args.Length)
-                    throw new JsonException($"Invalid number of arguments in the Inputs property for the JSON item {item}.");
-
-                bool inputsMatch = true;
-                List<JsonElement> inputArgs = inputsProperty.EnumerateArray().ToList();
-                for (var i = 0; i < inputArgs.Count; i++)
+                if (!inputArgs[i].ToString().Equals(args[i].ToString(), StringComparison.Ordinal))
                 {
-                    if (!inputArgs[i].ToString().Equals(args[i].ToString(), StringComparison.Ordinal))
-                    {
-                        inputsMatch = false;
-                        break;
-                    }
-                }
-
-                if (inputsMatch)
-                {
-                    if (!item.TryGetProperty("Data", out JsonElement dataProperty))
-                        throw new JsonException($"Cannot find Data property in the JSON item {item}.");
-                    T value = JsonSerializer.Deserialize<T>(dataProperty.GetRawText(), JsonOptions.SerializerOptions);
-                    return value;
+                    inputsMatch = false;
+                    break;
                 }
             }
 
-            return default;
+            if (inputsMatch)
+            {
+                if (!item.TryGetProperty("Data", out JsonElement dataProperty))
+                    throw new JsonException($"Cannot find Data property in the JSON item {item}.");
+                T? value = JsonSerializer.Deserialize<T>(dataProperty.GetRawText(), JsonOptions.SerializerOptions);
+                return value;
+            }
         }
 
-        public static async Task<IDictionary<string, T>> GetJsonAsDictionaryAsync<T>(this IContentSet contentSet,
-            string name, JsonSerializerOptions? serializerOptions = null)
-        {
-            return await contentSet.GetAsJsonAsync<IDictionary<string, T>>(name, serializerOptions).ConfigureAwait(false);
-        }
+        return default;
+    }
 
-        public static IDictionary<string, T> GetJsonAsDictionary<T>(this IContentSet contentSet, string name,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            return contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions);
-        }
+    public static async Task<IDictionary<string, T>?> GetJsonAsDictionaryAsync<T>(this IContentSet contentSet,
+        string name, JsonSerializerOptions? serializerOptions = null)
+    {
+        return await contentSet.GetAsJsonAsync<IDictionary<string, T>>(name, serializerOptions).ConfigureAwait(false);
+    }
 
-        public static async Task<T> GetJsonAsDictionaryEntryAsync<T>(this IContentSet contentSet,
-            string name,
-            string key,
-            StringComparison keyComparison = StringComparison.Ordinal,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            var dictionary = await contentSet.GetAsJsonAsync<IDictionary<string, T>>(name, serializerOptions)
-                .ConfigureAwait(false);
-            KeyValuePair<string, T> matchingEntry = dictionary.FirstOrDefault(kvp => kvp.Key.Equals(key, keyComparison));
-            return matchingEntry.Value;
-        }
+    public static IDictionary<string, T>? GetJsonAsDictionary<T>(this IContentSet contentSet, string name,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        return contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions);
+    }
 
-        public static T GetJsonAsDictionaryEntry<T>(this IContentSet contentSet,
-            string name,
-            string key,
-            StringComparison keyComparison = StringComparison.Ordinal,
-            JsonSerializerOptions? serializerOptions = null)
-        {
-            var dictionary = contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions);
-            KeyValuePair<string, T> matchingEntry = dictionary.FirstOrDefault(kvp => kvp.Key.Equals(key, keyComparison));
-            return matchingEntry.Value;
-        }
+    public static async Task<T> GetJsonAsDictionaryEntryAsync<T>(this IContentSet contentSet,
+        string name,
+        string key,
+        StringComparison keyComparison = StringComparison.Ordinal,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        var dictionary = await contentSet.GetAsJsonAsync<IDictionary<string, T>>(name, serializerOptions)
+            .ConfigureAwait(false);
+        KeyValuePair<string, T> matchingEntry = dictionary.FirstOrDefault(kvp => kvp.Key.Equals(key, keyComparison));
+        return matchingEntry.Value;
+    }
+
+    public static T GetJsonAsDictionaryEntry<T>(this IContentSet contentSet,
+        string name,
+        string key,
+        StringComparison keyComparison = StringComparison.Ordinal,
+        JsonSerializerOptions? serializerOptions = null)
+    {
+        var dictionary = contentSet.GetAsJson<IDictionary<string, T>>(name, serializerOptions);
+        KeyValuePair<string, T> matchingEntry = dictionary.FirstOrDefault(kvp => kvp.Key.Equals(key, keyComparison));
+        return matchingEntry.Value;
     }
 }

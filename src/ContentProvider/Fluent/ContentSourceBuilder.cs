@@ -17,25 +17,22 @@ limitations under the License.
 */
 #endregion
 
-using System;
+namespace ContentProvider;
 
-namespace ContentProvider
+public sealed class ContentSourceBuilder
 {
-    public sealed class ContentSourceBuilder
+    private readonly ContentBuilder _builder;
+
+    internal ContentSourceBuilder(ContentBuilder builder)
     {
-        private readonly ContentBuilder _builder;
+        _builder = builder;
+    }
 
-        internal ContentSourceBuilder(ContentBuilder builder)
-        {
-            _builder = builder;
-        }
-
-        public ContentBuilder Source(ContentSource source)
-        {
-            if (source is null)
-                throw new ArgumentNullException(nameof(source));
-            _builder.Add(source);
-            return _builder;
-        }
+    public ContentBuilder Source(ContentSource source)
+    {
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+        _builder.Add(source);
+        return _builder;
     }
 }

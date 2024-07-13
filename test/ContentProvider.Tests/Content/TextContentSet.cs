@@ -17,9 +17,9 @@ limitations under the License.
 */
 #endregion
 
-namespace ContentProvider.Tests.Content
-{
-    public sealed class TextContentSet : ContentSet
-    {
-    }
-}
+namespace ContentProvider.Tests.Content;
+
+#pragma warning disable S2094 // Classes should not be empty
+public sealed class TextContentSet : ContentSet;
+#pragma warning restore S2094 // Classes should not be empty
+

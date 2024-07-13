@@ -21,34 +21,33 @@ using ContentProvider.EmbeddedResources;
 using ContentProvider.Tests.Content;
 using Xunit;
 
-namespace ContentProvider.Tests.Fixtures
+namespace ContentProvider.Tests.Fixtures;
+
+public sealed class ContentManagerFixture
 {
-    public sealed class ContentManagerFixture
+    public ContentManagerFixture()
     {
-        public ContentManagerFixture()
-        {
-            ContentManager = new ContentManager()
-                .Register("Text", builder => builder
-                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                    {
-                        FileExtension = "txt",
-                        RootNamespace = typeof(TextContentSet).Namespace,
-                    }))
-                .Register("Json", builder => builder
-                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                    {
-                        FileExtension = "json",
-                        RootNamespace = typeof(JsonContentSet).Namespace,
-                    }));
-        }
-
-        public ContentManager ContentManager { get; }
+        ContentManager = new ContentManager()
+            .Register("Text", builder => builder
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    FileExtension = "txt",
+                    RootNamespace = typeof(TextContentSet).Namespace,
+                }))
+            .Register("Json", builder => builder
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    FileExtension = "json",
+                    RootNamespace = typeof(JsonContentSet).Namespace,
+                }));
     }
 
-    [CollectionDefinition("ContentManager")]
+    public ContentManager ContentManager { get; }
+}
+
+[CollectionDefinition("ContentManager")]
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public sealed class ContentManagerFixtureCollection : ICollectionFixture<ContentManagerFixture>
+public sealed class ContentManagerFixtureCollection : ICollectionFixture<ContentManagerFixture>
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
-    {
-    }
+{
 }

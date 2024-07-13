@@ -24,36 +24,35 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-namespace ContentProvider.Tests.Fixtures
+namespace ContentProvider.Tests.Fixtures;
+
+public sealed class ServiceProviderFixture
 {
-    public sealed class ServiceProviderFixture
+    public ServiceProviderFixture()
     {
-        public ServiceProviderFixture()
-        {
-            IServiceCollection services = new ServiceCollection()
-                .AddContent<TextContentSet>(b => b
-                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                    {
-                        RootNamespace = typeof(TextContentSet).Namespace,
-                        FileExtension = "txt",
-                    }))
-                .AddContent<JsonContentSet>(b => b
-                    .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                    {
-                        RootNamespace = typeof(JsonContentSet).Namespace,
-                        FileExtension = "json",
-                    }));
+        IServiceCollection services = new ServiceCollection()
+            .AddContent<TextContentSet>(b => b
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    RootNamespace = typeof(TextContentSet).Namespace,
+                    FileExtension = "txt",
+                }))
+            .AddContent<JsonContentSet>(b => b
+                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
+                {
+                    RootNamespace = typeof(JsonContentSet).Namespace,
+                    FileExtension = "json",
+                }));
 
-            ServiceProvider = services.BuildServiceProvider();
-        }
-
-        public ServiceProvider ServiceProvider { get; }
+        ServiceProvider = services.BuildServiceProvider();
     }
 
-    [CollectionDefinition("Content")]
+    public ServiceProvider ServiceProvider { get; }
+}
+
+[CollectionDefinition("Content")]
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-    public sealed class ContentCollection : ICollectionFixture<ServiceProviderFixture>
+public sealed class ContentCollection : ICollectionFixture<ServiceProviderFixture>
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
-    {
-    }
+{
 }

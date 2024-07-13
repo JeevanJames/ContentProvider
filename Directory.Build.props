@@ -9,8 +9,9 @@
 </ProductDescription>
 
         <!-- Build properties -->
-        <LangVersion>8.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <Nullable>annotations</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <NoWarn>1701;1702;1591;NU5105</NoWarn>
@@ -20,7 +21,7 @@
         <Authors>Damian Kulik,Jeevan James</Authors>
         <Company>Damian Kulik,Jeevan James</Company>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Copyright>Copyright (c) 2020 Damian Kulik, Jeevan James</Copyright>
+        <Copyright>Copyright (c) 2020-2024 Damian Kulik, Jeevan James</Copyright>
         <Product>Content Provider</Product>
         <PackageProjectUrl>https://github.com/JeevanJames/$(ProductId)/</PackageProjectUrl>
         <PackageIconUrl>https://github.com/JeevanJames/$(ProductId)/raw/master/Logo.png</PackageIconUrl>
@@ -34,9 +35,7 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-      
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)$(ProductId).ruleset</CodeAnalysisRuleSet>
-
     </PropertyGroup>
 
     <ItemGroup>
@@ -44,25 +43,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.8.0.18411">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="9.29.0.95321" PrivateAssets="all" />
+        <PackageReference Include="Roslynator.Analyzers" Version="4.12.4" PrivateAssets="all" />
     </ItemGroup>
+
 </Project>

@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>$(BaseNamespace).Formats.Json</AssemblyName>
-    <RootNamespace>$(AssemblyName)</RootNamespace>
-    <Nullable>enable</Nullable>
-    <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
-    <Description>$(ProductDescription)This package contains extension methods to support JSON content loading.</Description>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <AssemblyName>$(BaseNamespace).Formats.Json</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+        <Nullable>enable</Nullable>
+        <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
+        <Description>$(ProductDescription)This package contains extension methods to support JSON content loading.</Description>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ContentProvider\ContentProvider.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ContentProvider\ContentProvider.csproj" />
+    </ItemGroup>
 
 </Project>

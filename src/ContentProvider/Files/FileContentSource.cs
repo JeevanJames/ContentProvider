@@ -17,106 +17,100 @@ limitations under the License.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ContentProvider.Files
+namespace ContentProvider.Files;
+
+[DebuggerDisplay("File content source: {_baseDirectory} ({_files.Count} items)")]
+public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
 {
-    [DebuggerDisplay("File content source: {_baseDirectory} ({_files.Count} items)")]
-    public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
+    private readonly string _baseDirectory;
+    private readonly List<string> _files;
+
+    public FileContentSource(string baseDirectory, FileContentSourceOptions options)
+        : base(options)
     {
-        private readonly string _baseDirectory;
-        private readonly List<string> _files;
+        if (string.IsNullOrWhiteSpace(baseDirectory))
+            throw new ArgumentException(Errors.FilesInvalidBaseDirectory, nameof(baseDirectory));
+        if (!Directory.Exists(baseDirectory))
+            throw new DirectoryNotFoundException(string.Format(CultureInfo.CurrentCulture, Errors.FilesMissingBaseDirectory, baseDirectory));
 
-        public FileContentSource(string baseDirectory, FileContentSourceOptions options)
-            : base(options)
-        {
-            if (string.IsNullOrWhiteSpace(baseDirectory))
-                throw new ArgumentException(Errors.FilesInvalidBaseDirectory, nameof(baseDirectory));
-            if (!Directory.Exists(baseDirectory))
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.CurrentCulture, Errors.FilesMissingBaseDirectory, baseDirectory));
-
-            _baseDirectory = Path.GetFullPath(baseDirectory);
-            _files = Directory.EnumerateFiles(_baseDirectory, Options.SearchPattern, Options.SearchOption)
-                .Select(path => path.Substring(_baseDirectory.Length + 1))
-                .Select(name =>
+        _baseDirectory = Path.GetFullPath(baseDirectory);
+        _files = Directory.EnumerateFiles(_baseDirectory, Options.SearchPattern, Options.SearchOption)
+            .Select(path => path.Substring(_baseDirectory.Length + 1))
+            .Select(name =>
+            {
+                string contentName = Options.NameTransformer is null ? name : Options.NameTransformer(name);
+                if (!Options.KeepExtension)
                 {
-                    string contentName = Options.NameTransformer is null ? name : Options.NameTransformer(name);
-                    if (!Options.KeepExtension)
-                    {
-                        int dotIndex = contentName.LastIndexOf('.');
-                        if (dotIndex > 0)
-                            contentName = contentName.Substring(0, dotIndex);
-                    }
+                    int dotIndex = contentName.LastIndexOf('.');
+                    if (dotIndex > 0)
+                        contentName = contentName.Substring(0, dotIndex);
+                }
 
-                    return contentName;
-                })
-                .ToList();
-        }
+                return contentName;
+            })
+            .ToList();
+    }
 
-        public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
-        {
-            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (file is null)
-                return (false, null);
+    public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
+    {
+        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (file is null)
+            return (false, null);
 
-            string filePath = Path.Combine(_baseDirectory, file);
+        string filePath = Path.Combine(_baseDirectory, file);
 
-            string content;
-            using (var reader = new StreamReader(filePath))
-                content = await reader.ReadToEndAsync().ConfigureAwait(false);
+        string content;
+        using (var reader = new StreamReader(filePath))
+            content = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-            return (true, content);
-        }
+        return (true, content);
+    }
 
-        public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
-        {
-            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (file is null)
-                return (false, null);
+    public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
+    {
+        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (file is null)
+            return (false, null);
 
-            string filePath = Path.Combine(_baseDirectory, file);
+        string filePath = Path.Combine(_baseDirectory, file);
 
-            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var ms = new MemoryStream();
-            await fs.CopyToAsync(ms).ConfigureAwait(false);
-            byte[] content = ms.ToArray();
-            return (true, content);
-        }
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var ms = new MemoryStream();
+        await fs.CopyToAsync(ms).ConfigureAwait(false);
+        byte[] content = ms.ToArray();
+        return (true, content);
+    }
 
-        public override (bool success, string? content) TryLoadAsString(string name)
-        {
-            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (file is null)
-                return (false, null);
+    public override (bool success, string? content) TryLoadAsString(string name)
+    {
+        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (file is null)
+            return (false, null);
 
-            string filePath = Path.Combine(_baseDirectory, file);
+        string filePath = Path.Combine(_baseDirectory, file);
 
-            string content;
-            using (var reader = new StreamReader(filePath))
-                content = reader.ReadToEnd();
+        string content;
+        using (var reader = new StreamReader(filePath))
+            content = reader.ReadToEnd();
 
-            return (true, content);
-        }
+        return (true, content);
+    }
 
-        public override (bool success, byte[]? content) TryLoadAsBinary(string name)
-        {
-            string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-            if (file is null)
-                return (false, null);
+    public override (bool success, byte[]? content) TryLoadAsBinary(string name)
+    {
+        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
+        if (file is null)
+            return (false, null);
 
-            string filePath = Path.Combine(_baseDirectory, file);
+        string filePath = Path.Combine(_baseDirectory, file);
 
-            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var ms = new MemoryStream();
-            fs.CopyToAsync(ms);
-            byte[] content = ms.ToArray();
-            return (true, content);
-        }
+        using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var ms = new MemoryStream();
+        fs.CopyToAsync(ms);
+        byte[] content = ms.ToArray();
+        return (true, content);
     }
 }

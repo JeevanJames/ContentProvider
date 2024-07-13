@@ -17,111 +17,107 @@ limitations under the License.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Threading.Tasks;
 
-namespace ContentProvider
+namespace ContentProvider;
+
+/// <inheritdoc/>
+[DebuggerDisplay("Content Set {Name}")]
+public class ContentSet : IContentSet
 {
-    /// <inheritdoc/>
-    [DebuggerDisplay("Content Set {Name}")]
-    public class ContentSet : IContentSet
+    private string _name = null!;
+
+    /// <inheritdoc />
+    public string Name
     {
-        private string _name = null!;
-
-        /// <inheritdoc />
-        public string Name
+        get => _name;
+        internal set
         {
-            get => _name;
-            internal set
-            {
-                if (value is null)
-                    throw new ArgumentNullException(nameof(value));
-                if (value.Trim().Length == 0)
-                    throw new ArgumentException(Errors.InvalidContentSetName, nameof(value));
-                _name = value;
-            }
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+            if (value.Trim().Length == 0)
+                throw new ArgumentException(Errors.InvalidContentSetName, nameof(value));
+            _name = value;
         }
-
-        /// <inheritdoc />
-        /// <exception cref="ContentException">
-        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
-        ///     registered sources.
-        /// </exception>
-        public async Task<string> GetAsStringAsync(string name)
-        {
-            foreach (ContentSource source in Sources)
-            {
-                (bool success, string? content) = await source.TryLoadAsStringAsync(name)
-                    .ConfigureAwait(false);
-                if (success)
-                    return content!;
-            }
-
-            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
-                Errors.ContentEntryNotFound, name, Name));
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="ContentException">
-        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
-        ///     registered sources.
-        /// </exception>
-        public async Task<byte[]> GetAsBinaryAsync(string name)
-        {
-            foreach (ContentSource source in Sources)
-            {
-                (bool success, byte[]? content) = await source.TryLoadAsBinaryAsync(name)
-                    .ConfigureAwait(false);
-                if (success)
-                    return content!;
-            }
-
-            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
-                Errors.ContentEntryNotFound, name, Name));
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="ContentException">
-        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
-        ///     registered sources.
-        /// </exception>
-        public string GetAsString(string name)
-        {
-            foreach (ContentSource source in Sources)
-            {
-                (bool success, string? content) = source.TryLoadAsString(name);
-                if (success)
-                    return content!;
-            }
-
-            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
-                Errors.ContentEntryNotFound, name, Name));
-        }
-
-        /// <inheritdoc />
-        /// <exception cref="ContentException">
-        ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
-        ///     registered sources.
-        /// </exception>
-        public byte[] GetAsBinary(string name)
-        {
-            foreach (ContentSource source in Sources)
-            {
-                (bool success, byte[]? content) = source.TryLoadAsBinary(name);
-                if (success)
-                    return content!;
-            }
-
-            throw new ContentException(string.Format(CultureInfo.CurrentCulture,
-                Errors.ContentEntryNotFound, name, Name));
-        }
-
-        /// <summary>
-        ///     Gets the list of content sources registered with this content set.
-        /// </summary>
-        internal List<ContentSource> Sources { get; } = new List<ContentSource>();
     }
+
+    /// <inheritdoc />
+    /// <exception cref="ContentException">
+    ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+    ///     registered sources.
+    /// </exception>
+    public async Task<string> GetAsStringAsync(string name)
+    {
+        foreach (ContentSource source in Sources)
+        {
+            (bool success, string? content) = await source.TryLoadAsStringAsync(name)
+                .ConfigureAwait(false);
+            if (success)
+                return content!;
+        }
+
+        throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+            Errors.ContentEntryNotFound, name, Name));
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="ContentException">
+    ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+    ///     registered sources.
+    /// </exception>
+    public async Task<byte[]> GetAsBinaryAsync(string name)
+    {
+        foreach (ContentSource source in Sources)
+        {
+            (bool success, byte[]? content) = await source.TryLoadAsBinaryAsync(name)
+                .ConfigureAwait(false);
+            if (success)
+                return content!;
+        }
+
+        throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+            Errors.ContentEntryNotFound, name, Name));
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="ContentException">
+    ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+    ///     registered sources.
+    /// </exception>
+    public string GetAsString(string name)
+    {
+        foreach (ContentSource source in Sources)
+        {
+            (bool success, string? content) = source.TryLoadAsString(name);
+            if (success)
+                return content!;
+        }
+
+        throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+            Errors.ContentEntryNotFound, name, Name));
+    }
+
+    /// <inheritdoc />
+    /// <exception cref="ContentException">
+    ///     Thrown if content with the specified <paramref name="name"/> is not found in any of the
+    ///     registered sources.
+    /// </exception>
+    public byte[] GetAsBinary(string name)
+    {
+        foreach (ContentSource source in Sources)
+        {
+            (bool success, byte[]? content) = source.TryLoadAsBinary(name);
+            if (success)
+                return content!;
+        }
+
+        throw new ContentException(string.Format(CultureInfo.CurrentCulture,
+            Errors.ContentEntryNotFound, name, Name));
+    }
+
+    /// <summary>
+    ///     Gets the list of content sources registered with this content set.
+    /// </summary>
+    internal List<ContentSource> Sources { get; } = new List<ContentSource>();
 }

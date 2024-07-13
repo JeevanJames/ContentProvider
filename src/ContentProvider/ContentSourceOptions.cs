@@ -17,19 +17,16 @@ limitations under the License.
 */
 #endregion
 
-using System;
+namespace ContentProvider;
 
-namespace ContentProvider
+/// <summary>
+///     Base class for all content source options.
+/// </summary>
+public abstract class ContentSourceOptions
 {
     /// <summary>
-    ///     Base class for all content source options.
+    ///     Gets or sets an optional delegate that can be used to transform the content entry names
+    ///     generated from the content source.
     /// </summary>
-    public abstract class ContentSourceOptions
-    {
-        /// <summary>
-        ///     Gets or sets an optional delegate that can be used to transform the content entry names
-        ///     generated from the content source.
-        /// </summary>
-        public Func<string, string>? NameTransformer { get; set; }
-    }
+    public Func<string, string>? NameTransformer { get; set; }
 }
