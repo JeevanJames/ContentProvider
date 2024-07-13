@@ -1,7 +1,7 @@
 ﻿#region --- License & Copyright Notice ---
 /*
 ContentProvider Framework
-Copyright (c) 2020 Damian Kulik, Jeevan James
+Copyright (c) 2020-2024 Damian Kulik, Jeevan James
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
