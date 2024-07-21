@@ -50,9 +50,5 @@ public sealed class ServiceProviderFixture
     public ServiceProvider ServiceProvider { get; }
 }
 
-[CollectionDefinition("Content")]
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-public sealed class ContentCollection : ICollectionFixture<ServiceProviderFixture>
-#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
-{
-}
+[CollectionDefinition(nameof(ServiceProviderFixture))]
+public sealed class ServiceProviderCollectionFixture : ICollectionFixture<ServiceProviderFixture>;

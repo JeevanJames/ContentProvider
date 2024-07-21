@@ -27,7 +27,7 @@ using Xunit;
 
 namespace ContentProvider.Tests;
 
-[Collection("ContentManager")]
+[Collection(nameof(ContentManagerFixture))]
 public sealed class JsonTests
 {
     private readonly IContentSet _contentSet;
@@ -42,8 +42,7 @@ public sealed class JsonTests
     [Fact]
     public async Task Able_to_load_json_resources()
     {
-        var value = await _contentSet.GetAsJsonAsync<JsonStruct>("Content")
-;
+        var value = await _contentSet.GetAsJsonAsync<JsonStruct>("Content");
 
         value.ShouldNotBeNull();
     }
@@ -51,8 +50,7 @@ public sealed class JsonTests
     [Fact]
     public async Task Able_to_load_custom_list_entry()
     {
-        var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry", "Flash", 2)
-;
+        var value = await _contentSet.GetJsonAsCustomListEntry<CustomListEntry>("CustomListEntry", "Flash", 2);
 
         value.ShouldNotBeNull();
         value.Name.ShouldBe("Barry Allen");

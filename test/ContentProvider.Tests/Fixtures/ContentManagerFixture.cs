@@ -45,9 +45,5 @@ public sealed class ContentManagerFixture
     public ContentManager ContentManager { get; }
 }
 
-[CollectionDefinition("ContentManager")]
-#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-public sealed class ContentManagerFixtureCollection : ICollectionFixture<ContentManagerFixture>
-#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
-{
-}
+[CollectionDefinition(nameof(ContentManagerFixture))]
+public sealed class ContentManagerCollectionFixture : ICollectionFixture<ContentManagerFixture>;

@@ -24,13 +24,10 @@ namespace ContentProvider;
 [DebuggerDisplay("{_contentSets.Count} registered content sets")]
 public sealed partial class ContentManager : IContentManager
 {
-    private readonly Dictionary<string, ContentSet> _contentSets =
-        new Dictionary<string, ContentSet>(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, ContentSet> _contentSets = new(StringComparer.OrdinalIgnoreCase);
 
-    public ContentManager Register(string name, params ContentSource[] sources)
-    {
-        return Register<ContentSet>(name, sources);
-    }
+    public ContentManager Register(string name, params ContentSource[] sources) =>
+        Register<ContentSet>(name, sources);
 
     public ContentManager Register(string name, Action<ContentBuilder> builderSetup)
     {
@@ -45,10 +42,8 @@ public sealed partial class ContentManager : IContentManager
     }
 
     public ContentManager Register<TContentSet>(params ContentSource[] sources)
-        where TContentSet : ContentSet, new()
-    {
-        return Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, sources);
-    }
+        where TContentSet : ContentSet, new() =>
+        Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, sources);
 
     public ContentManager Register<TContentSet>(Action<ContentBuilder> builderSetup)
         where TContentSet : ContentSet, new()

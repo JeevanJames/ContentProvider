@@ -28,7 +28,7 @@ using Xunit;
 
 namespace ContentProvider.Tests;
 
-[Collection("Content")]
+[Collection(nameof(ServiceProviderFixture))]
 public sealed class ServiceCollectionTests
 {
     private readonly ServiceProviderFixture _fixture;

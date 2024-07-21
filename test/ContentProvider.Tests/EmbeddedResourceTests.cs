@@ -25,7 +25,7 @@ using Xunit;
 
 namespace ContentProvider.Tests;
 
-[Collection("ContentManager")]
+[Collection(nameof(ContentManagerFixture))]
 public sealed class EmbeddedResourceTests
 {
     private readonly ContentManager _contentManager;
