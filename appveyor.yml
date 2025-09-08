@@ -1,6 +1,6 @@
 image: Visual Studio 2022
 
-version: 1.0.0-{branch}+{build}
+version: 2.0.0-{branch}+{build}
 
 environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true

@@ -3,5 +3,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ContentProvider.Extensions")]
 [assembly: InternalsVisibleTo("ContentProvider.Extensions.DependencyInjection")]
