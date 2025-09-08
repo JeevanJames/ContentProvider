@@ -107,7 +107,7 @@
                 Gets or sets a value indicating whether to keep the file extension in the content name.
             </summary>
         </member>
-        <member name="M:ContentProvider.SourceBuilderExtensions.ResourcesIn(ContentProvider.ContentSourceBuilder,System.Reflection.Assembly,System.Action{ContentProvider.ResourceContentSourceBuilder})">
+        <member name="M:ContentProvider.SourceBuilderExtensions.ResourcesIn(ContentProvider.ContentSourceBuilder,System.Reflection.Assembly,System.Action{ContentProvider.EmbeddedResources.ResourceContentSourceOptionsBuilder})">
             <summary>
                 Registers a <see cref="T:ContentProvider.ContentSource"/> for content from embedded resources in the specified
                 assemblies.
@@ -121,7 +121,7 @@
                 <c>null</c>.
             </exception>
         </member>
-        <member name="M:ContentProvider.SourceBuilderExtensions.FilesIn(ContentProvider.ContentSourceBuilder,System.String,System.Action{ContentProvider.FileContentSourceBuilder})">
+        <member name="M:ContentProvider.SourceBuilderExtensions.FilesIn(ContentProvider.ContentSourceBuilder,System.String,System.Action{ContentProvider.Files.FileContentSourceBuilder})">
             <summary>
                 Registers a <see cref="T:ContentProvider.ContentSource"/> for content from files on the file system.
             </summary>

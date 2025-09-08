@@ -5,6 +5,7 @@ using System.Reflection;
 
 using ContentProvider.EmbeddedResources;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace ContentProvider;
 
 #pragma warning disable S4136 // Method overloads should be grouped together
@@ -23,19 +24,19 @@ public static partial class SourceBuilderExtensions
     ///     <c>null</c>.
     /// </exception>
     public static ContentSourceBuilder<ResourceContentSource> ResourcesIn(this ContentSourceBuilder builder,
-        Assembly assembly, Action<ResourceContentSourceBuilder>? sourceBuilderAction = null)
+        Assembly assembly, Action<ResourceContentSourceOptionsBuilder>? sourceBuilderAction = null)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
         if (assembly is null)
             throw new ArgumentNullException(nameof(assembly));
 
-        ResourceContentSourceBuilder sourceBuilder = new(assembly);
+        ResourceContentSourceOptionsBuilder sourceBuilder = new(assembly);
         sourceBuilderAction?.Invoke(sourceBuilder);
         return builder.Source(sourceBuilder.Build());
     }
 
     public static ContentSourceBuilder<ResourceContentSource> ResourcesInExecutingAssembly(
-        this ContentSourceBuilder builder, Action<ResourceContentSourceBuilder>? sourceBuilderAction = null) =>
+        this ContentSourceBuilder builder, Action<ResourceContentSourceOptionsBuilder>? sourceBuilderAction = null) =>
         builder.ResourcesIn(Assembly.GetCallingAssembly(), sourceBuilderAction);
 }

@@ -43,29 +43,5 @@ public sealed class ContentSourceBuilder
         return new ContentSourceBuilder<TSource>(_builder, source);
     }
 
-    public ContentSourceBuilder ThenFrom => new ContentSourceBuilder(_builder);
-}
-
-public sealed class ContentSourceBuilder<TSource>
-    where TSource : ContentSource
-{
-    private readonly ContentBuilder _builder;
-    private readonly TSource _source;
-
-    internal ContentSourceBuilder(ContentBuilder builder, TSource source)
-    {
-        _builder = builder;
-        _source = source;
-    }
-
-    public ContentSourceBuilder<TSource> Configure(Action<TSource> configurer)
-    {
-        if (configurer is null)
-            throw new ArgumentNullException(nameof(configurer));
-
-        configurer(_source);
-        return this;
-    }
-
-    public ContentSourceBuilder ThenFrom => new ContentSourceBuilder(_builder);
+    public ContentSourceBuilder ThenFrom => new(_builder);
 }

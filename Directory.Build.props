@@ -7,16 +7,18 @@
 
 
 </ProductDescription>
+    </PropertyGroup>
 
-        <!-- Build properties -->
+    <PropertyGroup Label="Build Properties">
         <LangVersion>latest</LangVersion>
         <Nullable>annotations</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
         <NoWarn>1701;1702;1591;NU5105</NoWarn>
+    </PropertyGroup>
 
-        <!-- Package properties -->
+    <PropertyGroup Label="Package Properties">
         <Version>0.1.0</Version>
         <Authors>Damian Kulik,Jeevan James</Authors>
         <Company>Damian Kulik,Jeevan James</Company>
@@ -31,20 +33,21 @@
         <PackageTags>Content Provider ContentProvider Embedded Resources</PackageTags>
         <PackageReleaseNotes>See https://github.com/JeevanJames/$(ProductId)/releases</PackageReleaseNotes>
         <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
 
-        <!-- SourceLink properties-->
+    <PropertyGroup Label="SourceLink Properties">
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)$(ProductId).ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup Label="Package Properties">
         <None Include="$(MSBuildThisFileDirectory)logo.png" Pack="true" PackagePath="\" />
         <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Label="Code Analysis Packages">
         <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" PrivateAssets="all" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" PrivateAssets="all" />

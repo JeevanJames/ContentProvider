@@ -8,7 +8,7 @@ namespace ContentProvider;
 
 public sealed class ContentBuilder : Collection<ContentSource>
 {
-    public ContentSourceBuilder From => new ContentSourceBuilder(this);
+    public ContentSourceBuilder From => new(this);
 
     public ContentSource[] Build() => this.ToArray();
 }
