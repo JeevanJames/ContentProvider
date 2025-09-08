@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
-        <AssemblyName>$(BaseNamespace).Extensions</AssemblyName>
-        <RootNamespace>$(BaseNamespace)</RootNamespace>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <RootNamespace>$(BaseNamespace).Extensions.DependencyInjection</RootNamespace>
+        <AssemblyName>$(RootNamespace)</AssemblyName>
         <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
         <Description>$(ProductDescription)This package contains extensions to support dependency injection through the Microsoft.Extensions.* packages.</Description>
     </PropertyGroup>

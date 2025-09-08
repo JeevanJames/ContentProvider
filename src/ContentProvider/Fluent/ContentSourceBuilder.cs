@@ -1,38 +1,71 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
-
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace ContentProvider;
 
 public sealed class ContentSourceBuilder
 {
     private readonly ContentBuilder _builder;
+    private ContentSource? _source;
 
     internal ContentSourceBuilder(ContentBuilder builder)
     {
         _builder = builder;
     }
 
-    public ContentBuilder Source(ContentSource source)
+    public ContentSourceBuilder Source(ContentSource source)
     {
         if (source is null)
             throw new ArgumentNullException(nameof(source));
+        if (_source is not null)
+            throw new InvalidOperationException("Cannot assign source again; it has already been assigned.");
         _builder.Add(source);
-        return _builder;
+        _source = source;
+        return this;
     }
+
+    public ContentSourceBuilder<TSource> Source<TSource>(TSource source)
+        where TSource : ContentSource
+    {
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
+        _builder.Add(source);
+        return new ContentSourceBuilder<TSource>(_builder, source);
+    }
+
+    public ContentSourceBuilder<TSource> Source<TSource>()
+        where TSource : ContentSource, new()
+    {
+        TSource source = new();
+        _builder.Add(source);
+        return new ContentSourceBuilder<TSource>(_builder, source);
+    }
+
+    public ContentSourceBuilder ThenFrom => new ContentSourceBuilder(_builder);
+}
+
+public sealed class ContentSourceBuilder<TSource>
+    where TSource : ContentSource
+{
+    private readonly ContentBuilder _builder;
+    private readonly TSource _source;
+
+    internal ContentSourceBuilder(ContentBuilder builder, TSource source)
+    {
+        _builder = builder;
+        _source = source;
+    }
+
+    public ContentSourceBuilder<TSource> Configure(Action<TSource> configurer)
+    {
+        if (configurer is null)
+            throw new ArgumentNullException(nameof(configurer));
+
+        configurer(_source);
+        return this;
+    }
+
+    public ContentSourceBuilder ThenFrom => new ContentSourceBuilder(_builder);
 }

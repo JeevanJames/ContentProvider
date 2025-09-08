@@ -1,21 +1,5 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
 
@@ -29,36 +13,18 @@ public sealed partial class ContentManager : IContentManager
     public ContentManager Register(string name, params ContentSource[] sources) =>
         Register<ContentSet>(name, sources);
 
-    public ContentManager Register(string name, Action<ContentBuilder> builderSetup)
-    {
-        if (builderSetup is null)
-            throw new ArgumentNullException(nameof(builderSetup));
-
-        var builder = new ContentBuilder();
-        builderSetup(builder);
-        ContentSource[] sources = builder.Build();
-
-        return Register<ContentSet>(name, sources);
-    }
+    public ContentManager Register(string name, Action<ContentBuilder> builderSetup) =>
+        Register<ContentSet>(name, builderSetup);
 
     public ContentManager Register<TContentSet>(params ContentSource[] sources)
         where TContentSet : ContentSet, new() =>
         Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, sources);
 
     public ContentManager Register<TContentSet>(Action<ContentBuilder> builderSetup)
-        where TContentSet : ContentSet, new()
-    {
-        if (builderSetup is null)
-            throw new ArgumentNullException(nameof(builderSetup));
+        where TContentSet : ContentSet, new() =>
+        Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, builderSetup);
 
-        var builder = new ContentBuilder();
-        builderSetup(builder);
-        ContentSource[] sources = builder.Build();
-
-        return Register<TContentSet>(typeof(TContentSet).AssemblyQualifiedName, sources);
-    }
-
-    private ContentManager Register<TContentSet>(string name, ContentSource[] sources)
+    public ContentManager Register<TContentSet>(string name, params ContentSource[] sources)
         where TContentSet : ContentSet, new()
     {
         if (name is null)
@@ -66,14 +32,26 @@ public sealed partial class ContentManager : IContentManager
         if (sources is null)
             throw new ArgumentNullException(nameof(sources));
 
-        var contentSet = new TContentSet
-        {
-            Name = name,
-        };
-        foreach (ContentSource source in sources)
-            contentSet.Sources.Add(source);
+        TContentSet contentSet = new();
+        contentSet.Sources.AddRange(sources);
         _contentSets.Add(name, contentSet);
+
         return this;
+    }
+
+    public ContentManager Register<TContentSet>(string name, Action<ContentBuilder> builderSetup)
+        where TContentSet : ContentSet, new()
+    {
+        if (name is null)
+            throw new ArgumentNullException(nameof(name));
+        if (builderSetup is null)
+            throw new ArgumentNullException(nameof(builderSetup));
+
+        var builder = new ContentBuilder();
+        builderSetup(builder);
+        ContentSource[] sources = builder.Build();
+
+        return Register<TContentSet>(name, sources);
     }
 
     /// <inheritdoc/>
@@ -86,15 +64,20 @@ public sealed partial class ContentManager : IContentManager
 
     /// <inheritdoc/>
     public TContentSet GetContentSet<TContentSet>()
-        where TContentSet : ContentSet, new()
-    {
-        if (!_contentSets.TryGetValue(typeof(TContentSet).AssemblyQualifiedName, out ContentSet contentSet))
-            throw new ArgumentException($"Could not find a content set typed {typeof(TContentSet).FullName}.");
+        where TContentSet : IContentSet, new() =>
+        GetContentSet<TContentSet>(typeof(TContentSet).AssemblyQualifiedName);
 
+    /// <inheritdoc/>
+    public TContentSet GetContentSet<TContentSet>(string name)
+        where TContentSet : IContentSet, new()
+    {
+        if (name is null)
+            throw new ArgumentNullException(nameof(name));
+        if (!_contentSets.TryGetValue(name, out ContentSet contentSet))
+            throw new ArgumentException($"Could not find a content set named {name}.", nameof(name));
         if (contentSet is TContentSet typedContentSet)
             return typedContentSet;
-
-        throw new ContentException($"The content set for type {typeof(TContentSet).FullName} is a different type {contentSet.GetType().FullName}.");
+        throw new ContentException($"The content set named {name} is a different type {contentSet.GetType().FullName}.");
     }
 }
 

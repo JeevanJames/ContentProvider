@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <AssemblyName>$(BaseNamespace).Tests</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\ContentProvider.Extensions\ContentProvider.Extensions.csproj" />
+        <ProjectReference Include="..\..\src\ContentProvider.Extensions.DependencyInjection\ContentProvider.Extensions.DependencyInjection.csproj" />
         <ProjectReference Include="..\..\src\ContentProvider.Formats.Json\ContentProvider.Formats.Json.csproj" />
         <ProjectReference Include="..\..\src\ContentProvider\ContentProvider.csproj" />
     </ItemGroup>

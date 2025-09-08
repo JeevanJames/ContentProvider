@@ -1,21 +1,5 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 using System.Text.Json;
 
@@ -28,7 +12,7 @@ public static class ContentSetExtensions
     {
         IEnumerable<T>? value = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
             .ConfigureAwait(false);
-        if (predicate != null)
+        if (predicate is not null)
             value = value.Where(predicate);
         return value;
     }
@@ -37,12 +21,12 @@ public static class ContentSetExtensions
         Func<T, bool>? predicate = null, JsonSerializerOptions? serializerOptions = null)
     {
         IEnumerable<T>? value = contentSet.GetAsJson<IEnumerable<T>>(name, serializerOptions);
-        if (predicate != null)
+        if (predicate is not null)
             value = value.Where(predicate);
         return value;
     }
 
-    public static Task<T?> GetJsonAsListEntryAsync<T>(this IContentSet contentSet,
+    public static async Task<T?> GetJsonAsListEntryAsync<T>(this IContentSet contentSet,
         string name,
         Func<T, bool> predicate,
         JsonSerializerOptions? serializerOptions = null)
@@ -50,14 +34,6 @@ public static class ContentSetExtensions
         if (predicate is null)
             throw new ArgumentNullException(nameof(predicate));
 
-        return contentSet.GetJsonAsListEntryAsyncInternal(name, predicate, serializerOptions);
-    }
-
-    private static async Task<T?> GetJsonAsListEntryAsyncInternal<T>(this IContentSet contentSet,
-        string name,
-        Func<T, bool> predicate,
-        JsonSerializerOptions? serializerOptions = null)
-    {
         IEnumerable<T>? collection = await contentSet.GetAsJsonAsync<IEnumerable<T>>(name, serializerOptions)
             .ConfigureAwait(false);
         T result = collection.FirstOrDefault(predicate);
@@ -77,9 +53,8 @@ public static class ContentSetExtensions
         return result;
     }
 
-    public static Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet,
-        string name,
-        params object[] args)
+    public static async Task<T?> GetJsonAsCustomListEntry<T>(this IContentSet contentSet,
+        string name, params object[] args)
         where T : class
     {
         if (contentSet is null)
@@ -91,14 +66,6 @@ public static class ContentSetExtensions
 
         //TODO: Check all arg types are valid JSON types - number, string, boolean
 
-        return contentSet.GetJsonAsCustomListEntryInternal<T>(name, args);
-    }
-
-    private static async Task<T?> GetJsonAsCustomListEntryInternal<T>(this IContentSet contentSet,
-        string name,
-        params object[] args)
-        where T : class
-    {
         string json = await contentSet.GetAsStringAsync(name).ConfigureAwait(false);
 
         JsonDocument doc = JsonDocument.Parse(json, new JsonDocumentOptions
@@ -117,7 +84,7 @@ public static class ContentSetExtensions
                 throw new JsonException($"Invalid number of arguments in the Inputs property for the JSON item {item}.");
 
             bool inputsMatch = true;
-            List<JsonElement> inputArgs = inputsProperty.EnumerateArray().ToList();
+            List<JsonElement> inputArgs = [.. inputsProperty.EnumerateArray()];
             for (var i = 0; i < inputArgs.Count; i++)
             {
                 if (!inputArgs[i].ToString().Equals(args[i].ToString(), StringComparison.Ordinal))

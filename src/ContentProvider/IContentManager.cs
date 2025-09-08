@@ -1,21 +1,5 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 namespace ContentProvider;
 
@@ -29,5 +13,8 @@ public interface IContentManager
     IContentSet GetContentSet(string name);
 
     TContentSet GetContentSet<TContentSet>()
-        where TContentSet : ContentSet, new();
+        where TContentSet : IContentSet, new();
+
+    TContentSet GetContentSet<TContentSet>(string name)
+        where TContentSet : IContentSet, new();
 }

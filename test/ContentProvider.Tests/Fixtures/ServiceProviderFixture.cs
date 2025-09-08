@@ -1,23 +1,7 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
-
-using ContentProvider.EmbeddedResources;
+using ContentProvider.Extensions.DependencyInjection;
 using ContentProvider.Tests.Content;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -30,19 +14,12 @@ public sealed class ServiceProviderFixture
 {
     public ServiceProviderFixture()
     {
-        IServiceCollection services = new ServiceCollection()
-            .AddContent<TextContentSet>(b => b
-                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                {
-                    RootNamespace = typeof(TextContentSet).Namespace,
-                    FileExtension = "txt",
-                }))
-            .AddContent<JsonContentSet>(b => b
-                .From.ResourcesInExecutingAssembly(new EmbeddedResourceContentSourceOptions
-                {
-                    RootNamespace = typeof(JsonContentSet).Namespace,
-                    FileExtension = "json",
-                }));
+        IServiceCollection services = new ServiceCollection();
+        services.AddContent<TextContentSet>(b => b
+            .From.ResourcesInExecutingAssembly(o => o.WithRootNamespace<TextContentSet>().WithFileExtension("txt"))
+            .ThenFrom.Memory().Add("Dummy", "Value"));
+        services.AddContent("Json", b => b
+            .From.ResourcesInExecutingAssembly(o => o.WithRootNamespace<JsonContentSet>().WithFileExtension("json")));
 
         ServiceProvider = services.BuildServiceProvider();
     }

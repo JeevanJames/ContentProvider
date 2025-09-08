@@ -1,21 +1,5 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
 using System.Globalization;
@@ -54,63 +38,55 @@ public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
             .ToList();
     }
 
-    public override async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
+    public override async Task<string?> LoadAsStringAsync(string name)
     {
         string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (file is null)
-            return (false, null);
+            return null;
 
         string filePath = Path.Combine(_baseDirectory, file);
 
-        string content;
-        using (var reader = new StreamReader(filePath))
-            content = await reader.ReadToEndAsync().ConfigureAwait(false);
-
-        return (true, content);
+        using var reader = new StreamReader(filePath);
+        return await reader.ReadToEndAsync().ConfigureAwait(false);
     }
 
-    public override async Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
+    public override async Task<byte[]?> LoadAsBinaryAsync(string name)
     {
         string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (file is null)
-            return (false, null);
+            return null;
 
         string filePath = Path.Combine(_baseDirectory, file);
 
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var ms = new MemoryStream();
         await fs.CopyToAsync(ms).ConfigureAwait(false);
-        byte[] content = ms.ToArray();
-        return (true, content);
+        return ms.ToArray();
     }
 
-    public override (bool success, string? content) TryLoadAsString(string name)
+    public override string? LoadAsString(string name)
     {
         string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (file is null)
-            return (false, null);
+            return null;
 
         string filePath = Path.Combine(_baseDirectory, file);
 
-        string content;
-        using (var reader = new StreamReader(filePath))
-            content = reader.ReadToEnd();
-
-        return (true, content);
+        using var reader = new StreamReader(filePath);
+        return reader.ReadToEnd();
     }
 
-    public override (bool success, byte[]? content) TryLoadAsBinary(string name)
+    public override byte[]? LoadAsBinary(string name)
     {
         string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (file is null)
-            return (false, null);
+            return null;
 
         string filePath = Path.Combine(_baseDirectory, file);
 
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var ms = new MemoryStream();
         fs.CopyToAsync(ms);
-        byte[] content = ms.ToArray();
-        return (true, content);
+        return ms.ToArray();
     }
 }

@@ -1,45 +1,34 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+using ContentProvider.Files;
 
-    http://www.apache.org/licenses/LICENSE-2.0
+namespace ContentProvider;
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
-
-namespace ContentProvider.Files;
-
-public static class SourceBuilderExtensions
+public static partial class SourceBuilderExtensions
 {
     /// <summary>
     ///     Registers a <see cref="ContentSource"/> for content from files on the file system.
     /// </summary>
     /// <param name="builder">The <see cref="ContentSourceBuilder"/> instance.</param>
     /// <param name="baseDirectory">The base directory to retrieve the files from.</param>
-    /// <param name="options">Options for registering the content source.</param>
-    /// <returns>An instance of <see cref="ContentBuilder"/>.</returns>
+    /// <param name="sourceBuilderAction">Delegate to setup options for registering the content source.</param>
+    /// <returns>An instance of <see cref="ContentSourceBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">
-    ///     Thrown if the <paramref name="builder"/> or <paramref name="options"/> parameters are
-    ///     <c>null</c>.
+    ///     Thrown if the <paramref name="builder"/> parameter is <c>null</c>.
     /// </exception>
-    public static ContentBuilder FilesIn(this ContentSourceBuilder builder, string baseDirectory,
-        FileContentSourceOptions options)
+    public static ContentSourceBuilder<FileContentSource> FilesIn(this ContentSourceBuilder builder,
+        string baseDirectory, Action<FileContentSourceBuilder>? sourceBuilderAction = null)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
-        if (options is null)
-            throw new ArgumentNullException(nameof(options));
 
-        return builder.Source(new FileContentSource(baseDirectory, options));
+        FileContentSourceBuilder sourceBuilder = new(baseDirectory);
+        sourceBuilderAction?.Invoke(sourceBuilder);
+        return builder.Source(sourceBuilder.Build());
     }
+
+    public static ContentSourceBuilder<FileContentSource> FilesInCurrentDirectory(this ContentSourceBuilder builder,
+        Action<FileContentSourceBuilder>? sourceBuilderAction = null) =>
+        builder.FilesIn(Directory.GetCurrentDirectory(), sourceBuilderAction);
 }

@@ -1,21 +1,5 @@
-﻿#region --- License & Copyright Notice ---
-/*
-ContentProvider Framework
-Copyright (c) 2020-2024 Damian Kulik, Jeevan James
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-#endregion
+﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
+// Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 using System.Text;
 
@@ -24,49 +8,35 @@ namespace ContentProvider;
 public abstract class ContentSource
 {
     /// <summary>
-    ///     Attempts to load an item from the content source as a string, given its
-    ///     <paramref name="name"/>.
+    ///     Attempts to load an item from the content source as a string, given its <paramref name="name"/>.
     /// </summary>
     /// <param name="name">The name of the content item to retrieve.</param>
     /// <returns>
-    ///     A tuple indicating whether the content item could be loaded, and if so, the string
-    ///     content itself.
+    ///     The content of the source as a string; otherwise <c>null</c> if the item is not found.
     /// </returns>
-    public virtual async Task<(bool success, string? content)> TryLoadAsStringAsync(string name)
+    public virtual async Task<string?> LoadAsStringAsync(string name)
     {
-        (bool success, byte[]? content) = await TryLoadAsBinaryAsync(name).ConfigureAwait(false);
-        if (!success)
-            return (false, null);
-
-        string contentString = Encoding.UTF8.GetString(content);
-        return (true, contentString);
+        byte[]? content = await LoadAsBinaryAsync(name).ConfigureAwait(false);
+        return content is not null ? Encoding.UTF8.GetString(content) : null;
     }
 
     /// <summary>
-    ///     Attempts to load an item from the content source as a byte array, given its
-    ///     <paramref name="name"/>.
+    ///     Attempts to load an item from the content source as a byte array, given its <paramref name="name"/>.
     /// </summary>
     /// <param name="name">The name of the content item to retrieve.</param>
     /// <returns>
-    ///     A tuple indicating whether the content item could be loaded, and if so, the byte
-    ///     array content itself.
+    ///     The content of the source as a byte array; otherwise <c>null</c> if the item is not found.
     /// </returns>
-    public virtual Task<(bool success, byte[]? content)> TryLoadAsBinaryAsync(string name)
+    public virtual Task<byte[]?> LoadAsBinaryAsync(string name) =>
+        Task.FromResult(LoadAsBinary(name));
+
+    public virtual string? LoadAsString(string name)
     {
-        return Task.FromResult(TryLoadAsBinary(name));
+        byte[]? content = LoadAsBinary(name);
+        return content is not null ? Encoding.UTF8.GetString(content) : default;
     }
 
-    public virtual (bool success, string? content) TryLoadAsString(string name)
-    {
-        (bool success, byte[]? content) = TryLoadAsBinary(name);
-        if (!success)
-            return default;
-
-        string contentString = Encoding.UTF8.GetString(content);
-        return (true, contentString);
-    }
-
-    public abstract (bool success, byte[]? content) TryLoadAsBinary(string name);
+    public abstract byte[]? LoadAsBinary(string name);
 }
 
 /// <summary>

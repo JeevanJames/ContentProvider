@@ -39,11 +39,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" PrivateAssets="all" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="9.29.0.95321" PrivateAssets="all" />
         <PackageReference Include="Roslynator.Analyzers" Version="4.12.4" PrivateAssets="all" />
