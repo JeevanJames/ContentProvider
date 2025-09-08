@@ -21,10 +21,11 @@
         <Authors>Damian Kulik,Jeevan James</Authors>
         <Company>Damian Kulik,Jeevan James</Company>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <Copyright>Copyright (c) 2020-2024 Damian Kulik, Jeevan James</Copyright>
+        <Copyright>Copyright (c) 2020-2025 Damian Kulik, Jeevan James</Copyright>
         <Product>Content Provider</Product>
         <PackageProjectUrl>https://github.com/JeevanJames/$(ProductId)/</PackageProjectUrl>
-        <PackageIconUrl>https://github.com/JeevanJames/$(ProductId)/raw/master/Logo.png</PackageIconUrl>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/JeevanJames/$(ProductId).git</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <PackageTags>Content Provider ContentProvider Embedded Resources</PackageTags>
@@ -37,6 +38,11 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)$(ProductId).ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)logo.png" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" PrivateAssets="all" />
