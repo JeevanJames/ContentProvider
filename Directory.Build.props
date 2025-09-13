@@ -40,6 +40,7 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)$(ProductId).ruleset</CodeAnalysisRuleSet>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup Label="Package Properties">
