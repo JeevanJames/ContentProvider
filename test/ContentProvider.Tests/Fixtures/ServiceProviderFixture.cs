@@ -7,8 +7,6 @@ using ContentProvider.Tests.SqlContent;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Xunit;
-
 namespace ContentProvider.Tests.Fixtures;
 
 public sealed class ServiceProviderFixture

@@ -3,11 +3,6 @@
 
 using ContentProvider.Formats.Json;
 using ContentProvider.Formats.Json.Structures;
-using ContentProvider.Tests.Fixtures;
-
-using Shouldly;
-
-using Xunit;
 
 namespace ContentProvider.Tests;
 

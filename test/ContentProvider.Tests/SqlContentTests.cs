@@ -1,15 +1,9 @@
 ﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
 // Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
-using ContentProvider.Tests.Fixtures;
 using ContentProvider.Tests.SqlContent;
 
 using Microsoft.Extensions.DependencyInjection;
-
-using Shouldly;
-
-using Xunit;
-using Xunit.Abstractions;
 
 namespace ContentProvider.Tests;
 
@@ -42,7 +36,7 @@ public sealed class SqlContentTests(ServiceProviderFixture fixture, ITestOutputH
     [InlineData("GetCustomers", false)]
     public async Task Can_read_sql_from_typed_contentset(string name, bool sourceShouldBeFile)
     {
-        IContentSet contentSet = _fixture.ServiceProvider.GetRequiredService<SqlContentSet>();
+        SqlContentSet contentSet = _fixture.ServiceProvider.GetRequiredService<SqlContentSet>();
         contentSet.ShouldNotBeNull();
 
         string sql = await contentSet.GetAsStringAsync(name);
@@ -52,5 +46,20 @@ public sealed class SqlContentTests(ServiceProviderFixture fixture, ITestOutputH
             sql.ShouldContain("Source: File");
         else
             sql.ShouldContain("Source: Resource");
+    }
+
+    [Fact]
+    public async Task Can_read_sql_from_contentset_methods()
+    {
+        SqlContentSet contentSet = _fixture.ServiceProvider.GetRequiredService<SqlContentSet>();
+        contentSet.ShouldNotBeNull();
+
+        string getOrdersSql = await contentSet.GetOrders();
+        Output.WriteLine(getOrdersSql);
+        getOrdersSql.ShouldContain("Source: File");
+
+        string getCustomersSql = await contentSet.GetCustomers();
+        Output.WriteLine(getCustomersSql);
+        getCustomersSql.ShouldContain("Source: Resource");
     }
 }

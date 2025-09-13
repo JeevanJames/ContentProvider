@@ -2,13 +2,8 @@
 // Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 using ContentProvider.Tests.Content;
-using ContentProvider.Tests.Fixtures;
 
 using Microsoft.Extensions.DependencyInjection;
-
-using Shouldly;
-
-using Xunit;
 
 namespace ContentProvider.Tests;
 

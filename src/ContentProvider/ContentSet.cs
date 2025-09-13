@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2020-2025 Damian Kulik, Jeevan James
 // Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
+using System.Runtime.CompilerServices;
+
 namespace ContentProvider;
 
 /// <inheritdoc/>
@@ -56,7 +58,7 @@ public class ContentSet : IContentSet
         {
             string? content = source.LoadAsString(name);
             if (content is not null)
-                return content!;
+                return content;
         }
 
         throw new ContentException($"Could not find content entry named '{name}'.");
@@ -73,9 +75,19 @@ public class ContentSet : IContentSet
         {
             byte[]? content = source.LoadAsBinary(name);
             if (content is not null)
-                return content!;
+                return content;
         }
 
         throw new ContentException($"Could not find content entry named '{name}'.");
     }
+
+    protected async Task<string> LoadAsStringAsync([CallerMemberName] string? name = null) =>
+        await GetAsStringAsync(name);
+
+    protected async Task<byte[]> LoadAsBinaryAsync([CallerMemberName] string? name = null) =>
+        await GetAsBinaryAsync(name);
+
+    protected string LoadAsString([CallerMemberName] string? name = null) => GetAsString(name);
+
+    protected byte[] LoadAsBinary([CallerMemberName] string? name = null) => GetAsBinary(name);
 }

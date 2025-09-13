@@ -3,8 +3,6 @@
 
 using ContentProvider.Tests.Content;
 
-using Xunit;
-
 namespace ContentProvider.Tests.Fixtures;
 
 public sealed class ContentManagerFixture
