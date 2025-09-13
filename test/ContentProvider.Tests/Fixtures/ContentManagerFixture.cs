@@ -15,13 +15,13 @@ public sealed class ContentManagerFixture
             .Register("Text", builder => builder
                 .From.ResourcesInExecutingAssembly(options => options
                     .WithFileExtension("txt")
-                    .WithRootNamespace<TextContentSet>())
+                    .WithResourceNamespace<TextContentSet>())
                 .ThenFrom.Memory()
                     .Add("InMemoryKey", "InMemoryValue"))
             .Register("Json", builder => builder
                 .From.ResourcesInExecutingAssembly(options => options
                     .WithFileExtension("json")
-                    .WithRootNamespace<JsonContentSet>()));
+                    .WithResourceNamespace<JsonContentSet>()));
     }
 
     public ContentManager ContentManager { get; }

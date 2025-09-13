@@ -11,12 +11,16 @@
         <None Remove="Content\Content.json" />
         <None Remove="Content\Content.txt" />
         <None Remove="Content\CustomListEntry.json" />
+        <None Remove="SqlContent\Resource_GetCustomers.sql" />
+        <None Remove="SqlContent\Resource_GetOrders.sql" />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="Content\Content.json" />
         <EmbeddedResource Include="Content\Content.txt" />
         <EmbeddedResource Include="Content\CustomListEntry.json" />
+        <EmbeddedResource Include="SqlContent\Resource_GetCustomers.sql" />
+        <EmbeddedResource Include="SqlContent\Resource_GetOrders.sql" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,6 +31,12 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="SqlContent\File_GetOrders.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

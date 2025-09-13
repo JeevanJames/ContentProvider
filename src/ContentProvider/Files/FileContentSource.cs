@@ -2,49 +2,25 @@
 // Licensed under the Apache License, Version 2.0.  See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using System.Globalization;
 
 namespace ContentProvider.Files;
 
-[DebuggerDisplay("File content source: {_baseDirectory} ({_files.Count} items)")]
+[DebuggerDisplay("File content source: {_baseDirectory})")]
 public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
 {
     private readonly string _baseDirectory;
-    private readonly List<string> _files;
 
-    public FileContentSource(string baseDirectory, FileContentSourceOptions options)
-        : base(options)
+    public FileContentSource(string baseDirectory, FileContentSourceOptions options) : base(options)
     {
         if (string.IsNullOrWhiteSpace(baseDirectory))
             throw new ArgumentException(Errors.FilesInvalidBaseDirectory, nameof(baseDirectory));
-        if (!Directory.Exists(baseDirectory))
-            throw new DirectoryNotFoundException(string.Format(CultureInfo.CurrentCulture, Errors.FilesMissingBaseDirectory, baseDirectory));
-
         _baseDirectory = Path.GetFullPath(baseDirectory);
-        _files = Directory.EnumerateFiles(_baseDirectory, Options.SearchPattern, Options.SearchOption)
-            .Select(path => path.Substring(_baseDirectory.Length + 1))
-            .Select(name =>
-            {
-                string contentName = Options.NameTransformer is null ? name : Options.NameTransformer(name);
-                if (!Options.KeepExtension)
-                {
-                    int dotIndex = contentName.LastIndexOf('.');
-                    if (dotIndex > 0)
-                        contentName = contentName.Substring(0, dotIndex);
-                }
-
-                return contentName;
-            })
-            .ToList();
     }
 
     public override async Task<string?> LoadAsStringAsync(string name)
     {
-        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-        if (file is null)
+        if (!TryFindFile(name, out string? filePath))
             return null;
-
-        string filePath = Path.Combine(_baseDirectory, file);
 
         using var reader = new StreamReader(filePath);
         return await reader.ReadToEndAsync().ConfigureAwait(false);
@@ -52,11 +28,8 @@ public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
 
     public override async Task<byte[]?> LoadAsBinaryAsync(string name)
     {
-        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-        if (file is null)
+        if (!TryFindFile(name, out string? filePath))
             return null;
-
-        string filePath = Path.Combine(_baseDirectory, file);
 
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var ms = new MemoryStream();
@@ -66,11 +39,8 @@ public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
 
     public override string? LoadAsString(string name)
     {
-        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-        if (file is null)
+        if (!TryFindFile(name, out string? filePath))
             return null;
-
-        string filePath = Path.Combine(_baseDirectory, file);
 
         using var reader = new StreamReader(filePath);
         return reader.ReadToEnd();
@@ -78,15 +48,39 @@ public sealed class FileContentSource : ContentSource<FileContentSourceOptions>
 
     public override byte[]? LoadAsBinary(string name)
     {
-        string file = _files.Find(file => file.Equals(name, StringComparison.OrdinalIgnoreCase));
-        if (file is null)
+        if (!TryFindFile(name, out string? filePath))
             return null;
-
-        string filePath = Path.Combine(_baseDirectory, file);
 
         using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var ms = new MemoryStream();
         fs.CopyToAsync(ms);
         return ms.ToArray();
+    }
+
+    // We do not cache any file details on startup. Each request for file content is dynamic and always
+    // queries the directory. This allows 
+    private bool TryFindFile(string name, out string? filePath)
+    {
+        filePath = null;
+
+        if (!Directory.Exists(_baseDirectory))
+            return false;
+
+        IEnumerable<string> files = Directory.EnumerateFiles(_baseDirectory, "*", SearchOption.TopDirectoryOnly);
+        foreach (string file in files)
+        {
+            string resolvedName = Options.KeepExtension ? Path.GetFileName(file) : Path.GetFileNameWithoutExtension(file);
+            if (Options.NameFilter?.Invoke(resolvedName) == false)
+                continue;
+            if (Options.NameTransformer is not null)
+                resolvedName = Options.NameTransformer(resolvedName);
+            if (resolvedName.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                filePath = file;
+                return true;
+            }
+        }
+
+        return false;
     }
 }

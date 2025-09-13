@@ -15,7 +15,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
-        <NoWarn>1701;1702;1591;NU5105</NoWarn>
+        <NoWarn>1701;1702;1591;NU1900;NU5105</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Label="Package Properties">

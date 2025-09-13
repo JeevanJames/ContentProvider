@@ -3,72 +3,79 @@
 
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 
 namespace ContentProvider.EmbeddedResources;
 
 [DebuggerDisplay("Embedded resources content source ({_resources.Count} items)")]
 public sealed class ResourceContentSource : ContentSource<ResourceContentSourceOptions>
 {
-    private readonly Dictionary<string, ResourceDetail> _resources = [];
+    private readonly Assembly _assembly;
+    private readonly Dictionary<string, string> _resources = [];
 
     public ResourceContentSource(Assembly assembly, ResourceContentSourceOptions options)
         : base(options)
     {
-        if (assembly is null)
-            throw new ArgumentNullException(nameof(assembly));
+        _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
 
-        DiscoverResources(assembly);
+        DiscoverAndCacheResources(assembly);
     }
 
-    private void DiscoverResources(Assembly assembly)
+    private void DiscoverAndCacheResources(Assembly assembly)
     {
-        Func<string, string> contentNameGetter = string.IsNullOrWhiteSpace(Options.RootNamespace)
-            ? res => res
-            : res => res.Substring(Options.RootNamespace.Length + 1);
-
         IEnumerable<string> resourceNames = assembly.GetManifestResourceNames();
 
-        if (Options.NameMatcher is not null)
-            resourceNames = resourceNames.Where(res => Options.NameMatcher.IsMatch(res));
-
-        if (!string.IsNullOrWhiteSpace(Options.FileExtension))
-        {
-            resourceNames = resourceNames
-                .Where(res => res.EndsWith($".{Options.FileExtension}", StringComparison.OrdinalIgnoreCase));
-        }
-
+        StringBuilder sb = new();
         foreach (string resourceName in resourceNames)
         {
-            string contentName = Options.NameTransformer is null
-                ? contentNameGetter(resourceName)
-                : Options.NameTransformer(contentNameGetter(resourceName));
-            if (!Options.KeepExtension)
+            sb.Clear().Append(resourceName);
+
+            if (!string.IsNullOrWhiteSpace(Options.ResourceNamespace) &&
+                !sb.TrimIfStartsWith(Options.ResourceNamespace))
             {
-                int dotIndex = contentName.LastIndexOf('.');
-                if (dotIndex > 0)
-                    contentName = contentName.Substring(0, dotIndex);
+                continue;
             }
 
-            _resources.Add(contentName, new ResourceDetail(assembly, resourceName));
+            bool specifiesFileExtension = !string.IsNullOrWhiteSpace(Options.FileExtension);
+            if (specifiesFileExtension && !sb.EndsWith(Options.FileExtension))
+                continue;
+
+            if (!Options.KeepExtension)
+            {
+                if (specifiesFileExtension)
+                    sb.TrimFileExtension(Options.FileExtension);
+                else
+                    sb.TrimFileExtension();
+            }
+
+            string contentName = sb.ToString();
+
+            if (Options.NameFilter?.Invoke(contentName) == false)
+                continue;
+
+            if (Options.NameTransformer is not null)
+                contentName = Options.NameTransformer(contentName);
+
+            _resources.Add(contentName, resourceName);
         }
     }
 
     public override async Task<string?> LoadAsStringAsync(string name)
     {
-        if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+        if (!_resources.TryGetValue(name, out string? resourceName))
             return null;
 
-        using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+        using Stream resourceStream = _assembly.GetManifestResourceStream(resourceName);
         using var reader = new StreamReader(resourceStream);
         return await reader.ReadToEndAsync().ConfigureAwait(false);
     }
 
     public override async Task<byte[]?> LoadAsBinaryAsync(string name)
     {
-        if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+        if (!_resources.TryGetValue(name, out string? resourceName))
             return null;
 
-        using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+        using Stream resourceStream = _assembly.GetManifestResourceStream(resourceName);
 
         var buffer = new byte[2048];
 
@@ -81,20 +88,20 @@ public sealed class ResourceContentSource : ContentSource<ResourceContentSourceO
 
     public override string? LoadAsString(string name)
     {
-        if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+        if (!_resources.TryGetValue(name, out string? resourceName))
             return null;
 
-        using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+        using Stream resourceStream = _assembly.GetManifestResourceStream(resourceName);
         using var reader = new StreamReader(resourceStream);
         return reader.ReadToEnd();
     }
 
     public override byte[]? LoadAsBinary(string name)
     {
-        if (!_resources.TryGetValue(name, out ResourceDetail resourceDetail))
+        if (!_resources.TryGetValue(name, out string? resourceName))
             return default;
 
-        using Stream resourceStream = resourceDetail.Assembly.GetManifestResourceStream(resourceDetail.ResourceName);
+        using Stream resourceStream = _assembly.GetManifestResourceStream(resourceName);
 
         var buffer = new byte[2048];
 
@@ -108,15 +115,59 @@ public sealed class ResourceContentSource : ContentSource<ResourceContentSourceO
     }
 }
 
-internal readonly struct ResourceDetail
+internal static class StringBuilderExtensions
 {
-    internal ResourceDetail(Assembly assembly, string resourceName)
+    internal static bool TrimIfStartsWith(this StringBuilder sb, string ns)
     {
-        Assembly = assembly;
-        ResourceName = resourceName;
+        // Include the dot after the resource namespace
+        int prefixLength = ns.Length + 1;
+
+        if (sb.Length < prefixLength) return false;
+
+        for (int i = 0; i < ns.Length; i++)
+        {
+            if (char.ToLowerInvariant(sb[i]) != char.ToLowerInvariant(ns[i]))
+                return false;
+        }
+
+        // Match the dot as well
+        if (char.ToLowerInvariant(sb[ns.Length]) != '.')
+            return false;
+
+        sb.Remove(0, prefixLength);
+        return true;
     }
 
-    internal Assembly Assembly { get; }
+    internal static bool EndsWith(this StringBuilder sb, string suffix)
+    {
+        if (sb.Length < suffix.Length) return false;
 
-    internal string ResourceName { get; }
+        int sbIndex = sb.Length - 1;
+        int suffixIndex = suffix.Length - 1;
+
+        while (suffixIndex >= 0)
+        {
+            if (char.ToLowerInvariant(sb[sbIndex]) != char.ToLowerInvariant(suffix[suffixIndex]))
+                return false;
+
+            sbIndex--;
+            suffixIndex--;
+        }
+
+        return true;
+    }
+
+    internal static void TrimFileExtension(this StringBuilder sb, string fileExtension)
+    {
+        sb.Remove(sb.Length - fileExtension.Length - 1, fileExtension.Length + 1);
+    }
+
+    internal static void TrimFileExtension(this StringBuilder sb)
+    {
+        int dotPos = sb.Length - 1;
+        while (dotPos >= 0 && sb[dotPos] != '.')
+            dotPos--;
+        if (dotPos >= 0)
+            sb.Remove(dotPos, sb.Length - dotPos - 1);
+    }
 }

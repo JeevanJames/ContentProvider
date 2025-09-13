@@ -3,10 +3,12 @@
 
 using System.Reflection;
 
+using ContentProvider.FilesAndResources;
+
 namespace ContentProvider.EmbeddedResources;
 
 public sealed class ResourceContentSourceOptionsBuilder
-    : ContentSourceOptionsBuilder<ResourceContentSourceOptionsBuilder,  ResourceContentSource, ResourceContentSourceOptions>
+    : BaseFileAndResourceContentSourceOptionsBuilder<ResourceContentSourceOptionsBuilder,  ResourceContentSource, ResourceContentSourceOptions>
 {
     private readonly Assembly _assembly;
 
@@ -17,36 +19,24 @@ public sealed class ResourceContentSourceOptionsBuilder
 
     public override ResourceContentSource Build() => new(_assembly, Options);
 
-    public ResourceContentSourceOptionsBuilder WithFileExtension(string extension)
+    public ResourceContentSourceOptionsBuilder WithResourceNamespace(string rootNamespace)
     {
-        Options.FileExtension = extension;
+        Options.ResourceNamespace = rootNamespace;
         return this;
     }
 
-    public ResourceContentSourceOptionsBuilder WithRootNamespace(string rootNamespace)
-    {
-        Options.RootNamespace = rootNamespace;
-        return this;
-    }
-
-    public ResourceContentSourceOptionsBuilder WithRootNamespace(Type type)
+    public ResourceContentSourceOptionsBuilder WithResourceNamespace(Type type)
     {
         if (type is null)
             throw new ArgumentNullException(nameof(type));
 
-        Options.RootNamespace = type.Namespace;
+        Options.ResourceNamespace = type.Namespace;
         return this;
     }
 
-    public ResourceContentSourceOptionsBuilder WithRootNamespace<T>()
+    public ResourceContentSourceOptionsBuilder WithResourceNamespace<T>()
     {
-        Options.RootNamespace = typeof(T).Namespace;
-        return this;
-    }
-
-    public ResourceContentSourceOptionsBuilder KeepExtensions()
-    {
-        Options.KeepExtension = true;
+        Options.ResourceNamespace = typeof(T).Namespace;
         return this;
     }
 }

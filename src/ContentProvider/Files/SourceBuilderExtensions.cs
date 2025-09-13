@@ -19,17 +19,17 @@ public static partial class SourceBuilderExtensions
     ///     Thrown if the <paramref name="builder"/> parameter is <c>null</c>.
     /// </exception>
     public static ContentSourceBuilder<FileContentSource> FilesIn(this ContentSourceBuilder builder,
-        string baseDirectory, Action<FileContentSourceBuilder>? sourceBuilderAction = null)
+        string baseDirectory, Action<FileContentSourceOptionsBuilder>? sourceBuilderAction = null)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
 
-        FileContentSourceBuilder sourceBuilder = new(baseDirectory);
+        FileContentSourceOptionsBuilder sourceBuilder = new(baseDirectory);
         sourceBuilderAction?.Invoke(sourceBuilder);
         return builder.Source(sourceBuilder.Build());
     }
 
     public static ContentSourceBuilder<FileContentSource> FilesInCurrentDirectory(this ContentSourceBuilder builder,
-        Action<FileContentSourceBuilder>? sourceBuilderAction = null) =>
+        Action<FileContentSourceOptionsBuilder>? sourceBuilderAction = null) =>
         builder.FilesIn(Directory.GetCurrentDirectory(), sourceBuilderAction);
 }

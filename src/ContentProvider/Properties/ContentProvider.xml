@@ -90,21 +90,10 @@
                 generated from the content source.
             </summary>
         </member>
-        <member name="P:ContentProvider.EmbeddedResources.ResourceContentSourceOptions.FileExtension">
-            <summary>
-                Gets or sets the file extension to filter embedded resources. If not specified, all
-                embedded resources are considered.
-            </summary>
-        </member>
-        <member name="P:ContentProvider.EmbeddedResources.ResourceContentSourceOptions.RootNamespace">
+        <member name="P:ContentProvider.EmbeddedResources.ResourceContentSourceOptions.ResourceNamespace">
             <summary>
                 Gets or sets the namespace to filter embedded resources. If not specified, all embedded
                 resources are considered.
-            </summary>
-        </member>
-        <member name="P:ContentProvider.EmbeddedResources.ResourceContentSourceOptions.KeepExtension">
-            <summary>
-                Gets or sets a value indicating whether to keep the file extension in the content name.
             </summary>
         </member>
         <member name="M:ContentProvider.SourceBuilderExtensions.ResourcesIn(ContentProvider.ContentSourceBuilder,System.Reflection.Assembly,System.Action{ContentProvider.EmbeddedResources.ResourceContentSourceOptionsBuilder})">
@@ -121,7 +110,7 @@
                 <c>null</c>.
             </exception>
         </member>
-        <member name="M:ContentProvider.SourceBuilderExtensions.FilesIn(ContentProvider.ContentSourceBuilder,System.String,System.Action{ContentProvider.Files.FileContentSourceBuilder})">
+        <member name="M:ContentProvider.SourceBuilderExtensions.FilesIn(ContentProvider.ContentSourceBuilder,System.String,System.Action{ContentProvider.Files.FileContentSourceOptionsBuilder})">
             <summary>
                 Registers a <see cref="T:ContentProvider.ContentSource"/> for content from files on the file system.
             </summary>
@@ -169,24 +158,21 @@
               Looks up a localized string similar to Specify a valid name for the content set..
             </summary>
         </member>
-        <member name="P:ContentProvider.Files.FileContentSourceOptions.SearchPattern">
+        <member name="P:ContentProvider.FilesAndResources.BaseFileAndResourceContentSourceOptions.NameFilter">
             <summary>
-                Gets or sets the search string to match against the names of the files. This parameter can
-                contain a combination of valid literal path and wildcard (* and ?) characters, but it doesn't
-                support regular expressions.
-                <para/>
-                The default is <c>*</c>.
+                Optional delegate to filter found content names.
             </summary>
         </member>
-        <member name="P:ContentProvider.Files.FileContentSourceOptions.SearchOption">
+        <member name="P:ContentProvider.FilesAndResources.BaseFileAndResourceContentSourceOptions.FileExtension">
             <summary>
-                Gets or sets an enumeration value that specified whether the search operation should include
-                all subdirectories or only the current directory.
+                File extension to filter files and embedded resources. If not specified, all files and embedded
+                resources under the specific scope (base directory and resource namespace respectively)
+                are considered.
             </summary>
         </member>
-        <member name="P:ContentProvider.Files.FileContentSourceOptions.KeepExtension">
+        <member name="P:ContentProvider.FilesAndResources.BaseFileAndResourceContentSourceOptions.KeepExtension">
             <summary>
-                Gets or sets a value indicating whether to keep the file extension in the content name.
+                Indicates whether to keep the file extension in the content name.
             </summary>
         </member>
         <member name="M:ContentProvider.IContentManager.GetContentSet(System.String)">
