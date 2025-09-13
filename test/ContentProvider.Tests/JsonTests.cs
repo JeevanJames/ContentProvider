@@ -13,8 +13,7 @@ public sealed class JsonTests
 
     public JsonTests(ContentManagerFixture fixture)
     {
-        if (fixture is null)
-            throw new ArgumentNullException(nameof(fixture));
+        ArgumentNullException.ThrowIfNull(fixture);
         _contentSet = fixture.ContentManager.GetContentSet("Json");
     }
 

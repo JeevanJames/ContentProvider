@@ -82,10 +82,10 @@ public class ContentSet : IContentSet
     }
 
     protected async Task<string> LoadAsStringAsync([CallerMemberName] string? name = null) =>
-        await GetAsStringAsync(name);
+        await GetAsStringAsync(name).ConfigureAwait(false);
 
     protected async Task<byte[]> LoadAsBinaryAsync([CallerMemberName] string? name = null) =>
-        await GetAsBinaryAsync(name);
+        await GetAsBinaryAsync(name).ConfigureAwait(false);
 
     protected string LoadAsString([CallerMemberName] string? name = null) => GetAsString(name);
 
